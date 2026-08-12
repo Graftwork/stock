@@ -7,7 +7,7 @@ The rootstock for new projects — a versioned foundation you graft new work ont
 so every project starts from a proven, consistent base and can be re-synced as
 the foundation improves.
 
-**Version 0.1.0.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
+**Version 0.1.1.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
 versions, which doubles as the migration list for already-grafted projects.
 
 ## What you get
@@ -82,13 +82,34 @@ non-blocking so a fresh stamp is never red. See
 
 ## Grafting a project from Stock
 
-1. Copy the foundation into the target repo (everything except `openspec/specs/`,
-   which is Stock's own spec, and this README).
-2. Set the project name in `pyproject.toml`.
-3. Run `mise trust && mise install && uv sync && mise run check` — it should be
-   green before you write a line of your own code.
-4. Record the Stock version you grafted from, so a later re-sync knows where to
-   start.
+Clone Stock at a tag, drop its history, and point the remote at the new repo:
 
-Re-syncing an existing project is a matter of reading the CHANGELOG from your
-recorded version forward and applying each entry as a small PR.
+```bash
+git clone --branch v0.1.0 --depth 1 git@github.com:Graftwork/stock.git <project>
+rm -rf <project>/.git
+git -C <project> init -b main
+git -C <project> remote add origin <new-repo-url>
+```
+
+Then:
+
+1. **Keep `openspec/specs/foundation/`.** It is Stock's own spec, and its
+   promises stay true of the grafted project — the suite asserts at least one
+   scenario exists, so removing it turns a fresh stamp red. Your capabilities go
+   alongside it.
+2. Rewrite `README.md`, `CHANGELOG.md`, and the "what this repo is" section of
+   `CLAUDE.md` for the new project. Keep `docs/decisions/` — the foundation's
+   rationale travels with it, and the project's own ADRs start at 0005.
+3. Set `name` and `description` in `pyproject.toml`, and record the graft:
+
+   ```toml
+   [tool.graftwork]
+   stock-version = "0.1.0"
+   grafted = "YYYY-MM-DD"
+   ```
+
+4. Run `mise trust && mise install && uv sync && mise run check` — it should be
+   green before you write a line of your own code.
+
+To re-sync later, read this CHANGELOG forward from the recorded `stock-version`,
+apply each entry as its own small PR, then bump the recorded version.
