@@ -15,5 +15,8 @@ coverage.xml
 # Node
 node_modules/
 
+# Machine-local Claude Code settings; the shared allowlist is .claude/settings.json
+.claude/settings.local.json
+
 # OS
 .DS_Store

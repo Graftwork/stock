@@ -1,0 +1,42 @@
+[project]
+name = "graftwork-stock"
+version = "0.1.0"
+description = "The rootstock for new projects — a versioned foundation you graft new work onto."
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+# --strict-markers turns a typo'd marker into an error rather than a silent
+# no-op, which is what makes the spec link trustworthy.
+addopts = [
+    "--strict-markers",
+    "--cov",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+]
+markers = [
+    "spec(scenario_id): link this test to an OpenSpec scenario, e.g. spec(\"foundation/green-from-commit-one\")",
+]
+
+[tool.coverage.run]
+source = ["scripts"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
