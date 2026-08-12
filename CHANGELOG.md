@@ -9,6 +9,38 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [0.1.2] — 2026-08-13
+
+Permission allowlist tightened. Grafted projects should apply this to their own
+`.claude/settings.json`.
+
+### Fixed
+
+- **The allowlist granted arbitrary code execution.** `Bash(uv run:*)` permitted
+  `uv run python -c '<anything>'`, and `Bash(mise run:*)` permitted any task
+  `mise.toml` happens to define. Both are removed and replaced by the specific
+  commands actually used — `uv run pytest`, `uv run ruff check .`,
+  `mise run check`, and so on. Because this file is copied into every grafted
+  project, the over-broad version propagated outward, which is what makes it
+  worth a release of its own.
+
+### Added
+
+- Narrow read-only allowlist entries derived from real usage across sessions:
+  the `mise run` tasks, `uv run pytest`, ruff's check-only forms, the
+  traceability guard, `uvx pre-commit run --all-files`, `uv sync --locked`, and
+  the read-only OpenSpec subcommands.
+
+### Notes
+
+- `Bash(uvx pre-commit:*)` and `Bash(npx --yes @fission-ai/openspec@1.6.0:*)`
+  are deliberately kept. Both are scoped to a single named tool rather than to
+  an interpreter, and narrowing OpenSpec further would mean a prompt on every
+  `new change` and `archive` — a real cost for no real gain.
+- Entries such as `Bash(git status:*)` are redundant, since Claude Code already
+  treats read-only git and gh subcommands as safe. They are harmless and left
+  alone.
+
 ## [0.1.1] — 2026-08-12
 
 Fixes found by the first real graft ([sorting-office](https://github.com/Graftwork/sorting-office)).
@@ -65,5 +97,6 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.1.2]: https://github.com/Graftwork/stock/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Graftwork/stock/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Graftwork/stock/releases/tag/v0.1.0

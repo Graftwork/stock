@@ -7,7 +7,7 @@ The rootstock for new projects — a versioned foundation you graft new work ont
 so every project starts from a proven, consistent base and can be re-synced as
 the foundation improves.
 
-**Version 0.1.1.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
+**Version 0.1.2.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
 versions, which doubles as the migration list for already-grafted projects.
 
 ## What you get
