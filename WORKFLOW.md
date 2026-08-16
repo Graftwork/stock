@@ -36,6 +36,49 @@ is skip UAT, because the archive is one-way.
 
 ## Conventions
 
+### Context is not content
+
+To brief an agent well you have to tell it things. Why this matters, who it is
+for, what went wrong last time. That is the right way to work — an agent
+reasoning without context produces plausible, useless requirements.
+
+But this method is a transcription pipeline. It is built to turn what you said
+into something written, reviewable, and permanent:
+
+```
+conversation  →  proposal  →  design  →  spec  →  code  →  commit  →  remote
+    ^                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^           ^
+ said to explain       the window — every one of these is a copy    │
+ the problem                                                 past here the only
+                                                             honest remedy is to
+                                                             rebuild the repo
+```
+
+Nothing has to malfunction for a detail offered as background to end up in a
+published requirement. The pipeline has no notion of *why* you said something.
+
+So the rule: **detail supplied to aid understanding is not thereby material for
+the artifacts.** Requirements name categories and rules — a named correspondent
+rather than their name, a retention period rather than whose records. Where a
+specific genuinely is the requirement, it gets named as a specific and confirmed
+before it is written down. The agent says what it abstracted, so the judgement is
+visible rather than silent.
+
+Two things follow that are easy to get wrong:
+
+- **The control sits at the crossing, not at review.** A check before the PR is
+  already too late if a commit was made an hour earlier. Git history is not
+  edited, it is rewritten — a different and worse operation.
+- **The machine half is the small half.** The `detect-secrets` pre-commit hook
+  catches credentials, and that is worth having. It cannot tell whether "the
+  consultant" is a category or a person. Do not read a green hook as "checked" —
+  the rest is a review policy, declared as a gap in `pyproject.toml` precisely
+  because no test can keep it.
+
+This was learned the expensive way: the first project grafted from Stock was torn
+down and rebuilt because personal context given while scoping had been written
+into a spec, then into code, then pushed.
+
 ### Small changes, because abandonment is the cheap part
 
 The usual arguments for small scope are velocity and review burden. Neither is
@@ -230,6 +273,13 @@ Knowing these stops you assuming you have misunderstood something.
 - **Validation is binary.** No "intentionally incomplete" state.
 - **Renaming a change is manual** — directory, branch, and every cross-reference,
   by hand.
+- **Nothing may reference a scenario id until the change is archived.** A
+  scenario lives in the change's delta until `openspec archive` writes it into
+  `openspec/specs/`, so a test marker or a declared gap naming it fails the
+  traceability guard as an unknown claim until then. There is no `sync` command
+  in the CLI to write main specs early (`openspec --help`, v1.6.0), so plan the
+  task order with the archive *ahead* of anything that cites an id — the natural
+  order of "implement, then archive" is backwards here.
 - **The change argument is a flag on some commands and positional on others.**
   `status --change <name>` and `instructions <artifact> --change <name>`, but
   `validate <name>`. Getting it wrong on `validate` prints
