@@ -9,6 +9,99 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [0.3.0] — 2026-08-16
+
+**Context is not content.** Learned the expensive way: the first project grafted
+from Stock was torn down and rebuilt because personal detail supplied while
+scoping the work had been written into a spec, then into code, then pushed. By
+the time it was noticed it was in git history, and history is not edited but
+rewritten — so rebuilding was the cheapest honest remedy.
+
+This is structural, not careless. Spec-driven development with an agent is a
+transcription pipeline by design — conversation to proposal to spec to code to
+commit — and the pipeline has no notion of *why* a detail was supplied. Every
+project grafted from Stock inherits the same exposure, which is what makes it a
+foundation concern.
+
+The migration is additive: a new promise and one new pre-commit hook. A grafted
+project that adopts neither stays green.
+
+### Added
+
+- **`foundation` requirement: Context Is Not Content.** Detail supplied so the
+  agent understands a problem is not thereby material for artifacts. Requirements
+  are written as categories and rules — a named correspondent, not their name; a
+  retention period, not whose records. A specific that genuinely is the
+  requirement gets confirmed before it is written down.
+- **A `detect-secrets` pre-commit hook** (`Yelp/detect-secrets`, pinned
+  `v1.5.0`), covering the half of that promise a machine can keep. Verified both
+  ways: clean across the repository, and failing on a planted credential. No
+  baseline file — Stock has no false positives to suppress, and a project adds
+  one the day it gets its first.
+- **Two declared gaps** in `[tool.graftwork.traceability]` for the half a machine
+  cannot keep. No test can read a requirement and judge whether "the consultant"
+  is a category or a person. The split is stated rather than blurred, because a
+  green hook reading as "checked" is exactly the false assurance to avoid here.
+- **UAT case 4** — read the artifacts as a stranger would. The only case that
+  must run **before the commit** rather than before the PR, for the reason above.
+- **House rule in `CLAUDE.md`** and the long-form convention in `WORKFLOW.md`,
+  including the pipeline diagram showing where the window closes.
+- **Three more of OpenSpec's rough edges**, all hit while making this change:
+  nothing may reference a scenario id until the change is archived (there is no
+  `sync` command to write main specs early, so the archive has to be ordered
+  *ahead* of any claiming test or declared gap); `archive` moves a change one
+  directory deeper without rewriting its relative links, silently breaking every
+  `../../../` reference in its artifacts; and `validate --change <name>` prints
+  `error: unknown option` while exiting 0.
+
+### Changed
+
+- **UAT `Last passed` dates are batched** into the next real change rather than
+  each earning its own PR. A one-line date change costing a full pull request is
+  friction that gets a rule quietly ignored; an exemption is a hole that widens.
+  This release is the first use of it.
+- **`docs/UAT.md` cases now carry two dates, not one.** `Last agent run` records
+  that the commands were executed and what came back; `Last passed` records that
+  a person looked and accepted. Only a person writes the second.
+
+  This corrects a real defect in v0.2.0: every `Last passed` date in that release
+  was written by the agent that had just run the commands itself. Everything was
+  green and nothing had been reviewed — the exact failure UAT exists to prevent,
+  shipped inside the file that forbids it. All `Last passed` dates are reset to
+  `never` pending a human read.
+
+- **Release candidates.** `docs/RELEASING.md` gains a step: after merge, cut
+  `vX.Y.Z-rc.N` and run the tag-dependent UAT cases against *that*, before the
+  stable tag exists. This closes a circle the v0.2.0 process could not: those
+  cases need a real, cloneable tag, so they could only run after the release was
+  already made — and a stable tag that turns out to be wrong cannot be moved,
+  because someone may already have grafted from it. A candidate is real enough to
+  clone and carries no promise, so a failure costs an `-rc.2` rather than a bad
+  release. Cases previously marked *post-release* are now marked *needs a
+  published tag*, since they no longer happen after the release.
+- **A backlog stub** at `openspec/changes/fresh-graft-check-belongs-in-ci/`. UAT
+  case 1 is fully machine-judgeable — its `Expect` is three exit codes — and by
+  `docs/UAT.md`'s own admission rule it should be a CI job. A UAT list padded
+  with mechanical checks trains the reader to skim, and the cases either side of
+  it are the ones that must not be skimmed.
+
+### Notes
+
+- **This is the first change to take the full OpenSpec route** that
+  [Stock ADR 0007](docs/decisions/stock-0007-how-stock-changes-itself.md)
+  established — propose, design, delta specs, tasks, apply, archive. v0.2.0
+  introduced the rule and could not follow it. The main spec here was written by
+  `openspec archive`, not by hand.
+- `gitleaks` was tested and rejected: its pre-commit hook declares
+  `language: golang`, and Stock's toolchain pins Python, uv and Node but no Go.
+  Adding a language runtime for one hook is disproportionate; the Docker variant
+  trades it for a Docker dependency. `detect-secrets` declares `language: python`,
+  which pre-commit provisions itself.
+- The task list was edited mid-flight. Its first draft put the claiming test and
+  the declared gaps before the archive step, which cannot work — see the rough
+  edge above. The correction is recorded in the archived change rather than
+  quietly applied.
+
 ## [0.2.0] — 2026-08-16
 
 The ways of working, promoted from a real project. Everything here changed an
@@ -223,6 +316,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.3.0]: https://github.com/Graftwork/stock/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Graftwork/stock/releases/tag/v0.2.0
 [0.1.2]: https://github.com/Graftwork/stock/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Graftwork/stock/releases/tag/v0.1.1

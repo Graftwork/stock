@@ -55,7 +55,7 @@ uvx pre-commit run --all-files
 ### 4. Run UAT — before the PR, not after
 
 Work [`docs/UAT.md`](UAT.md), run the cases you can, and record what you saw.
-Cases marked *post-release* cannot run yet; leave them. Reporting a case as open
+Cases marked *needs a published tag* cannot run yet; leave them for step 8. Reporting a case as open
 is the correct outcome — an agent may run the commands and report, but may not
 mark a case passed.
 
@@ -73,10 +73,12 @@ already-grafted project, and it is the only thing standing between "re-sync to
 Stock vX" and an archaeology exercise. Write it for someone holding a project
 three versions behind.
 
-Bump the version everywhere it appears. There are currently 8 occurrences across
-4 files and nothing checks they agree — see the backlog stub at
-`openspec/changes/version-string-consistency/`. Until that is built, this step is
-manual and easy to half-do:
+Bump the version everywhere it appears, and **only where it tracks the current
+version**. Measured at v0.2.0: 13 occurrences across 6 files, of which 5 must
+move and the rest are permanent statements about the past — a blanket
+find-and-replace corrupts the record while looking correct. The breakdown is in
+the backlog stub at `openspec/changes/version-string-consistency/`. Until that is
+built, this step is manual and easy to get wrong in both directions:
 
 ```bash
 grep -rn "$OLD_VERSION" --include="*.md" --include="*.toml" .
@@ -90,26 +92,61 @@ and it is declared as a review-policy gap in `[tool.graftwork.traceability]`
 precisely because no test can enforce it. The only thing keeping it true is
 someone doing it.
 
-### 7. Merge, then tag
+### 7. Merge, then cut a release candidate
 
 ```bash
 git checkout main && git pull origin main
-git tag -a v<X.Y.Z> -m "v<X.Y.Z>"
+git tag -a v<X.Y.Z>-rc.1 -m "v<X.Y.Z>-rc.1"
+git push origin v<X.Y.Z>-rc.1
+```
+
+**Not the final tag yet.** Some UAT cases need a real published tag to run
+against — you cannot rehearse "clone Stock at a tag and graft a project from it"
+without a tag to clone. Cutting the stable tag first would mean the release is
+already made by the time you find out whether it is any good, and a stable tag
+that turns out to be wrong cannot be moved: someone may already have grafted from
+it, and the whole point of a tag is that it does not move.
+
+A release candidate breaks that circle. It is a real, cloneable tag, so the graft
+UAT is the genuine article rather than a rehearsal — but it carries no promise,
+so nothing is committed to.
+
+Semver orders pre-releases before the release they precede, so `v0.3.0-rc.1` sorts
+below `v0.3.0` and never gets mistaken for it.
+
+The `README.md` graft snippet keeps naming the **stable** tag throughout. An rc is
+for the person running UAT, not for anyone starting a project.
+
+### 8. Run the tag-dependent UAT cases against the candidate
+
+Clone the rc tag and work the cases marked *needs a published tag*. This is the step that
+was, until now, impossible to do before releasing.
+
+- **All good** → go to step 9.
+- **Something is wrong** → fix it on a new branch, merge, and cut `-rc.2`. The rc
+  tags stay in the repository as an honest record of what was tried; they cost
+  nothing and deleting them would only obscure the history.
+
+Record `Last agent run` for what was executed; **`Last passed` stays for the
+person who looked.**
+
+### 9. Tag the release
+
+```bash
+git tag -a v<X.Y.Z> -m "v<X.Y.Z>" <the same commit the passing rc points at>
 git push origin v<X.Y.Z>
 ```
 
-Tag after the merge, on `main`, never on the branch. The tag is what
+Tag on `main`, never on a branch, and on **the exact commit the passing candidate
+pointed at** — otherwise you have released something no one ran UAT against, and
+the candidate proved nothing.
+
+The tag is what
 [the graft instructions](../README.md#grafting-a-project-from-stock) clone, so a
-missing or misplaced tag breaks new projects rather than existing ones — which
-makes it a failure nobody in the repo will notice.
+missing or misplaced tag breaks new projects rather than existing ones — a
+failure nobody already in the repository will ever notice.
 
-### 8. Run the post-release UAT cases
-
-Now that the tag exists, run the cases that need it and record `Last passed`.
-This is the one step that is legitimately *after* the PR, because it verifies the
-release rather than the change.
-
-### 9. Push the migration outward
+### 10. Push the migration outward
 
 Every entry in the CHANGELOG is work waiting to happen in every grafted project.
 Read each project's recorded `stock-version` in its `pyproject.toml`, read this

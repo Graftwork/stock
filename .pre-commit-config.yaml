@@ -18,6 +18,16 @@ repos:
         args: [--fix]
       - id: ruff-format
 
+  # Credentials are the half of "context is not content" a machine can catch.
+  # The other half — a person's name, condition, or address in a requirement —
+  # is a review policy, declared as a gap in pyproject.toml. No baseline file:
+  # the repo passes clean without one, and a project adds it the day it gets its
+  # first false positive. See openspec/specs/foundation/spec.md.
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+
   - repo: local
     hooks:
       # The review-layer contract, enforced before a commit rather than after.
