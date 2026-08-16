@@ -1,7 +1,7 @@
 # ADR 0005: Untestable scenarios are declared, with a written reason
 
 - **Status:** accepted
-- **Date:** 2026-08-14
+- **Date:** 2026-08-16
 
 ## Context
 

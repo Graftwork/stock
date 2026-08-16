@@ -50,11 +50,26 @@ A problem you have noticed but not designed needs somewhere to live that isn't a
 issue tracker nobody reads. In OpenSpec the only primitive is a change, so the
 convention is a change with a `proposal.md` and nothing else.
 
-**The cost, stated plainly: `openspec validate` will call it invalid ("no deltas
-found") for as long as it stays a stub.** There is no "intentionally incomplete"
-state — validation is binary. So read `openspec status` (`1/4 artifacts`) for
-progress, and treat `validate` as a completeness measure rather than a health
-check.
+**The cost, stated plainly: `openspec validate` will call it invalid for as long
+as it stays a stub.** There is no "intentionally incomplete" state — validation is
+binary. Measured against the stub in this repo:
+
+```
+$ openspec validate version-string-consistency          # exit 1
+Change 'version-string-consistency' has issues
+✗ [ERROR] file: Change must have at least one delta. No deltas found.
+
+$ openspec status --change version-string-consistency   # exit 0
+Progress: 1/4 artifacts complete
+[x] proposal
+[ ] design
+[ ] specs
+[-] tasks (blocked by: design, specs)
+```
+
+So read `status` for progress, and treat `validate` as a completeness measure
+rather than a health check. Do not wire `validate` into CI unless you have
+decided that stubs are banned.
 
 Stubs pay for themselves when they carry research. A stub that already holds the
 measurements and the dead ends gives `/opsx:propose` something to build on
@@ -73,8 +88,14 @@ in the imperative, addressed to whoever tries next:
 > first working out how to keep the mating profile intact — that is precisely
 > what went wrong last time.
 
-A paragraph like that is worth more than the branch you deleted. The proposal
-template has `## Background` and `## Supersedes` sections waiting for it.
+A paragraph like that is worth more than the branch you deleted.
+
+The stock OpenSpec proposal template has no slot for this — it is `## Why`,
+`## What Changes`, `## Capabilities`, `## Impact`. Rather than fork the template,
+Stock adds a proposal rule in `openspec/config.yaml` telling the agent to write a
+`## Background` section carrying the reasoning forward whenever a change replaces
+an abandoned one. Rules are the supported hook; an edited template would be
+overwritten the next time OpenSpec regenerates.
 
 ### Validate before you specify
 
@@ -209,6 +230,12 @@ Knowing these stops you assuming you have misunderstood something.
 - **Validation is binary.** No "intentionally incomplete" state.
 - **Renaming a change is manual** — directory, branch, and every cross-reference,
   by hand.
+- **The change argument is a flag on some commands and positional on others.**
+  `status --change <name>` and `instructions <artifact> --change <name>`, but
+  `validate <name>`. Getting it wrong on `validate` prints
+  `error: unknown option '--change'` **and still exits 0**, so a script that
+  trusts the exit code will read a typo as a pass. Verified against
+  `@fission-ai/openspec@1.6.0`.
 - **Relationships between changes are prose.** Supersedes and depends-on are not
   queryable, which is why learnings must be transcribed forward by hand.
 

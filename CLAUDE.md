@@ -33,6 +33,7 @@ speculative; a grafted project adds its own package alongside.
 - `tests/` — the suite, including tests of the guard itself
 - `WORKFLOW.md` — how changes are run: the loop, the conventions, OpenSpec's rough edges
 - `docs/UAT.md` — the checks that need human senses, and when they run
+- `docs/RELEASING.md` — how a change to Stock itself gets out: route, version, tag, re-sync
 - `docs/decisions/` — ADRs recording deliberate choices
 - `mise.toml` — pinned toolchain and task entry points
 
@@ -73,6 +74,14 @@ gets an ADR in `docs/decisions/`.
 **Every change here is a migration for grafted projects.** Log it in
 `CHANGELOG.md` so "migrate project Y to Stock vX" is a reviewable batch of small
 PRs rather than an archaeology exercise.
+
+**Changes to Stock take one of two routes.** Anything touching
+`openspec/specs/`, `scripts/`, or `tests/` runs as a full OpenSpec change — the
+specs are written by archiving, never edited by hand. Docs, CI, toolchain and
+permission changes go direct. Either way it reaches `main` by branch and PR,
+never a direct commit. The full sequence is in
+[`docs/RELEASING.md`](docs/RELEASING.md); the reasoning is
+[ADR 0007](docs/decisions/0007-how-stock-changes-itself.md).
 
 ## House rules
 

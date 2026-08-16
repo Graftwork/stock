@@ -24,6 +24,7 @@ plumbing.
 | [`scripts/check_spec_traceability.py`](scripts/check_spec_traceability.py) | The guard: every scenario is claimed by a test |
 | [`WORKFLOW.md`](WORKFLOW.md) | How changes are run — the loop, the conventions, the tool's rough edges |
 | [`docs/UAT.md`](docs/UAT.md) | The checks that need human senses, and when they run |
+| [`docs/RELEASING.md`](docs/RELEASING.md) | Branch to tag to re-sync — how a change gets out |
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Lint + test + coverage upload |
 | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | The same checks, before the commit lands |
 | [`.devcontainer/`](.devcontainer/) | Reproducibility layer, for when a project graduates |
@@ -103,6 +104,12 @@ everything in it changed an outcome on a real project.
 is one-way. An agent can run the commands and report what it saw; it can't mark
 the case passed. See [ADR 0006](docs/decisions/0006-uat-is-a-human-gate.md).
 
+[`docs/RELEASING.md`](docs/RELEASING.md) is how a change gets *out* — branch, the
+route it takes, the version decision, tag, and the re-sync PRs it owes every
+grafted project. Stock changes that touch specs or the guard run through the same
+OpenSpec flow Stock ships; docs and CI fixes go direct. See
+[ADR 0007](docs/decisions/0007-how-stock-changes-itself.md).
+
 ## Turning on the coverage badge
 
 Coverage runs from day one, but the hosted badge needs one step: add a
@@ -130,7 +137,8 @@ Then:
    alongside it.
 2. **Keep `WORKFLOW.md` and `docs/decisions/`.** The ways of working and the
    foundation's rationale travel with the graft; the project's own ADRs start at
-   0007.
+   0008. Keep `docs/RELEASING.md` too, and replace its specifics — most projects
+   can drop the re-sync step and keep the rest.
 3. Rewrite `README.md`, `CHANGELOG.md`, and the "what this repo is" section of
    `CLAUDE.md` for the new project. Replace Stock's cases in `docs/UAT.md` with
    the project's own — keep the file and the case format.
