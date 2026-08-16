@@ -1,6 +1,6 @@
 # Graftwork Stock — pinned toolchain.
 # Every version here is explicit so a stamped project behaves the same on any
-# machine and in CI. See docs/decisions/0001-why-mise.md.
+# machine and in CI. See docs/decisions/stock-0001-why-mise.md.
 
 [tools]
 python = "3.13"
@@ -9,7 +9,7 @@ node = "26"
 
 [env]
 # OpenSpec is run through npx at a pinned version rather than installed as a
-# dependency. See docs/decisions/0002-why-openspec-via-npx.md.
+# dependency. See docs/decisions/stock-0002-why-openspec-via-npx.md.
 OPENSPEC_VERSION = "1.6.0"
 
 [tasks.install]
