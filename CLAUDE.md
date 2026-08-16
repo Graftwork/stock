@@ -88,6 +88,15 @@ never a direct commit. The full sequence is in
 The long form, with the reasoning, is in [`WORKFLOW.md`](WORKFLOW.md). These are
 the ones that bind you while you work.
 
+**Context is not content.** Detail someone gives you so you understand their
+problem is not thereby material for the artifacts. Write requirements as
+categories and rules — a named correspondent, not their name; a retention
+period, not whose records. When a specific genuinely has to appear for the
+requirement to mean anything, say which specific and confirm it before writing
+it down. Say what you abstracted, so the choice is visible and can be reversed.
+The window is the crossing from conversation into a file that will be committed;
+after the commit the cheapest honest remedy is rebuilding the repository.
+
 **Measure, don't derive — and say which you did.** Every number a decision rests
 on is *measured* (name the command that produced it), *derived* (show the
 derivation), or *recalled* (say so; treat it as unverified). A confidently stated

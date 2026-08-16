@@ -1,6 +1,6 @@
 [project]
 name = "graftwork-stock"
-version = "0.2.0"
+version = "0.3.0"
 description = "The rootstock for new projects — a versioned foundation you graft new work onto."
 requires-python = ">=3.13"
 dependencies = []
@@ -18,6 +18,8 @@ dev = [
 # docs/decisions/stock-0005-declared-gaps-in-traceability.md.
 unclaimed = [
     { scenario = "foundation/a-pull-request-carrying-ai-generated-code-names-the-agent-and-model", reason = "review policy; the suite cannot observe a pull request" },
+    { scenario = "foundation/personal-detail-supplied-as-context-stays-out-of-the-artifacts", reason = "review policy; no test can read a requirement and tell whether a named correspondent is a category or a real person" },
+    { scenario = "foundation/a-load-bearing-specific-is-confirmed-before-it-is-written-down", reason = "review policy; the confirmation happens in conversation, which the suite cannot observe" },
 ]
 
 [tool.pytest.ini_options]
