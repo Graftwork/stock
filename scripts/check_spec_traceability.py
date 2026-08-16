@@ -18,6 +18,20 @@ Tests claim a scenario with a pytest marker::
 Claims are found by parsing the test files' syntax tree, so this never imports
 or executes test code.
 
+Some scenarios genuinely cannot be claimed by a test — a review policy, or a
+promise about something outside the suite's reach. Those are declared in
+``pyproject.toml`` with the reason written down::
+
+    [tool.graftwork.traceability]
+    unclaimed = [
+        { scenario = "foundation/...", reason = "review policy, not runtime-checkable" },
+    ]
+
+The reason is mandatory, and the declaration is itself checked: an entry with no
+reason, an entry naming a scenario that does not exist, and an entry for a
+scenario a test now claims are all reported. "We cannot test this" stays honest
+only while it is written down and kept current.
+
 Run it directly (``python scripts/check_spec_traceability.py``) or let the test
 suite run it — both report the same thing.
 """
@@ -28,6 +42,8 @@ import argparse
 import ast
 import re
 import sys
+import tomllib
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -37,6 +53,7 @@ REQUIREMENT_HEADING = re.compile(r"^###\s+Requirement:\s*(.+?)\s*$")
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SPECS_DIR = REPO_ROOT / "openspec" / "specs"
 TESTS_DIR = REPO_ROOT / "tests"
+PYPROJECT = REPO_ROOT / "pyproject.toml"
 
 
 def slugify(title: str) -> str:
@@ -66,22 +83,40 @@ class Claim:
     line: int
 
 
+@dataclass(frozen=True)
+class Allowed:
+    """A scenario deliberately left unclaimed, and the written reason why."""
+
+    scenario_id: str
+    reason: str
+
+
 @dataclass
 class Report:
     """The result of checking claims against scenarios."""
 
     scenarios: list[Scenario] = field(default_factory=list)
     claims: list[Claim] = field(default_factory=list)
+    allowed: list[Allowed] = field(default_factory=list)
     unclaimed: list[Scenario] = field(default_factory=list)
     unknown: list[Claim] = field(default_factory=list)
+    unexplained: list[Allowed] = field(default_factory=list)
+    orphaned: list[Allowed] = field(default_factory=list)
+    redundant: list[Allowed] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
-        return not self.unclaimed and not self.unknown
+        return not (
+            self.unclaimed or self.unknown or self.unexplained or self.orphaned or self.redundant
+        )
 
     def summary(self) -> str:
-        claimed = len(self.scenarios) - len(self.unclaimed)
-        return f"{claimed}/{len(self.scenarios)} scenarios claimed by tests"
+        claimed_ids = {claim.scenario_id for claim in self.claims}
+        claimed = sum(1 for scenario in self.scenarios if scenario.id in claimed_ids)
+        line = f"{claimed}/{len(self.scenarios)} scenarios claimed by tests"
+        if self.allowed:
+            line += f", {len(self.allowed)} allowed without one"
+        return line
 
 
 def find_scenarios(specs_dir: Path = SPECS_DIR) -> list[Scenario]:
@@ -152,19 +187,59 @@ def find_claims(tests_dir: Path = TESTS_DIR) -> list[Claim]:
     return claims
 
 
-def check(specs_dir: Path = SPECS_DIR, tests_dir: Path = TESTS_DIR) -> Report:
-    """Check that scenarios and test claims line up in both directions."""
+def load_allowlist(pyproject: Path = PYPROJECT) -> list[Allowed]:
+    """Read the declared gaps from ``[tool.graftwork.traceability]``.
+
+    A project with no declarations — the state a fresh graft starts in — has no
+    table, and that is not an error.
+    """
+    if not pyproject.is_file():
+        return []
+
+    table = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    for key in ("tool", "graftwork", "traceability"):
+        table = table.get(key, {}) if isinstance(table, dict) else {}
+    entries = table.get("unclaimed", []) if isinstance(table, dict) else []
+
+    allowed: list[Allowed] = []
+    for position, entry in enumerate(entries, 1):
+        if not isinstance(entry, dict) or "scenario" not in entry:
+            raise ValueError(
+                f"{_display_path(pyproject)}: unclaimed[{position}] needs a `scenario` key "
+                "naming the scenario id, and a `reason` saying why no test claims it"
+            )
+        allowed.append(Allowed(str(entry["scenario"]), str(entry.get("reason", "")).strip()))
+    return allowed
+
+
+def check(
+    specs_dir: Path = SPECS_DIR,
+    tests_dir: Path = TESTS_DIR,
+    allowed: Sequence[Allowed] | None = None,
+) -> Report:
+    """Check that scenarios, test claims, and declared gaps all line up.
+
+    Passing ``allowed`` explicitly overrides the declarations in
+    ``pyproject.toml``; ``[]`` checks the specs on their own.
+    """
     scenarios = find_scenarios(specs_dir)
     claims = find_claims(tests_dir)
+    allowed = list(load_allowlist()) if allowed is None else list(allowed)
 
     claimed_ids = {claim.scenario_id for claim in claims}
     known_ids = {scenario.id for scenario in scenarios}
+    # An entry with no reason explains nothing, so it does not excuse anything.
+    excused_ids = {entry.scenario_id for entry in allowed if entry.reason}
 
     return Report(
         scenarios=scenarios,
         claims=claims,
-        unclaimed=[s for s in scenarios if s.id not in claimed_ids],
+        allowed=allowed,
+        unclaimed=[s for s in scenarios if s.id not in claimed_ids and s.id not in excused_ids],
         unknown=[c for c in claims if c.scenario_id not in known_ids],
+        unexplained=[a for a in allowed if not a.reason],
+        orphaned=[a for a in allowed if a.scenario_id not in known_ids],
+        redundant=[a for a in allowed if a.scenario_id in claimed_ids],
     )
 
 
@@ -199,6 +274,29 @@ def format_report(report: Report) -> str:
             lines.append("    fix: correct the id, or write the scenario in the spec")
         lines.append("")
 
+    if report.unexplained:
+        lines.append("Scenarios allowed to go unclaimed with no reason given:")
+        for entry in report.unexplained:
+            lines.append(f"  {entry.scenario_id}")
+            lines.append("    fix: give it a `reason`, or delete the entry and write a test")
+        lines.append("")
+
+    if report.orphaned:
+        lines.append("Allowed scenarios that no spec declares:")
+        for entry in report.orphaned:
+            lines.append(f"  {entry.scenario_id}")
+            if entry.reason:
+                lines.append(f'    allowed because "{entry.reason}"')
+            lines.append("    fix: the scenario was renamed or removed — update or drop the entry")
+        lines.append("")
+
+    if report.redundant:
+        lines.append("Allowed scenarios that a test now claims:")
+        for entry in report.redundant:
+            lines.append(f"  {entry.scenario_id}")
+            lines.append("    fix: it is tested after all — drop the entry")
+        lines.append("")
+
     lines.append(report.summary())
     return "\n".join(lines)
 
@@ -207,9 +305,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--specs-dir", type=Path, default=SPECS_DIR)
     parser.add_argument("--tests-dir", type=Path, default=TESTS_DIR)
+    parser.add_argument("--pyproject", type=Path, default=PYPROJECT)
     args = parser.parse_args(argv)
 
-    report = check(args.specs_dir, args.tests_dir)
+    try:
+        allowed = load_allowlist(args.pyproject)
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 1
+
+    report = check(args.specs_dir, args.tests_dir, allowed)
     print(format_report(report))
     return 0 if report.ok else 1
 

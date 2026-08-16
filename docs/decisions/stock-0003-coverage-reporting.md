@@ -1,4 +1,4 @@
-# ADR 0003: Codecov from day one, but never blocking a fresh stamp
+# Stock ADR 0003: Codecov from day one, but never blocking a fresh stamp
 
 - **Status:** accepted
 - **Date:** 2026-07-25

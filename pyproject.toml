@@ -1,6 +1,6 @@
 [project]
 name = "graftwork-stock"
-version = "0.1.2"
+version = "0.2.0"
 description = "The rootstock for new projects — a versioned foundation you graft new work onto."
 requires-python = ">=3.13"
 dependencies = []
@@ -10,6 +10,14 @@ dev = [
     "pytest>=8.3",
     "pytest-cov>=6.0",
     "ruff>=0.9",
+]
+
+[tool.graftwork.traceability]
+# Scenarios deliberately left unclaimed by any test. A reason is mandatory, and
+# the guard checks these entries the same way it checks everything else — see
+# docs/decisions/stock-0005-declared-gaps-in-traceability.md.
+unclaimed = [
+    { scenario = "foundation/a-pull-request-carrying-ai-generated-code-names-the-agent-and-model", reason = "review policy; the suite cannot observe a pull request" },
 ]
 
 [tool.pytest.ini_options]

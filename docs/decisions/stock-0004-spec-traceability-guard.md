@@ -1,4 +1,4 @@
-# ADR 0004: Tests claim scenarios with a pytest marker
+# Stock ADR 0004: Tests claim scenarios with a pytest marker
 
 - **Status:** accepted
 - **Date:** 2026-07-25
