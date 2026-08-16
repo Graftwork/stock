@@ -9,11 +9,13 @@ stale while the suite stays green.
 The archive is one-way, and a PR is the wrong place to discover the concept was
 wrong. See [Ways of working](../WORKFLOW.md#uat-is-a-gate-and-it-comes-before-the-pr).
 
-The one exception is a case marked **post-release**, which verifies the release
-itself and therefore cannot run until the tag exists. Those run at step 8 of
-[the release sequence](RELEASING.md#8-run-the-post-release-uat-cases). A case is
-post-release only if it genuinely cannot be checked earlier — it is not a way to
-defer an awkward case past the gate.
+The one exception is a case marked **needs a published tag**, which verifies the
+release itself and so cannot run until a tag exists. Those run against a release
+**candidate** — `vX.Y.Z-rc.N` — at
+[step 8 of the release sequence](RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate),
+which is what lets them happen before the release rather than after it. A case
+earns this marking only if it genuinely cannot be checked earlier; it is not a
+way to defer an awkward case past the gate.
 
 An agent may run the commands and report what it saw. It may not mark a case
 passed — that is the whole point of the gate.
@@ -120,7 +122,7 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
 - **Last passed:** never — this is the case an agent is least able to close,
   since it cannot know which details are sensitive to you.
 
-### 5. The published tag is actually graftable — *post-release*
+### 5. The published tag is actually graftable — *needs a published tag*
 
 Case 1 rehearses this against the working tree. This is the real thing, and it is
 the only check that catches a tag pushed to the wrong commit, a tag never pushed,
@@ -129,13 +131,18 @@ or a file that is gitignored in a way nobody noticed.
 - **Command:**
 
   ```bash
-  git clone --branch v<X.Y.Z> --depth 1 git@github.com:Graftwork/stock.git /tmp/graft-real
+  # against the release candidate, before the stable tag exists
+  git clone --branch v<X.Y.Z>-rc.<N> --depth 1 git@github.com:Graftwork/stock.git /tmp/graft-real
   rm -rf /tmp/graft-real/.git
   cd /tmp/graft-real && mise trust && mise install && uv sync && mise run check
   ```
 
-- **Expect:** green, and `pyproject.toml` reads `version = "<X.Y.Z>"` — the tag
-  and the file agree. Check the README's own graft snippet names this tag too.
+- **Expect:** green, and `pyproject.toml` reads `version = "<X.Y.Z>"` — the
+  candidate and the file agree on the version being released. Check the README's
+  graft snippet names the **stable** tag, not the candidate.
+
+  If this passes, the stable tag goes on the exact commit the candidate points
+  at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
 - **Last agent run:** never — blocked; pushing a tag returns HTTP 403 for this
   session's credentials.
 - **Last passed:** never

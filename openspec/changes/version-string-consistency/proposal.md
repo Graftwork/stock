@@ -30,7 +30,7 @@ bumping them would be the bug:
 | `README.md` | 10 | `**Version 0.2.0.**` |
 | `README.md` | 119 | graft clone `--branch v0.2.0` |
 | `README.md` | 141 | `stock-version = "0.2.0"` in the recorded graft |
-| `docs/UAT.md` | — | the post-release tag case's `Last passed` note (case 5 as of v0.3.0; cited by name, since case numbers shift) |
+| `docs/UAT.md` | — | the tag-dependent graftability case's `Last passed` note (case 5 as of v0.3.0; cited by name, since case numbers shift) |
 
 Plus two *additions* to `CHANGELOG.md` — a new heading and a new link-footer
 entry — which are appended rather than edited, and the git tag itself.

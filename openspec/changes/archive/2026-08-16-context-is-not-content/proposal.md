@@ -68,6 +68,6 @@ None. This extends an existing capability.
 `.pre-commit-config.yaml` (the `detect-secrets` hook), `tests/`, `docs/UAT.md`,
 `CLAUDE.md`, `WORKFLOW.md`, `CHANGELOG.md`.
 
-Under [`docs/RELEASING.md`](../../../docs/RELEASING.md) this touches
+Under [`docs/RELEASING.md`](../../../../docs/RELEASING.md) this touches
 `openspec/specs/` and `tests/`, so it takes the full OpenSpec route. It is the
 first change to do so — v0.2.0 introduced the rule and could not follow it.

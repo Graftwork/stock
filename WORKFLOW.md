@@ -273,6 +273,12 @@ Knowing these stops you assuming you have misunderstood something.
 - **Validation is binary.** No "intentionally incomplete" state.
 - **Renaming a change is manual** — directory, branch, and every cross-reference,
   by hand.
+- **`archive` moves the change a directory deeper and does not rewrite its
+  relative links.** A change at `openspec/changes/<name>/` linking to
+  `../../../docs/…` lands at `openspec/changes/archive/<date>-<name>/`, where
+  that path is one `../` short and every such link is silently dead. Measured on
+  a real archive in this repo: 2 files, 3 links. Check links after archiving, or
+  prefer repository-root-relative references in change artifacts.
 - **Nothing may reference a scenario id until the change is archived.** A
   scenario lives in the change's delta until `openspec archive` writes it into
   `openspec/specs/`, so a test marker or a declared gap naming it fails the

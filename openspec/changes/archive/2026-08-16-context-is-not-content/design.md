@@ -70,7 +70,7 @@ Note that `git ls-remote` orders lexicographically; the first attempt at this
 number was wrong for exactly that reason, and `sort -V` is what corrected it.
 
 **Behaviour verified, both directions**, because a guard that cannot fail is not
-a guard ([Stock ADR 0004](../../../docs/decisions/stock-0004-spec-traceability-guard.md)):
+a guard ([Stock ADR 0004](../../../../docs/decisions/stock-0004-spec-traceability-guard.md)):
 
 ```
 $ uvx pre-commit run detect-secrets --all-files
@@ -102,7 +102,7 @@ them. It is a written claim, reviewable, that no test could keep these promises 
 and the guard checks the claim itself: a reason is mandatory, a declaration
 naming a scenario that no longer exists fails, and a declaration for a gap a test
 has since closed fails
-([Stock ADR 0005](../../../docs/decisions/stock-0005-declared-gaps-in-traceability.md)).
+([Stock ADR 0005](../../../../docs/decisions/stock-0005-declared-gaps-in-traceability.md)).
 
 ## Alternatives considered
 

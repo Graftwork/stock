@@ -46,11 +46,13 @@ project that adopts neither stays green.
   must run **before the commit** rather than before the PR, for the reason above.
 - **House rule in `CLAUDE.md`** and the long-form convention in `WORKFLOW.md`,
   including the pipeline diagram showing where the window closes.
-- **Two more of OpenSpec's rough edges**, both hit while making this change:
+- **Three more of OpenSpec's rough edges**, all hit while making this change:
   nothing may reference a scenario id until the change is archived (there is no
   `sync` command to write main specs early, so the archive has to be ordered
-  *ahead* of any claiming test or declared gap); and `validate --change <name>`
-  prints `error: unknown option` while exiting 0.
+  *ahead* of any claiming test or declared gap); `archive` moves a change one
+  directory deeper without rewriting its relative links, silently breaking every
+  `../../../` reference in its artifacts; and `validate --change <name>` prints
+  `error: unknown option` while exiting 0.
 
 ### Changed
 
@@ -67,6 +69,21 @@ project that adopts neither stays green.
   green and nothing had been reviewed — the exact failure UAT exists to prevent,
   shipped inside the file that forbids it. All `Last passed` dates are reset to
   `never` pending a human read.
+
+- **Release candidates.** `docs/RELEASING.md` gains a step: after merge, cut
+  `vX.Y.Z-rc.N` and run the tag-dependent UAT cases against *that*, before the
+  stable tag exists. This closes a circle the v0.2.0 process could not: those
+  cases need a real, cloneable tag, so they could only run after the release was
+  already made — and a stable tag that turns out to be wrong cannot be moved,
+  because someone may already have grafted from it. A candidate is real enough to
+  clone and carries no promise, so a failure costs an `-rc.2` rather than a bad
+  release. Cases previously marked *post-release* are now marked *needs a
+  published tag*, since they no longer happen after the release.
+- **A backlog stub** at `openspec/changes/fresh-graft-check-belongs-in-ci/`. UAT
+  case 1 is fully machine-judgeable — its `Expect` is three exit codes — and by
+  `docs/UAT.md`'s own admission rule it should be a CI job. A UAT list padded
+  with mechanical checks trains the reader to skim, and the cases either side of
+  it are the ones that must not be skimmed.
 
 ### Notes
 
