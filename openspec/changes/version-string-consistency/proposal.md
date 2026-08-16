@@ -39,9 +39,9 @@ entry — which are appended rather than edited, and the git tag itself.
 
 | File | Why it is permanent |
 | --- | --- |
-| `docs/decisions/0007-...md` ×4 | ADR text recording what v0.2.0 specifically did |
+| `docs/decisions/stock-0007-...md` ×4 | ADR text recording what v0.2.0 specifically did |
 | `docs/RELEASING.md` ×2 | the cutover statement — "this rule starts at v0.2.0" |
-| `docs/RELEASING.md` ×1 | note that count-spatula earned the v0.2.0 conventions |
+| `docs/RELEASING.md` ×1 | note recording where the v0.2.0 conventions were earned |
 
 A naive find-and-replace across the repo therefore *corrupts the record* while
 appearing to do the release correctly. That is a worse failure than the one this

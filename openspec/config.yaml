@@ -32,7 +32,7 @@ rules:
     - State the provenance of any load-bearing number - measured (name the
       command), derived (show it), or recalled (say so).
   tasks:
-    # See docs/UAT.md and ADR 0006.
+    # See docs/UAT.md and Stock ADR 0006.
     - If the change produces output a test cannot fully judge, include a task to
       regenerate the artifacts and look at them, ordered before the archive step
       and before any PR.

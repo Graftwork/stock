@@ -1,11 +1,11 @@
-# ADR 0005: Untestable scenarios are declared, with a written reason
+# Stock ADR 0005: Untestable scenarios are declared, with a written reason
 
 - **Status:** accepted
 - **Date:** 2026-08-16
 
 ## Context
 
-[ADR 0004](0004-spec-traceability-guard.md) made every scenario need a claiming
+[Stock ADR 0004](stock-0004-spec-traceability-guard.md) made every scenario need a claiming
 test. Real projects then hit scenarios that genuinely have none: a review policy
 ("a PR carrying AI-generated code names the model"), a licensing rule, a promise
 about something outside the process the suite runs in.

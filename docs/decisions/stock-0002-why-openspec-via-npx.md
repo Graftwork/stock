@@ -1,4 +1,4 @@
-# ADR 0002: OpenSpec runs through npx at a pinned version
+# Stock ADR 0002: OpenSpec runs through npx at a pinned version
 
 - **Status:** accepted
 - **Date:** 2026-07-25

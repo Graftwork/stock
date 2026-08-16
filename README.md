@@ -28,7 +28,7 @@ plumbing.
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Lint + test + coverage upload |
 | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | The same checks, before the commit lands |
 | [`.devcontainer/`](.devcontainer/) | Reproducibility layer, for when a project graduates |
-| [`docs/decisions/`](docs/decisions/) | ADRs — which choices were deliberate |
+| [`docs/decisions/`](docs/decisions/) | ADRs — which choices were deliberate. Stock's carry a `stock-` prefix; yours start at 0001 |
 | [`CLAUDE.md`](CLAUDE.md) | Commands, conventions, house rules for Claude Code |
 
 ## Getting started
@@ -73,7 +73,7 @@ Scenarios with no test claiming them:
 It runs three ways — standalone, as a pre-commit hook, and as a test in the suite
 — so the link between what was promised and what is checked can't quietly rot.
 The guard is itself tested against known-bad input, because a guard that can't
-fail isn't a guard. See [ADR 0004](docs/decisions/0004-spec-traceability-guard.md).
+fail isn't a guard. See [Stock ADR 0004](docs/decisions/stock-0004-spec-traceability-guard.md).
 
 Some promises genuinely can't be kept by a test — a review policy, something the
 suite can't observe. Those are declared, with the reason written down:
@@ -89,7 +89,7 @@ The reason is mandatory, and the declarations are checked the same way everythin
 else is — an entry with no reason, one naming a scenario that no longer exists,
 or one for a gap a test has since closed all turn the guard red. The distinction
 that matters isn't "tested or not", it's **"decided or not"**. See
-[ADR 0005](docs/decisions/0005-declared-gaps-in-traceability.md).
+[Stock ADR 0005](docs/decisions/stock-0005-declared-gaps-in-traceability.md).
 
 ## Working this way
 
@@ -102,13 +102,13 @@ everything in it changed an outcome on a real project.
 [`docs/UAT.md`](docs/UAT.md) holds the checks that need a person — each with a
 `Last passed` date, run before the PR and before the archive, because the archive
 is one-way. An agent can run the commands and report what it saw; it can't mark
-the case passed. See [ADR 0006](docs/decisions/0006-uat-is-a-human-gate.md).
+the case passed. See [Stock ADR 0006](docs/decisions/stock-0006-uat-is-a-human-gate.md).
 
 [`docs/RELEASING.md`](docs/RELEASING.md) is how a change gets *out* — branch, the
 route it takes, the version decision, tag, and the re-sync PRs it owes every
 grafted project. Stock changes that touch specs or the guard run through the same
 OpenSpec flow Stock ships; docs and CI fixes go direct. See
-[ADR 0007](docs/decisions/0007-how-stock-changes-itself.md).
+[Stock ADR 0007](docs/decisions/stock-0007-how-stock-changes-itself.md).
 
 ## Turning on the coverage badge
 
@@ -116,7 +116,7 @@ Coverage runs from day one, but the hosted badge needs one step: add a
 `CODECOV_TOKEN` secret to the repo and it goes live on the next push. Until then
 CI stays green and the real number is in the CI log — the upload is deliberately
 non-blocking so a fresh stamp is never red. See
-[ADR 0003](docs/decisions/0003-coverage-reporting.md).
+[Stock ADR 0003](docs/decisions/stock-0003-coverage-reporting.md).
 
 ## Grafting a project from Stock
 
@@ -136,9 +136,13 @@ Then:
    scenario exists, so removing it turns a fresh stamp red. Your capabilities go
    alongside it.
 2. **Keep `WORKFLOW.md` and `docs/decisions/`.** The ways of working and the
-   foundation's rationale travel with the graft; the project's own ADRs start at
-   0008. Keep `docs/RELEASING.md` too, and replace its specifics — most projects
-   can drop the re-sync step and keep the rest.
+   foundation's rationale travel with the graft. Stock's ADRs are the
+   `stock-NNNN-*.md` files — leave them named as they are and never renumber
+   them; **your own ADRs start at `0001`**, so the two sequences can't collide
+   and a re-sync never rewrites your history
+   ([Stock ADR 0008](docs/decisions/stock-0008-adr-numbering.md)). Keep
+   `docs/RELEASING.md` too, and replace its specifics — most projects can drop
+   the re-sync step and keep the rest.
 3. Rewrite `README.md`, `CHANGELOG.md`, and the "what this repo is" section of
    `CLAUDE.md` for the new project. Replace Stock's cases in `docs/UAT.md` with
    the project's own — keep the file and the case format.

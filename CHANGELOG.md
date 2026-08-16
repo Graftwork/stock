@@ -12,9 +12,8 @@ re-sync, and a **minor** bump means the migration is additive.
 ## [0.2.0] — 2026-08-16
 
 The ways of working, promoted from a real project. Everything here changed an
-outcome on [count-spatula](https://github.com/Bear-Prince/count-spatula) — a
-parametric model generator run this way for its whole life — rather than being
-added because it sounded sensible.
+outcome on a real project — a parametric model generator run this way for its
+whole life — rather than being added because it sounded sensible.
 
 The migration is additive: nothing existing changes behaviour, and a grafted
 project that adopts none of it stays green.
@@ -43,14 +42,14 @@ project that adopts none of it stays green.
   naming a scenario that no spec declares, and one for a gap a test has since
   closed all fail the guard. The distinction that matters is not "tested or not"
   but "decided or not".
-  ([ADR 0005](docs/decisions/0005-declared-gaps-in-traceability.md))
+  ([Stock ADR 0005](docs/decisions/stock-0005-declared-gaps-in-traceability.md))
 - **`docs/UAT.md`** — numbered cases with `Command` / `Expect` / `Last passed`,
   run before the PR and before the archive. An agent may run the commands and
   report what it saw; it may not mark a case passed. Ships with four real cases
   for Stock itself rather than an empty template, one of them marked
   *post-release* because it verifies the published tag and so genuinely cannot
   run before the release exists.
-  ([ADR 0006](docs/decisions/0006-uat-is-a-human-gate.md))
+  ([Stock ADR 0006](docs/decisions/stock-0006-uat-is-a-human-gate.md))
 - **House rules in `CLAUDE.md`** — the agent-facing half. Measure rather than
   derive and mark which you did; test an empirical premise before specifying on
   top of it; in-flight artifacts are editable and edits get reported; don't open
@@ -67,7 +66,7 @@ project that adopts none of it stays green.
   docs and CI go direct), the version decision, tag-after-merge, and the re-sync
   PRs each release owes every grafted project. A grafted project should keep the
   file and replace the specifics.
-  ([ADR 0007](docs/decisions/0007-how-stock-changes-itself.md))
+  ([Stock ADR 0007](docs/decisions/stock-0007-how-stock-changes-itself.md))
 - **Project context and artifact rules in `openspec/config.yaml`**, which was
   previously entirely commented out. The `proposal` rules ask for a
   `## Background` section carrying reasoning forward from a superseded change,
@@ -89,8 +88,28 @@ project that adopts none of it stays green.
   `orphaned`, and `redundant` alongside `unclaimed` and `unknown`, and the
   summary line accounts for declared gaps: `8/9 scenarios claimed by tests, 1
   allowed without one`.
+- **Stock's ADRs are renamed `stock-NNNN-<slug>.md`**, titled `# Stock ADR NNNN:`
+  and cited in prose as "Stock ADR 0004". A grafted project now numbers its own
+  ADRs from `0001` and never renumbers them — the two sequences share a directory
+  and cannot collide.
+
+  This replaces the old advice that a project's ADRs "start at the next free
+  number", which could not work: a project stamped when Stock had four ADRs
+  started at 0005, and this release adds Stock's own 0005, 0006 and 0007. The
+  collision was measured on a real graft — three colliding filenames and 45
+  cross-references across 11 files that a renumber would have to rewrite by hand,
+  recurring at every future release that adds an ADR. Since nothing outside Stock
+  cites Stock's ADR filenames, moving Stock's files instead costs almost nothing.
+  ([Stock ADR 0008](docs/decisions/stock-0008-adr-numbering.md))
+
+  **Re-syncers:** if you grafted before v0.2.0 and numbered your own ADRs from
+  0005, you do *not* need to renumber. Take the renamed `stock-*` files, keep
+  yours exactly as they are, and update any of your own prose that cited Stock's
+  ADRs by their old bare numbers.
 - Graft steps in `README.md` now say to keep `WORKFLOW.md` and to replace Stock's
-  UAT cases rather than the file. A grafted project's own ADRs now start at 0008.
+  UAT cases rather than the file.
+- The ADR template carries a comment explaining the two numbering sequences, so
+  the convention is visible at the moment someone copies it.
 - **Stock no longer commits to `main` directly.** Up to v0.1.2 every release was
   a direct commit — `main` is a linear run with no merge commits and the repo had
   never had a pull request. From v0.2.0 changes reach `main` by branch and PR,
@@ -106,7 +125,7 @@ project that adopts none of it stays green.
   the next regeneration. `CLAUDE.md` is loaded every session and carries it
   instead.
 - **v0.2.0 sits on the wrong side of its own rule.** It edits
-  `openspec/specs/foundation/spec.md` directly, which ADR 0007 forbids from
+  `openspec/specs/foundation/spec.md` directly, which Stock ADR 0007 forbids from
   v0.2.0 onward — it is the change that introduced the rule and could not have
   followed it. Retrofitting an archived change would fabricate a record of
   deliberation that never happened. The gap is deliberate and stays on the
@@ -150,7 +169,7 @@ Permission allowlist tightened. Grafted projects should apply this to their own
 
 ## [0.1.1] — 2026-08-12
 
-Fixes found by the first real graft ([sorting-office](https://github.com/Graftwork/sorting-office)).
+Fixes found by the first real graft.
 No code changed, so re-syncing is documentation-only.
 
 ### Fixed
@@ -182,21 +201,21 @@ The initial foundation.
 
 - **Pinned toolchain** via `mise.toml` — Python 3.13, uv 0.11.16, Node 26.
   Drives the local shell, CI, and the devcontainer from one source of truth.
-  ([ADR 0001](docs/decisions/0001-why-mise.md))
+  ([Stock ADR 0001](docs/decisions/stock-0001-why-mise.md))
 - **Python project config** in `pyproject.toml` — uv dependency groups, ruff
   (lint + format), pytest with coverage and `--strict-markers`.
 - **OpenSpec** initialised via the pinned `@fission-ai/openspec@1.6.0`, with
   Claude Code skills and `/opsx:*` commands.
-  ([ADR 0002](docs/decisions/0002-why-openspec-via-npx.md))
+  ([Stock ADR 0002](docs/decisions/stock-0002-why-openspec-via-npx.md))
 - **Spec traceability guard** (`scripts/check_spec_traceability.py`) — checks
   that every scenario is claimed by a test and that every claim names a real
   scenario. Runs standalone, as a pre-commit hook, and inside the test suite.
-  ([ADR 0004](docs/decisions/0004-spec-traceability-guard.md))
+  ([Stock ADR 0004](docs/decisions/stock-0004-spec-traceability-guard.md))
 - **`foundation` spec** — Stock's own promises, written as scenarios and claimed
   by tests, so the foundation is verified by the same mechanism it provides.
 - **CI** (`.github/workflows/ci.yml`) — lint, test, and a non-blocking Codecov
   upload so a fresh stamp is green before any secret exists.
-  ([ADR 0003](docs/decisions/0003-coverage-reporting.md))
+  ([Stock ADR 0003](docs/decisions/stock-0003-coverage-reporting.md))
 - **pre-commit config** — whitespace/YAML/TOML hygiene, ruff, and the
   traceability guard.
 - **Devcontainer** layered on mise, for when a project graduates from experiment.

@@ -1,4 +1,4 @@
-# ADR 0006: UAT is a human gate, ordered before the PR and the archive
+# Stock ADR 0006: UAT is a human gate, ordered before the PR and the archive
 
 - **Status:** accepted
 - **Date:** 2026-08-16

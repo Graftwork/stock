@@ -1,4 +1,4 @@
-# ADR 0001: mise pins the toolchain, devcontainer is the reproducibility layer
+# Stock ADR 0001: mise pins the toolchain, devcontainer is the reproducibility layer
 
 - **Status:** accepted
 - **Date:** 2026-07-25

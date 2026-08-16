@@ -1,4 +1,4 @@
-# ADR 0007: Stock runs its own change flow, for changes that touch promises
+# Stock ADR 0007: Stock runs its own change flow, for changes that touch promises
 
 - **Status:** accepted
 - **Date:** 2026-08-16

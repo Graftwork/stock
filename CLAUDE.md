@@ -56,7 +56,7 @@ cannot observe — is declared in `pyproject.toml` under
 `[tool.graftwork.traceability]` with a written reason. The reason is mandatory
 and the declarations are checked too: no reason, a scenario that no longer
 exists, or a gap a test has since closed all fail the guard. See
-[ADR 0005](docs/decisions/0005-declared-gaps-in-traceability.md).
+[Stock ADR 0005](docs/decisions/stock-0005-declared-gaps-in-traceability.md).
 
 **Never weaken the guard to make it pass.** If the guard fails, either the test
 is missing or the spec is wrong. Both are real findings. Declaring a gap is not a
@@ -81,7 +81,7 @@ specs are written by archiving, never edited by hand. Docs, CI, toolchain and
 permission changes go direct. Either way it reaches `main` by branch and PR,
 never a direct commit. The full sequence is in
 [`docs/RELEASING.md`](docs/RELEASING.md); the reasoning is
-[ADR 0007](docs/decisions/0007-how-stock-changes-itself.md).
+[Stock ADR 0007](docs/decisions/stock-0007-how-stock-changes-itself.md).
 
 ## House rules
 
