@@ -9,6 +9,27 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [Unreleased]
+
+### Added
+
+- **`.claude/setup.sh` and [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).**
+  Claude Code cloud sessions don't have `mise`, and — measured, not assumed —
+  nothing a session can run installs it: `mise.run` returns 403 through the
+  Trusted allowlist, `uv tool install mise` fails (not on PyPI), and a direct
+  GitHub release-asset fetch is blocked because `jdx/mise` isn't attached to
+  the session. This is a mechanical consequence of Stock's own choice to
+  standardize on mise ([Stock ADR 0001](docs/decisions/stock-0001-why-mise.md)),
+  so every grafted project inherits it, and no amount of committed code
+  removes the fix's one manual step — creating a Custom cloud environment and
+  pasting the script in is a human, per-account action. `README.md` and
+  `CLAUDE.md` both point here so a session hitting `mise: command not found`
+  doesn't spend a turn rediscovering it.
+
+  Found and independently verified from a live cloud session while grafting
+  and rebuilding [sorting-office](https://github.com/Graftwork/sorting-office)
+  — the same project that found the v0.1.1 and `openspec/changes/` fixes.
+
 ## [0.3.0] — 2026-08-16
 
 **Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
