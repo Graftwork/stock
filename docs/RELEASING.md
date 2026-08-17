@@ -148,6 +148,32 @@ counts as this step too; a bug it finds is exactly what the step exists to catch
   Confusing the two means the version that eventually ships may never have
   actually been tested — the failure this whole step exists to prevent.
 
+```mermaid
+flowchart LR
+    subgraph S["Graftwork/stock — one continuous git history"]
+        A["merge to main"] --> B["tag vX.Y.Z-rc.1<br/>candidate, no promise yet"]
+        B -->|"fix: a defect<br/>this candidate's UAT found"| C["tag vX.Y.Z-rc.2"]
+        C --> D["tag vX.Y.Z<br/>stable — grafts clone this"]
+        C -.->|"independent work,<br/>unrelated to this candidate"| E["Unreleased —<br/>joins the next version"]
+    end
+
+    subgraph G["a grafted project — a new, separate history"]
+        F["cloned at the tag"] --> H["built and used for real"] --> I["a defect surfaces"]
+    end
+
+    B -.->|"clone --branch vX.Y.Z-rc.1<br/>then rm -rf .git — a copy, not a link"| F
+    I ==>|"reported back as<br/>a defect in the candidate"| B
+
+    classDef accent fill:#1e6e63,stroke:#1e6e63,color:#fff
+    class I,C accent
+```
+
+Stock and a grafted project are separate git histories from the moment of the
+clone — nothing flows back on its own. A finding from a graft returns only as a
+manual report, and this step is the fork in what happens to it: the highlighted
+path is a defect in the exact candidate under test, folded back into the same
+release; the plain path is everything else, which waits for the next one.
+
 Record `Last agent run` for what was executed; **`Last passed` stays for the
 person who looked.**
 
