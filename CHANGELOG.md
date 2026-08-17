@@ -9,6 +9,25 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [Unreleased]
+
+Not part of v0.3.0. `v0.3.0-rc.1` and `main` were the same commit when this
+landed, and the release is tagged on the commit the candidate points at — so
+anything merged after the candidate belongs to the next version, not this one.
+
+### Fixed
+
+- **The graft instructions said nothing about `openspec/changes/`.** Found by
+  the first real graft attempted under v0.3.0-rc.1: Stock's own backlog stubs
+  and archived changes came across by default, because step 1 covers
+  `openspec/specs/` and is silent on `openspec/changes/`. Left in place, an
+  agent reading `openspec list` in the grafted project sees Stock's TODOs as if
+  they were its own, and `CLAUDE.md`'s "don't open a second change over the
+  same ground" rule then treats a stale Stock stub as ground already covered —
+  actively steering the agent away from real work. The graft steps now have a
+  step 2: remove `openspec/changes/`; `openspec new change` recreates it (and
+  `archive/`) the first time it's needed, verified against the pinned CLI.
+
 ## [0.3.0] — 2026-08-16
 
 **Context is not content.** Learned the expensive way: the first project grafted
