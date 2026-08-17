@@ -120,12 +120,33 @@ for the person running UAT, not for anyone starting a project.
 ### 8. Run the tag-dependent UAT cases against the candidate
 
 Clone the rc tag and work the cases marked *needs a published tag*. This is the step that
-was, until now, impossible to do before releasing.
+was, until now, impossible to do before releasing. A real graft attempted from
+the candidate — by a person or an agent, not necessarily as a formal UAT run —
+counts as this step too; a bug it finds is exactly what the step exists to catch.
 
 - **All good** → go to step 9.
 - **Something is wrong** → fix it on a new branch, merge, and cut `-rc.2`. The rc
   tags stay in the repository as an honest record of what was tried; they cost
   nothing and deleting them would only obscure the history.
+
+  **The fix belongs to *this* version, not the next one.** Amend the existing
+  `[X.Y.Z]` CHANGELOG entry rather than opening a new `[Unreleased]` section —
+  the entry describes what the release will contain once a candidate finally
+  passes, and this release does not yet exist to have shipped without the fix.
+  `pyproject.toml` stays at the version being released; only the tag suffix
+  changes, `-rc.1` to `-rc.2`.
+
+  This is easy to get backwards. A defect a candidate's own UAT surfaces is not
+  the same thing as unrelated new work that happens to land while a candidate
+  is outstanding — only the second kind is genuinely `[Unreleased]`:
+
+  | | Defect UAT found in the candidate | Independent new work |
+  | --- | --- | --- |
+  | Belongs to | This version — merge, `-rc.2` | The next version |
+  | CHANGELOG | Amend the existing `[X.Y.Z]` entry | New `[Unreleased]` section |
+
+  Confusing the two means the version that eventually ships may never have
+  actually been tested — the failure this whole step exists to prevent.
 
 Record `Last agent run` for what was executed; **`Last passed` stays for the
 person who looked.**
