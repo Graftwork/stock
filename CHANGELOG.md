@@ -9,6 +9,22 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [Unreleased]
+
+Not part of v0.3.0. `v0.3.0-rc.1` and `main` were the same commit when this
+landed, and the release is tagged on the commit the candidate points at — so
+anything merged after the candidate belongs to the next version, not this one.
+
+### Added
+
+- **[Stock ADR 0009](docs/decisions/stock-0009-not-a-template-repo.md)** — Stock
+  is deliberately *not* a GitHub template repository. Templates copy a branch,
+  never a tag, and start the new repository with a single commit carrying no
+  tags or releases; Stock's whole re-sync contract is tag-based, so a template
+  graft would have no honest `stock-version` to record. Recorded because
+  switching the setting on looks like an obvious improvement and is a one-click
+  action. The ADR names the condition under which it should be revisited.
+
 ## [0.3.0] — 2026-08-16
 
 **Context is not content.** Learned the expensive way: the first project grafted

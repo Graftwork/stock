@@ -141,6 +141,13 @@ Tag on `main`, never on a branch, and on **the exact commit the passing candidat
 pointed at** — otherwise you have released something no one ran UAT against, and
 the candidate proved nothing.
 
+**Anything merged while a candidate is outstanding belongs to the next version.**
+`main` moves on; the tag does not follow it. Put that work under
+`## [Unreleased]` in the CHANGELOG and leave the version in `pyproject.toml`
+alone until the release after this one. Folding it into the current entry would
+describe a release that does not contain it — and the CHANGELOG is the migration
+instruction someone will follow literally.
+
 The tag is what
 [the graft instructions](../README.md#grafting-a-project-from-stock) clone, so a
 missing or misplaced tag breaks new projects rather than existing ones — a
