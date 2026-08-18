@@ -11,6 +11,10 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
+Nothing here is part of `v0.3.0`, which is already tagged and released. Each
+of these landed on `main` after the release candidate it was built against —
+the tag doesn't follow `main`, so this is all next-version material.
+
 ### Added
 
 - **`.claude/skills/stock-resync-in-flight-graft/`** and
@@ -35,6 +39,14 @@ re-sync, and a **minor** bump means the migration is additive.
   per `RELEASING.md` step 10, still has no tooling behind it. That stays a
   backlog item on purpose: one proven narrow case is real evidence for
   *this* situation, not for the general one.
+
+- **[Stock ADR 0009](docs/decisions/stock-0009-not-a-template-repo.md)** — Stock
+  is deliberately *not* a GitHub template repository. Templates copy a branch,
+  never a tag, and start the new repository with a single commit carrying no
+  tags or releases; Stock's whole re-sync contract is tag-based, so a template
+  graft would have no honest `stock-version` to record. Recorded because
+  switching the setting on looks like an obvious improvement and is a one-click
+  action. The ADR names the condition under which it should be revisited.
 
 ## [0.3.0] — 2026-08-16
 
