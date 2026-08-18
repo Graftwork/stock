@@ -11,11 +11,34 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-Not part of v0.3.0. `v0.3.0-rc.1` and `main` were the same commit when this
-landed, and the release is tagged on the commit the candidate points at — so
-anything merged after the candidate belongs to the next version, not this one.
+Nothing here is part of `v0.3.0`, which is already tagged and released. Each
+of these landed on `main` after the release candidate it was built against —
+the tag doesn't follow `main`, so this is all next-version material.
 
 ### Added
+
+- **`.claude/skills/stock-resync-in-flight-graft/`** and
+  [Stock ADR 0011](docs/decisions/stock-0011-resync-in-flight-graft-skill.md).
+  Catches up a grafted project's `main` (kept as a rolling mirror of a Stock
+  tag) and its in-progress work branch to a newer Stock tag, without a raw
+  `git merge` mangling files the project has already rewritten for its own
+  identity — untouched files get a straight patch, verified with tree hashes
+  rather than assumed; already-rewritten files are read and decided on by
+  hand, one at a time.
+
+  Written and proven on [sorting-office](https://github.com/Graftwork/sorting-office)
+  — the same project this CHANGELOG already credits for the v0.1.1,
+  `openspec/changes/`, and cloud-environment `mise` fixes — after Stock moved
+  from `v0.3.0-rc.1` to `v0.3.0-rc.2` while its first PR was still unmerged.
+  Renamed with the `stock-` prefix on the way in, matching the ADR-numbering
+  convention rather than introducing a second one; content otherwise
+  unchanged.
+
+  This does not attempt the general case — an already-settled, already-released
+  project reading Stock's CHANGELOG forward and applying entries by hand,
+  per `RELEASING.md` step 10, still has no tooling behind it. That stays a
+  backlog item on purpose: one proven narrow case is real evidence for
+  *this* situation, not for the general one.
 
 - **[Stock ADR 0009](docs/decisions/stock-0009-not-a-template-repo.md)** — Stock
   is deliberately *not* a GitHub template repository. Templates copy a branch,
@@ -26,6 +49,27 @@ anything merged after the candidate belongs to the next version, not this one.
   action. The ADR names the condition under which it should be revisited.
 
 ## [0.3.0] — 2026-08-16
+
+**Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
+graft attempted under it found the bug below — so per
+[`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
+the fix is folded into this same entry rather than filed separately, and the
+next tag is `v0.3.0-rc.2`, not a release. Nothing here is final until a
+candidate passes.
+
+### Fixed
+
+- **The graft instructions said nothing about `openspec/changes/`.** Stock's
+  own backlog stubs and archived changes came across into the grafted project
+  by default, because step 1 covers `openspec/specs/` and is silent on
+  `openspec/changes/`. Left in place, an agent reading `openspec list` in the
+  grafted project sees Stock's TODOs as if they were its own, and
+  `CLAUDE.md`'s "don't open a second change over the same ground" rule then
+  treats a stale Stock stub as ground already covered — actively steering the
+  agent away from real work, not just leaving noise behind. The graft steps
+  now have a step 2: remove `openspec/changes/`; `openspec new change`
+  recreates it (and `archive/`) the first time it's needed, verified against
+  the pinned CLI rather than assumed.
 
 **Context is not content.** Learned the expensive way: the first project grafted
 from Stock was torn down and rebuilt because personal detail supplied while
