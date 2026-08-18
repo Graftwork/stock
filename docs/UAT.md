@@ -143,9 +143,11 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
-- **Last agent run:** never — blocked; pushing a tag returns HTTP 403 for this
-  session's credentials.
-- **Last passed:** never
+- **Last agent run:** n/a — run and confirmed directly by a person this time,
+  not by an agent; the 403 that blocked an agent from pushing the tag never
+  blocked a person from doing it via the GitHub UI.
+- **Last passed:** 2026-08-18 — against `v0.3.0-rc.2`, confirmed by the person
+  who ran it.
 
 ---
 
