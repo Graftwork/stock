@@ -39,6 +39,11 @@ mise install && uv sync
 mise run check
 ```
 
+**On Claude Code cloud sessions, `mise` isn't there and can't install itself.**
+It needs a one-time, per-account manual step — see
+[`.claude/setup.sh`](.claude/setup.sh) and
+[Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).
+
 ## The verification layer
 
 This is the part that matters. A spec scenario is written in plain English:

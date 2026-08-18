@@ -23,6 +23,13 @@ mise run openspec -- list   # the pinned OpenSpec CLI
 uvx pre-commit run --all-files
 ```
 
+**If `mise: command not found`,** this is a Claude Code cloud session and mise
+genuinely cannot be installed from any command available here — don't spend a
+turn rediscovering that. It requires a one-time human step outside the repo;
+see [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).
+Until that step is done, run `uv sync`, `uv run pytest`, `uv run ruff check .`
+directly instead of through `mise run`.
+
 ## Architecture
 
 There is deliberately no `src/`. Stock carries the verification layer and nothing
