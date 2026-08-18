@@ -17,6 +17,23 @@ the tag doesn't follow `main`, so this is all next-version material.
 
 ### Added
 
+- **`.claude/setup.sh` and [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).**
+  Claude Code cloud sessions don't have `mise`, and — measured, not assumed —
+  nothing a session can run installs it: `mise.run` returns 403 through the
+  Trusted allowlist, `uv tool install mise` fails (not on PyPI), and a direct
+  GitHub release-asset fetch is blocked because `jdx/mise` isn't attached to
+  the session. This is a mechanical consequence of Stock's own choice to
+  standardize on mise ([Stock ADR 0001](docs/decisions/stock-0001-why-mise.md)),
+  so every grafted project inherits it, and no amount of committed code
+  removes the fix's one manual step — creating a Custom cloud environment and
+  pasting the script in is a human, per-account action. `README.md` and
+  `CLAUDE.md` both point here so a session hitting `mise: command not found`
+  doesn't spend a turn rediscovering it.
+
+  Found and independently verified from a live cloud session while grafting
+  and rebuilding [sorting-office](https://github.com/Graftwork/sorting-office)
+  — the same project that found the v0.1.1 and `openspec/changes/` fixes.
+
 - **`.claude/skills/stock-resync-in-flight-graft/`** and
   [Stock ADR 0011](docs/decisions/stock-0011-resync-in-flight-graft-skill.md).
   Catches up a grafted project's `main` (kept as a rolling mirror of a Stock
