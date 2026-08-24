@@ -27,8 +27,16 @@ uvx pre-commit run --all-files
 genuinely cannot be installed from any command available here — don't spend a
 turn rediscovering that. It requires a one-time human step outside the repo;
 see [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).
-Until that step is done, run `uv sync`, `uv run pytest`, `uv run ruff check .`
-directly instead of through `mise run`.
+
+**Even once `mise` is installed, `mise install` and every `mise run <task>`
+still fail in a Claude Code cloud session** — resolving the pinned
+python/uv versions needs GitHub release metadata that session's GitHub
+access doesn't cover. A `SessionStart` hook already works around this by
+running `uv python install`/`uv sync` directly; see
+[Stock ADR 0012](docs/decisions/stock-0012-uv-not-mise-run-on-claude-code-web.md).
+Either way, run `uv sync`, `uv run pytest`, `uv run ruff check .`,
+`uv run python scripts/check_spec_traceability.py` directly instead of
+through `mise run` in this environment.
 
 ## Architecture
 
