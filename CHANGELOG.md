@@ -57,6 +57,26 @@ the tag doesn't follow `main`, so this is all next-version material.
   backlog item on purpose: one proven narrow case is real evidence for
   *this* situation, not for the general one.
 
+- **`.claude/hooks/session-start.sh` and [Stock ADR 0012](docs/decisions/stock-0012-uv-not-mise-run-on-claude-code-web.md).**
+  Getting `mise` itself onto a Claude Code cloud session ([Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md))
+  doesn't make `mise install` work there: resolving the pinned python/uv
+  versions needs GitHub release metadata, and a cloud session's GitHub
+  access is scoped to the repositories attached to it — never `astral-sh/uv`
+  or the Python build repo for a grafted project. Measured directly,
+  `mise install` and every `mise run <task>` fail on this before the task
+  itself ever runs. A `SessionStart` hook now runs `uv python install
+  <version from mise.toml>` and `uv sync` instead — `uv` reaches the same
+  builds through a direct release-asset URL, which redirects to a CDN host
+  outside the restriction, where `mise`'s API lookup for the same version
+  does not. `CLAUDE.md` and `README.md` both say to use `uv run`/`npx`
+  directly instead of `mise run lint`/`test`/`trace` in this environment,
+  for the same reason.
+
+  Found and re-verified from a live cloud session while grafting and
+  rebuilding [sorting-office](https://github.com/Graftwork/sorting-office) —
+  the same project this CHANGELOG already credits for the v0.1.1,
+  `openspec/changes/`, cloud-environment `mise`, and resync-skill fixes.
+
 - **[Stock ADR 0009](docs/decisions/stock-0009-not-a-template-repo.md)** — Stock
   is deliberately *not* a GitHub template repository. Templates copy a branch,
   never a tag, and start the new repository with a single commit carrying no
