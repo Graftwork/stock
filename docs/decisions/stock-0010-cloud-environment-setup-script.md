@@ -2,6 +2,13 @@
 
 - **Status:** accepted
 - **Date:** 2026-08-17
+- **Corrected:** 2026-08-18 — the original script pinned `MISE_VERSION`.
+  Pasted into a real Custom environment by [sorting-office](
+  https://github.com/Graftwork/sorting-office), it failed. The pin, the
+  domain guidance, and the reasoning below are all updated to match what
+  was actually found — see the end of the Decision section. Nothing here
+  had shipped in a release yet when this was corrected, so it's fixed in
+  place rather than superseded by a new ADR.
 
 ## Context
 
@@ -46,10 +53,10 @@ a Custom environment's Setup Script field, and this ADR as where the reasoning
 and the manual step live. `README.md`/`CLAUDE.md` point here rather than
 restating it.
 
-The script installs mise to `/usr/local/bin`, pinned to a specific version,
-using variables mise's own installer documents (`MISE_INSTALL_PATH`,
-`MISE_VERSION`). Both choices were checked, not copied from the first thing
-that looked plausible:
+The script installs mise to `/usr/local/bin`, using variables mise's own
+installer documents (`MISE_INSTALL_PATH`, and originally `MISE_VERSION` too
+— see the correction below). Both remaining choices were checked, not copied
+from the first thing that looked plausible:
 
 - **`/usr/local/bin`, not the installer's default `~/.local/bin`.** Verified
   directly: a value written to `~/.bashrc` in one Bash tool call is invisible
@@ -58,9 +65,6 @@ that looked plausible:
   way. `/usr/local/bin` is already on `PATH` for every call, confirmed by
   writing an executable there and finding it from a separate call with no
   PATH or rc edit at all.
-- **Pinned, not floating.** Consistent with `mise.toml` pinning everything
-  mise itself manages — the binary that enforces those pins shouldn't be the
-  one unpinned thing in the chain.
 - **The env vars sit before `sh`, not before `curl`.** In a pipeline,
   `VAR=val cmd1 | cmd2` sets `VAR` only for `cmd1`. The install script runs
   as the `sh` process and reads its own environment, so the variables have to
@@ -75,12 +79,57 @@ anything. Rather than assume an ordering, the script does the one thing that
 is independent of it, and everything downstream happens the normal way, once
 `mise` exists on `PATH`.
 
-**What could not be verified.** `curl https://mise.run` returns 403 in every
-session available to check this from — the actual install, past that point,
-was never observed to complete. Everything about *why* it fails and what the
-fix has to look like is measured; whether the fixed script runs clean end to
-end once the domain is allowlisted is not, and is worth confirming the first
-time someone actually adds `mise.run` to a Custom environment.
+**Correction: no `MISE_VERSION` pin, and no GitHub in the domain list.**
+The original script pinned to a specific mise release, reasoning that the
+binary enforcing `mise.toml`'s pins shouldn't itself be the unpinned thing
+in the chain. That reasoning was wrong in a way this session had no way to
+catch — `curl https://mise.run` returned 403 in every session available to
+check from, so the pinned script was never actually run past that point.
+`sorting-office` pasted it into a real Custom environment with `mise.run`
+allowlisted, and it failed.
+
+The mechanism, read directly from mise's own installer source
+(`jdx/mise`, `packaging/standalone/install.envsubst`) rather than guessed at:
+
+```sh
+if [ "$version" != "$current_version" ] ...
+  tarball_url="https://github.com/jdx/mise/releases/download/..."
+else
+  tarball_url="https://mise.jdx.dev/..."
+```
+
+`$current_version` is whatever release was current when mise.run's
+currently-served script copy was generated, and it moves forward over time.
+A pin written today matches that copy today and stops matching the moment
+mise ships a new release — silently flipping the branch above to the
+**GitHub** path, which is exactly the release-asset download this ADR
+already ruled out: scoped to repositories attached to the session, and
+`jdx/mise` isn't one. The pinned script wasn't just untested past the first
+403 — it carried a second, independent failure mode behind that one, which
+only a real environment with `mise.run` actually reachable could surface.
+
+Leaving `MISE_VERSION` unset makes "requested equals current" true by
+construction, on every run, so the install always takes the `mise.jdx.dev`
+path and never touches GitHub. The domain requirement changes accordingly:
+**`mise.run` and `mise.jdx.dev`, not GitHub.**
+
+mise's own docs, quoted verbatim (`jdx/mise`, `docs/installing-mise.md`),
+argue against pinning the tool itself on separate grounds: *"Locking users
+to one mise version is like preventing `apt update` or `brew update` from
+refreshing package metadata: it can hide deprecation messages and cause bit
+rot with upstream integrations like aqua-registry... Projects and
+organizations should generally set a `min_version` when they need a newer
+mise feature instead of locking every user to a specific mise executable."*
+`mise.toml` doesn't currently set one; nothing in this repo needs a mise
+feature recent enough to warrant it yet.
+
+**What is and isn't verified now.** The installer mechanism above was read
+directly from mise's own source and docs, not inferred — that part is
+measured. Whether the corrected script completes cleanly end to end is
+`sorting-office`'s report, not something reproduced from a session here:
+`mise.run` still returns 403 in every session available to check this from,
+pinned or not, so no session that has touched this ADR has run the install
+past that point itself.
 
 ## Consequences
 
@@ -90,9 +139,16 @@ time someone actually adds `mise.run` to a Custom environment.
   it — worth saying plainly rather than implying the script alone fixes
   this. Someone still has to create a Custom environment, set its network
   access, and paste the script in, once per account.
-- The pinned version will drift from mise's actual latest release over time.
-  That's the same trade-off `mise.toml` already accepts for Python, uv, and
-  Node, for the same reason: reproducibility over always-latest.
+- Unlike `mise.toml`'s pins on Python, uv, and Node, the mise binary itself
+  now floats deliberately — the opposite trade-off, and correct for this one
+  case, since pinning it is what broke the install. If this repo ever needs
+  a mise feature recent enough to matter, that's a `min_version` in
+  `mise.toml`, not a version in this script.
+- **A theory that looks sound and matches the evidence available at the time
+  can still be wrong**, if the evidence available was itself incomplete —
+  every session that touched this ADR before `sorting-office` ran it for
+  real was blocked at the same 403 and never saw the failure mode past it.
+  Worth remembering the next time something here reads as fully verified.
 
 ## Related, not addressed here
 
