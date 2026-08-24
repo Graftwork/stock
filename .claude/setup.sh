@@ -9,10 +9,10 @@
 # settings) — a one-time, per-account step only a human can do; nothing
 # committed to a repo can complete it unassisted.
 #
-# That environment's network access must also reach mise.run and GitHub.
-# Under Custom, ticking "Also include default list of common package
-# managers" and adding mise.run is the simplest way to get both — Trusted
-# alone does not cover mise.run, since it is not on the default allowlist.
+# That environment's network access must also reach mise.run and
+# mise.jdx.dev — not GitHub, deliberately; see below. Under Custom, ticking
+# "Also include default list of common package managers" and adding both
+# domains is the simplest way to get there; Trusted alone covers neither.
 set -euo pipefail
 
 # MISE_INSTALL_PATH: /usr/local/bin is on PATH for every process by default,
@@ -22,11 +22,28 @@ set -euo pipefail
 # ~/.profile is invisible to Claude's next command; installing straight to
 # an already-searched directory sidesteps that instead of working around it.
 #
-# MISE_VERSION: pinned, consistent with mise.toml pinning everything mise
-# itself manages. Bump deliberately, the same way mise.toml's own pins move.
+# Deliberately no MISE_VERSION pin. mise's own installer, read directly
+# (jdx/mise, packaging/standalone/install.envsubst), only downloads from
+# GitHub when the requested version doesn't match the version baked into
+# whatever copy of the script mise.run is currently serving:
 #
-# Both variables must sit before `sh`, not before `curl` — in a pipeline,
-# `VAR=val cmd1 | cmd2` only sets VAR for cmd1. The install script runs as
-# the `sh` process and reads its own environment, so that is where the
-# variables have to be.
-curl https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise MISE_VERSION=2026.8.8 sh
+#   if [ "$version" != "$current_version" ] ...
+#     tarball_url="https://github.com/jdx/mise/releases/download/..."
+#   else
+#     tarball_url="https://mise.jdx.dev/..."
+#
+# A pin here goes stale the next time mise ships a release, which silently
+# flips that branch to the GitHub path — the exact release-asset download
+# already ruled out in the ADR, since it's scoped to repositories attached
+# to the session and jdx/mise isn't one. Leaving MISE_VERSION unset makes
+# "requested equals current" true by construction, every run, so it always
+# takes the mise.jdx.dev path and never touches GitHub at all.
+#
+# mise's own docs argue against pinning the tool itself, independent of the
+# above: "Locking users to one mise version is like preventing `apt update`
+# or `brew update` from refreshing package metadata: it can hide deprecation
+# messages and cause bit rot with upstream integrations like aqua-registry."
+# A project that needs a floor sets `min_version` in mise.toml instead — a
+# promise mise checks against itself at run time, not an executable frozen
+# in an install script.
+curl https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise sh
