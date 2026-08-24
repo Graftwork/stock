@@ -43,6 +43,11 @@ mise run check
 It needs a one-time, per-account manual step — see
 [`.claude/setup.sh`](.claude/setup.sh) and
 [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).
+Even after that step, `mise install` and `mise run <task>` still don't work
+there — a committed `SessionStart` hook installs Python and syncs
+dependencies with `uv` directly instead, and lint/test/trace need `uv run …`
+rather than `mise run …` in that environment; see
+[Stock ADR 0012](docs/decisions/stock-0012-uv-not-mise-run-on-claude-code-web.md).
 
 ## The verification layer
 
