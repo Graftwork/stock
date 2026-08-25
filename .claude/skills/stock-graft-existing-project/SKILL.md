@@ -43,7 +43,7 @@ writing them onto an empty repo.)*
 ## Steps
 
 *(still being reordered and refined as later steps are done and measured.
-Steps 1–2 below are confirmed by doing them; the rest are still the
+Steps 1–3 below are confirmed by doing them; the rest are still the
 provisional plan from the applicability review.)*
 
 1. **Done.** Reconcile the Python version pin (and any other toolchain pins)
@@ -63,8 +63,18 @@ provisional plan from the applicability review.)*
    real per-case decision, not a blind accept — e.g. a mutable-default-argument
    finding (`B008`) needs the function's actual default-value semantics
    understood before rewriting it, not a mechanical transform.
-3. Add an initial test suite for whatever part of the project is already
-   plain, importable, testable code — before touching anything that is not.
+3. **Done.** Add an initial test suite for whatever part of the project is
+   already plain, importable, testable code — before touching anything that
+   is not. On the first case this was a genuinely small scope: one function
+   with no I/O beyond the filesystem and sqlite, out of a script whose real
+   logic is browser automation around an interactive login. Resist the pull
+   to pad coverage by testing CLI argument-parsing glue or anything that
+   only exists to call the untestable part — an honest small suite beats a
+   padded one that looks more complete than the code actually is. Pair with
+   Stock's own pytest/coverage config (`testpaths`, `pythonpath`, `--cov`)
+   but leave out `--strict-markers` and the `spec()` marker until step 7
+   actually adds the traceability guard those exist for — see Lessons below
+   on why this step's own branch naming has the same ordering problem.
 4. Decide, file by file, what to do with logic that is not structured as
    testable code at all — extract into testable modules where practical, or
    declare as an untestable gap with a written reason where it is genuinely
@@ -113,19 +123,44 @@ does not need each cell independently runnable, so ruff's default behavior
 is not wrong here, only unfamiliar on first read. Reaching for `# noqa` or
 splitting the `--fix` pass to work around it would mean carrying a
 project-specific exception to a tool default, for a benefit (standalone
-cells) most notebooks do not need. Graftwork's target user is a product
-owner, not an engineer — someone who cannot evaluate whether a suppression
-comment is still justified two years later, or safely remove one that is
-not. An exception that requires that judgement call is a liability for this
-audience specifically, even where an experienced engineer might reasonably
-keep it. Default to the tool's own defaults; treat a suppression as
-something to justify explicitly, not a routine option alongside it.
+cells) most notebooks do not need. Generalized into
+[Stock ADR 0013](../../docs/decisions/stock-0013-defer-to-tool-defaults-over-suppressions.md):
+default to a tool's own defaults, treat a suppression as needing a written
+justification rather than being a routine option alongside the default —
+Graftwork's target user is a product owner who cannot evaluate whether a
+suppression is still warranted later, not an engineer who might reasonably
+judge one safe to keep.
 
 **Ruff's import-sort can split one multi-name `from module import (A, B,
 C)` into several single-name `from module import (X)` statements**, one per
 name, rather than keeping them combined. Confirmed stable across repeated
 `ruff format` runs (not a transient/unstable formatting choice), just an
 unexpected shape when reviewing the diff for the first time.
+
+**Stock's branch-naming convention (`WORKFLOW.md`, "Branch names match the
+route") presupposes `openspec/` already exists.** A change to `tests/`
+content is documented as the OpenSpec route (`feature/`, `bugfix/`) — but
+that route only exists once `openspec/` and the traceability guard are in
+the project, which for an existing project being grafted is step 7, not
+step 3. Adding the first test suite has nothing to name a `feature/`
+branch after yet. Used `chore/` for this step on the first case, as the
+least-wrong available prefix, rather than inventing a new one or
+force-fitting the OpenSpec-route naming before the OpenSpec route exists.
+Revisit once a project reaches step 7: does the *next* test change after
+that point correctly switch to `feature/`/`bugfix/`, and is `chore/` still
+the right call for the pre-step-7 window, or does this graft skill need its
+own documented exception to the branch-naming convention?
+
+**An existing project's `.gitignore` often has real gaps that only surface
+once Stock's tooling is actually added**, not before. The first case's
+`.gitignore` covered Python build artifacts and the project's own database
+files, but had no entries for `.pytest_cache/`, `.ruff_cache/`, `.coverage`,
+or `coverage.xml` — not because anyone had reasoned about coverage tooling
+and decided against ignoring it, but because nothing in the project had
+ever produced those files before. A stray `.coverage` file appearing as
+untracked, mid-step, was the actual signal, not a review of the file done
+in advance. Check `git status` after running the new tooling for the first
+time, not only after writing the config that adds it.
 
 ## Open questions
 
