@@ -105,12 +105,21 @@ already available in every later cell, so `ruff check --fix` will remove a
 directly — the import is not actually unused within the cell, only unused
 *given* the earlier cell's import. Consequence: the later cell can no longer
 be run standalone (kernel restart, run only that cell) without a
-`NameError`. This is exactly correct for a notebook that is already written
-for sequential top-to-bottom execution — most are — but is a real trap for
-one that is not, or that gets restructured later. There is no config flag
-found so far to opt a specific cell out of this; the only lever is not
-running `--fix` on that cell's import line, or suppressing with `# noqa`
-and accepting the redundancy deliberately.
+`NameError`.
+
+**Decided: accept this, do not suppress it.** A notebook meant to be run
+top-to-bottom in one kernel session — the normal way to use one — genuinely
+does not need each cell independently runnable, so ruff's default behavior
+is not wrong here, only unfamiliar on first read. Reaching for `# noqa` or
+splitting the `--fix` pass to work around it would mean carrying a
+project-specific exception to a tool default, for a benefit (standalone
+cells) most notebooks do not need. Graftwork's target user is a product
+owner, not an engineer — someone who cannot evaluate whether a suppression
+comment is still justified two years later, or safely remove one that is
+not. An exception that requires that judgement call is a liability for this
+audience specifically, even where an experienced engineer might reasonably
+keep it. Default to the tool's own defaults; treat a suppression as
+something to justify explicitly, not a routine option alongside it.
 
 **Ruff's import-sort can split one multi-name `from module import (A, B,
 C)` into several single-name `from module import (X)` statements**, one per
@@ -120,11 +129,4 @@ unexpected shape when reviewing the diff for the first time.
 
 ## Open questions
 
-- Is there a real cost, on a project that actually relies on running
-  notebook cells out of order, to the cross-cell import-scoping behavior
-  above? Not yet hit — the first case's notebooks are already
-  sequential-only — so unmeasured. If a future case needs specific cells to
-  stay independently runnable, work out the least-bad way to keep that
-  (explicit per-cell imports plus a suppression, excluding those cells from
-  `ruff check --fix` specifically, or something not yet considered) rather
-  than deciding it fresh under time pressure.
+*(none currently open)*
