@@ -216,17 +216,15 @@ kebab-case throughout.
 - `test/<slug>` — same carve-out: test infrastructure (`conftest.py`,
   coverage config) outside `tests/` itself. A change to `tests/` content is
   the OpenSpec route.
-- `hotfix/<slug>` — urgent, prioritized for review. Still reaches `main` by
-  PR like everything else here — Stock has no unreviewed path to `main`, so
-  this prefix means "urgent," not "unreviewed," unlike its usual meaning
-  elsewhere.
 
-**Not adopted: `release/`.** The common meaning names a branch that
-stabilizes code before shipping. Stock doesn't have one —
-[`docs/RELEASING.md`](docs/RELEASING.md) cuts a release candidate tag
-(`vX.Y.Z-rc.N`) directly from `main` instead, so there's no step in the
-process for this prefix to attach to. Adding it would document something
-Stock doesn't do.
+**Not adopted: `release/`, `hotfix/`.** Both name a step or a lane Stock
+doesn't have. `release/` usually marks a branch that stabilizes code before
+shipping — Stock cuts a release candidate tag (`vX.Y.Z-rc.N`) directly from
+`main` instead, per [`docs/RELEASING.md`](docs/RELEASING.md), so there's no
+step for it to attach to. `hotfix/` usually marks an expedited or unreviewed
+path to production — Stock has no unreviewed path to `main` and no separate
+expedited review lane, so nothing distinguishes an "urgent" branch from any
+other. Adding either would document something Stock doesn't do.
 
 Claude Code on the web derives its own `claude/<slug>-<hash>` branch per
 session, which is none of these. Rename onto the matching prefix

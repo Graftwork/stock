@@ -19,13 +19,14 @@ the tag doesn't follow `main`, so this is all next-version material.
 
 - **[Branch names match the route](WORKFLOW.md#branch-names-match-the-route).**
   A branch prefix for each route and change type — `feature/`, `bugfix/` on
-  the OpenSpec route; `chore/`, `docs/`, `ci/`, `refactor/`, `test/`,
-  `hotfix/` on the direct route — so the branch states which route it's on
-  before the PR is opened. `release/` was considered and left out: Stock
-  ships from a tag cut directly off `main`, not a stabilization branch, so
-  there's no step in the process for it to name. A Claude Code cloud
-  session's auto-derived `claude/<slug>-<hash>` branch should be renamed
-  onto the matching prefix before opening a PR.
+  the OpenSpec route; `chore/`, `docs/`, `ci/`, `refactor/`, `test/` on the
+  direct route — so the branch states which route it's on before the PR is
+  opened. `release/` and `hotfix/` were considered and left out: Stock ships
+  from a tag cut directly off `main`, not a stabilization branch, and has no
+  expedited or unreviewed path to `main`, so neither prefix names a step
+  Stock actually has. A Claude Code cloud session's auto-derived
+  `claude/<slug>-<hash>` branch should be renamed onto the matching prefix
+  before opening a PR.
 
   Brought over from sorting-office, which established the two-prefix
   version of this first.
