@@ -188,6 +188,48 @@ the eyeball task named and left open is correct. Reporting 35/35 is not.
 Cases live in [`docs/UAT.md`](docs/UAT.md), each with a `Last passed` date — the
 date is what stops UAT from going quietly stale.
 
+### Branch names match the route
+
+Every branch reaches `main` by PR, never a direct commit — see
+[Changes to Stock take one of two routes](../CLAUDE.md#conventions). The
+prefix names the route, and what kind of change it is within it. Slugs are
+kebab-case throughout.
+
+**OpenSpec route** — touches `openspec/specs/`, `scripts/`, or `tests/`:
+
+- `feature/<change-name>` — new capability. Reuse the change's own directory
+  name (`openspec/changes/<change-name>/`) as the slug, so the branch, the
+  change, and the PR all name the same thing.
+- `bugfix/<change-name>` — a bug fix. Still the OpenSpec route: OpenSpec
+  doesn't distinguish a bug fix from a new capability at the change level,
+  so this names intent, not a different process from `feature/`.
+
+**Direct route** — everything else:
+
+- `chore/<slug>` — maintenance: toolchain, permissions, dependency bumps.
+- `docs/<slug>` — documentation only: README, CLAUDE.md, this file, ADRs.
+- `ci/<slug>` — `.github/workflows/` changes.
+- `refactor/<slug>` — restructuring with no behavior change, outside
+  `openspec/specs/`, `scripts/`, and `tests/`. A refactor touching any of
+  those three is the OpenSpec route regardless of prefix — there's no
+  "just a refactor" exception to that rule.
+- `test/<slug>` — same carve-out: test infrastructure (`conftest.py`,
+  coverage config) outside `tests/` itself. A change to `tests/` content is
+  the OpenSpec route.
+
+**Not adopted: `release/`, `hotfix/`.** Both name a step or a lane Stock
+doesn't have. `release/` usually marks a branch that stabilizes code before
+shipping — Stock cuts a release candidate tag (`vX.Y.Z-rc.N`) directly from
+`main` instead, per [`docs/RELEASING.md`](docs/RELEASING.md), so there's no
+step for it to attach to. `hotfix/` usually marks an expedited or unreviewed
+path to production — Stock has no unreviewed path to `main` and no separate
+expedited review lane, so nothing distinguishes an "urgent" branch from any
+other. Adding either would document something Stock doesn't do.
+
+Claude Code on the web derives its own `claude/<slug>-<hash>` branch per
+session, which is none of these. Rename onto the matching prefix
+(`git branch -m`) before opening the PR.
+
 ### Prove you didn't break the existing thing
 
 For any additive change, include a task that *proves* the untouched path is
