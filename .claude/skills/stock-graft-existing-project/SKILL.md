@@ -42,15 +42,27 @@ writing them onto an empty repo.)*
 
 ## Steps
 
-*(pending — filled in and reordered as each is actually done and measured on
-comic-book-guy. The list below is the provisional plan from the applicability
-review, not yet confirmed by doing it.)*
+*(still being reordered and refined as later steps are done and measured.
+Steps 1–2 below are confirmed by doing them; the rest are still the
+provisional plan from the applicability review.)*
 
-1. Reconcile the Python version pin (and any other toolchain pins) between
-   what Stock requires and what the project already declares.
-2. Bring the project's existing code to lint-clean under Stock's `ruff`
-   config before wiring in CI, so a freshly added check does not go red on
-   day one for code Stock had no part in writing.
+1. **Done.** Reconcile the Python version pin (and any other toolchain pins)
+   between what Stock requires and what the project already declares. On the
+   first case this was a one-line bump each in `pyproject.toml` and
+   `.python-version`, followed by re-resolving the lockfile against the new
+   interpreter — no dependency versions changed, only the wheel selection for
+   the new Python tag. Small enough that there is not much more to say about
+   it in general; watch for it costing more on a project with tighter
+   third-party version constraints.
+2. **Done.** Bring the project's existing code to lint-clean under Stock's
+   `ruff` config before wiring in CI, so a freshly added check does not go
+   red on day one for code Stock had no part in writing. This includes any
+   Jupyter notebooks in the project — see Lessons below, ruff's notebook
+   support changes what this step actually covers. Auto-fix what `ruff check
+   --fix` and `ruff format` can; the findings with no safe autofix need a
+   real per-case decision, not a blind accept — e.g. a mutable-default-argument
+   finding (`B008`) needs the function's actual default-value semantics
+   understood before rewriting it, not a mechanical transform.
 3. Add an initial test suite for whatever part of the project is already
    plain, importable, testable code — before touching anything that is not.
 4. Decide, file by file, what to do with logic that is not structured as
@@ -73,10 +85,46 @@ review, not yet confirmed by doing it.)*
 
 ## Lessons so far
 
-*(pending — this section is the point of the skill. It stays empty honestly
-until there is a real lesson to record, rather than being filled with
-anticipated ones.)*
+**Ruff lints and formats `.ipynb` natively, not just `.py`.** This changes
+what "bring the code to lint-clean" means for a notebook-heavy project —
+notebooks are not automatically out of scope for that step, or automatically
+deferred to the harder testable-code question. Confirmed by diff on a real
+notebook: `ruff format` only rewrote cell `source`; `outputs` and
+`execution_count` were untouched in every cell, in both a `ruff check --fix`
+pass and a `ruff format` pass. Safe to run as part of the same lint-clean
+step as the project's plain `.py` files, not a separate concern.
+
+**Ruff also reformats fenced ` ```python ` code blocks inside Markdown
+files**, including `README.md`. Not specific to grafting, but easy to miss
+the first time `ruff format .` touches a file with no `.py` extension.
+
+**Ruff's unused-import check (`F401`) treats a whole notebook as one shared
+namespace**, not per-cell scopes. A name imported in an earlier cell reads as
+already available in every later cell, so `ruff check --fix` will remove a
+"redundant" import from a later cell even when that cell calls the name
+directly — the import is not actually unused within the cell, only unused
+*given* the earlier cell's import. Consequence: the later cell can no longer
+be run standalone (kernel restart, run only that cell) without a
+`NameError`. This is exactly correct for a notebook that is already written
+for sequential top-to-bottom execution — most are — but is a real trap for
+one that is not, or that gets restructured later. There is no config flag
+found so far to opt a specific cell out of this; the only lever is not
+running `--fix` on that cell's import line, or suppressing with `# noqa`
+and accepting the redundancy deliberately.
+
+**Ruff's import-sort can split one multi-name `from module import (A, B,
+C)` into several single-name `from module import (X)` statements**, one per
+name, rather than keeping them combined. Confirmed stable across repeated
+`ruff format` runs (not a transient/unstable formatting choice), just an
+unexpected shape when reviewing the diff for the first time.
 
 ## Open questions
 
-*(pending)*
+- Is there a real cost, on a project that actually relies on running
+  notebook cells out of order, to the cross-cell import-scoping behavior
+  above? Not yet hit — the first case's notebooks are already
+  sequential-only — so unmeasured. If a future case needs specific cells to
+  stay independently runnable, work out the least-bad way to keep that
+  (explicit per-cell imports plus a suppression, excluding those cells from
+  `ruff check --fix` specifically, or something not yet considered) rather
+  than deciding it fresh under time pressure.
