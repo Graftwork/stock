@@ -94,7 +94,9 @@ PRs rather than an archaeology exercise.
 `openspec/specs/`, `scripts/`, or `tests/` runs as a full OpenSpec change — the
 specs are written by archiving, never edited by hand. Docs, CI, toolchain and
 permission changes go direct. Either way it reaches `main` by branch and PR,
-never a direct commit. The full sequence is in
+never a direct commit. The branch's prefix names which route and what kind
+of change it is — see [Branch names match the route](WORKFLOW.md#branch-names-match-the-route).
+The full sequence is in
 [`docs/RELEASING.md`](docs/RELEASING.md); the reasoning is
 [Stock ADR 0007](docs/decisions/stock-0007-how-stock-changes-itself.md).
 
