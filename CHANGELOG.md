@@ -99,6 +99,26 @@ the tag doesn't follow `main`, so this is all next-version material.
   switching the setting on looks like an obvious improvement and is a one-click
   action. The ADR names the condition under which it should be revisited.
 
+- **[Stock ADR 0013](docs/decisions/stock-0013-defer-to-tool-defaults-over-suppressions.md)**
+  — grafted projects default to a tool's own defaults over a suppression,
+  exception, or workaround, even where an experienced engineer might
+  reasonably judge one safe to add. Treat a suppression as needing a written
+  justification, the same bar `[tool.graftwork.traceability]`'s declared gaps
+  already hold ([Stock ADR 0005](docs/decisions/stock-0005-declared-gaps-in-traceability.md)),
+  not a routine option alongside the default. Grounded in who Stock is
+  for: a product owner directing an LLM, not an engineer who can judge
+  whether a `# noqa` is still warranted two years on, or safely remove one
+  that no longer is.
+
+  Found while grafting Stock onto an existing project (`comic-book-guy`) —
+  ruff's `F401` strips an "already imported earlier" name from a later
+  notebook cell even when that cell uses it directly, since ruff treats a
+  whole notebook as one shared import namespace. The instinctive fix was a
+  suppression to keep the cell independently runnable; decided against it,
+  since the notebook was already written for sequential execution and
+  didn't need that property. The specific case is one example of the
+  general rule, not the reason for it.
+
 ## [0.3.0] — 2026-08-16
 
 **Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
