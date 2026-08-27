@@ -62,9 +62,37 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude code review
-        uses: anthropics/claude-code-action@v1
+        # Pinned to a commit SHA, not the floating @v1 tag — this is a
+        # different risk from the checkout split above, and one with a real,
+        # disclosed precedent specific to this action: PR content (a title, a
+        # code comment, hidden text) can instruct the model to use its own
+        # legitimately-granted tools — the same comment-posting tools this
+        # workflow already needs — to leak the secrets in its own
+        # environment, no filesystem access required, so the checkout fix
+        # above doesn't touch this vector. Separately, GHSA-8q5r-mmjf-575q /
+        # CVE-2026-47751 (a first-party advisory on this action, confirmed
+        # directly rather than assumed) describes a related but distinct
+        # RCE + secret-exfiltration path via a malicious .mcp.json in PR
+        # content, fixed >=1.0.74 — its own recommended mitigation is this
+        # same one: pin to a specific version, never a floating tag.
+        # 70fec18 is v1.0.207, the latest release as of this pin (2026-08-27),
+        # well past both fixes. A floating @v1 tag gives no such guarantee —
+        # it silently tracks whatever is newest at run time — and leaves no
+        # record of which version actually ran on a given review if either
+        # class of bug regresses. Bump this SHA deliberately; treat it like
+        # any other dependency version bump, not a set-and-forget default.
+        uses: anthropics/claude-code-action@70fec183852c4f82f3f1969faed7dd60c5149ca7 # v1.0.207
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # plugin_marketplaces/plugins are NOT pinned below — this is a known,
+          # currently-open gap, not an oversight. The action's own action.yml
+          # documents plugin_marketplaces as a plain git URL and plugins as
+          # name@marketplace-name; neither documents a ref/SHA-pinning syntax,
+          # and guessing at an undocumented git-URL-fragment convention here
+          # risks silently doing nothing while looking fixed. Until a
+          # documented pin mechanism is confirmed (or this marketplace is
+          # forked/vendored at a known commit instead), the plugin content
+          # itself tracks anthropics/claude-code's default branch un-pinned.
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
           prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
