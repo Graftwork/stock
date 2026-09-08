@@ -16,9 +16,21 @@ jobs:
       - uses: actions/checkout@v7
 
       # mise reads mise.toml, so CI and a laptop run the same pinned versions.
+      # `minimum_release_age` is not a pin — mise.toml's own tool versions
+      # stay unaffected, and this still always moves forward to whatever is
+      # newest once it clears the age threshold. It only guards against the
+      # brand-new mise binary itself (mise-action's own default resolution,
+      # separate from mise.toml) shipping with release assets that 404 for a
+      # few days after publish. Measured directly: CI failed on PR #14 with
+      # `curl: (22) ... 404` fetching mise-v2026.9.2-linux-x64.tar.zst,
+      # immediately after that release went out, while every prior run on
+      # this same workflow was green. `7d` matches mise-action's own
+      # documented example for this input, added in v4.3.0 — see
+      # jdx/mise-action's README, "Minimum Release Age" section.
       - uses: jdx/mise-action@v4
         with:
           cache: true
+          minimum_release_age: 7d
 
       - name: Install dependencies
         run: uv sync --locked
