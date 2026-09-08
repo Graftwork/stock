@@ -119,6 +119,19 @@ the tag doesn't follow `main`, so this is all next-version material.
   didn't need that property. The specific case is one example of the
   general rule, not the reason for it.
 
+### Fixed
+
+- **CI's `jdx/mise-action@v4` step now sets `minimum_release_age: 7d`.** Not
+  a pin — `mise.toml`'s own tool versions are untouched, and this still
+  always moves forward to whatever mise release is newest once it clears
+  the threshold. It only guards against the mise binary itself (resolved by
+  `mise-action`, separate from anything in `mise.toml`) shipping with
+  release assets that don't resolve for the first few days after publish.
+  Measured directly: CI failed with `curl: (22) ... 404` fetching
+  `mise-v2026.9.2-linux-x64.tar.zst` immediately after that release went
+  out, while every prior run on the same workflow was green. `7d` matches
+  `mise-action`'s own documented example for this input.
+
 ## [0.3.0] — 2026-08-16
 
 **Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
