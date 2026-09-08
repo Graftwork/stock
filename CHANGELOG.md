@@ -119,6 +119,32 @@ the tag doesn't follow `main`, so this is all next-version material.
   didn't need that property. The specific case is one example of the
   general rule, not the reason for it.
 
+- **`.github/workflows/claude-review.yml`** — an automated Claude Code
+  review on every pull request opened against a grafted project, using the
+  `code-review` plugin from `anthropics/claude-code`, authenticated via a
+  Claude subscription OAuth token (`CLAUDE_CODE_OAUTH_TOKEN` repo secret,
+  not committed anywhere — set it per project after grafting).
+
+  Drafted here, then actually shaken out on `comic-book-guy` before coming
+  back — two real bugs found and fixed that way: a clean review (no issues
+  found) posts its summary through a different mechanism (`gh pr comment`)
+  than one that finds issues (an inline-comment MCP tool), so granting only
+  one made the other look like it silently did nothing; and `--comment` is
+  required on the review prompt at all, or nothing reaches the PR, only the
+  workflow's own run log.
+
+  Hardened across two review rounds after the first version merged: fork
+  PRs (the shape every contribution into `Graftwork/stock` itself takes)
+  withhold secrets from a plain `pull_request` trigger by default, and
+  enabling the private-repo setting that restores them turns an unpinned
+  checkout of the PR's own content into real exposure — fixed by splitting
+  into two checkouts, base branch at the workspace root, the PR's content
+  isolated in a subdirectory. Separately, `claude-code-action` carried a
+  disclosed, since-patched prompt-injection vulnerability (malicious PR
+  content tricking the action into leaking its own credentials through
+  tools it's legitimately granted); fixed by pinning the action to a
+  specific commit past the fix, rather than a floating major-version tag.
+
 ## [0.3.0] — 2026-08-16
 
 **Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
