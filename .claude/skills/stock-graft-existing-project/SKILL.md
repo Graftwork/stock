@@ -46,6 +46,11 @@ writing them onto an empty repo.)*
 Steps 1–3 below are confirmed by doing them; the rest are still the
 provisional plan from the applicability review.)*
 
+Before step 1: create a status file in the project being grafted (e.g.
+`GRAFT_STATUS.md`), tracking these steps' status for *that* project. See
+Lessons below — this is not optional bookkeeping, the first case ran for
+several sessions without one and the plan existed only in conversation.
+
 1. **Done.** Reconcile the Python version pin (and any other toolchain pins)
    between what Stock requires and what the project already declares. On the
    first case this was a one-line bump each in `pyproject.toml` and
@@ -75,11 +80,23 @@ provisional plan from the applicability review.)*
    but leave out `--strict-markers` and the `spec()` marker until step 7
    actually adds the traceability guard those exist for — see Lessons below
    on why this step's own branch naming has the same ordering problem.
-4. Decide, file by file, what to do with logic that is not structured as
-   testable code at all — extract into testable modules where practical, or
-   declare as an untestable gap with a written reason where it is genuinely
-   human-only, per
+4. **In progress.** Decide, file by file, what to do with logic that is not
+   structured as testable code at all — extract into testable modules where
+   practical, or declare as an untestable gap with a written reason where it
+   is genuinely human-only, per
    [Stock ADR 0005](../../docs/decisions/stock-0005-declared-gaps-in-traceability.md).
+   On the first case: every plain, callable function across two Jupyter
+   notebooks got wrapped directly with `testbook` (tests run against a real
+   kernel, not a mock) rather than extracted first — extraction can follow
+   later once the wrapped tests already prove correctness, which lowers the
+   stakes of doing it. *(pending: the detailed testbook mechanics —
+   serialization quirks, capturing printed output, running a cell with
+   `allow_errors` — are still to be written up here.)* One genuine
+   extraction case remains open: bare top-level script logic with no
+   function boundary at all (dedupe/mkdir/rename against a hardcoded path)
+   cannot be wrapped as-is and needs extracting before it is testable —
+   tracked as an open item on the project's own status file (see Lessons),
+   not treated as a new step of its own.
 5. Add `mise.toml` together with `.claude/hooks/session-start.sh` and its
    `.claude/settings.json` wiring, as one change — not `mise.toml` alone. A
    Claude Code cloud session cannot resolve the pinned toolchain any other
@@ -161,6 +178,23 @@ ever produced those files before. A stray `.coverage` file appearing as
 untracked, mid-step, was the actual signal, not a review of the file done
 in advance. Check `git status` after running the new tooling for the first
 time, not only after writing the config that adds it.
+
+**A per-repo graft's own step-by-step status belongs in a committed file in
+that project, not only in conversation.** On the first case, this skill's
+numbered steps were tracked purely as a running summary inside an agent
+session, across several sessions of real work — nothing recorded which
+steps were done, in progress, or deliberately deferred *for that specific
+project*, separately from this skill's own generalized text. That would
+have been lost entirely had the session ended or reset before being written
+down; it was only caught because a person asked how to track what was left.
+Fixed by adding a short status file (`GRAFT_STATUS.md` on the first case) to
+the grafted project itself — one place a fresh session or person can read
+current status without depending on chat history. Keep it separate from
+this skill: this file stays the generalized how-to and lessons, the
+project's own file tracks only that project's status, including any
+deferred sub-items (like the one under step 4 above) that don't warrant
+becoming a numbered step of their own. Do this before step 1, not once its
+absence is already felt.
 
 ## Open questions
 
