@@ -1,6 +1,6 @@
 [project]
 name = "graftwork-stock"
-version = "0.3.0"
+version = "0.4.0"
 description = "The rootstock for new projects — a versioned foundation you graft new work onto."
 license = "Apache-2.0"
 requires-python = ">=3.13"
