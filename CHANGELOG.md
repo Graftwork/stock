@@ -34,6 +34,16 @@ next tag is `v0.4.0-rc.2`, not a release.
   explicitly: update `NOTICE`'s first line to the new project's name either
   way, the same identity-rewrite step 4 already gives `README.md` and
   `CHANGELOG.md`.
+- **Step 8 didn't say how to keep an `-rc.N` fix clean when unrelated work
+  had already landed on `main`.** It classified "independent work" as
+  belonging to the next version, but building this very fix's `rc.2` exposed
+  that nothing said *how* to keep that true mechanically — branching from
+  current `main` as usual would have silently carried the unrelated work
+  (PR #17) into the fix, and from there into the tag, unaccounted for in this
+  CHANGELOG entry. Step 8 now says explicitly: branch the fix from the
+  candidate's own commit, not from `main`; merging into `main` afterward is
+  still normal, but the tag is cut from a cherry-pick onto the candidate, not
+  from `main`'s tip.
 
 ### Added
 
