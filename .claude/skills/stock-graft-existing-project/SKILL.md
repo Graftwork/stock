@@ -19,14 +19,14 @@ This skill is incomplete by design. It is being written one real step at a
 time against comic-book-guy, the first project Stock has been grafted onto
 after the fact rather than at creation. Sections marked *(pending)* have not
 been done yet; treat the gap as honest, not an oversight — see
-[Stock ADR 0006](../../docs/decisions/stock-0006-uat-is-a-human-gate.md) on
+[Stock ADR 0006](../../../docs/decisions/stock-0006-uat-is-a-human-gate.md) on
 why an agent reports what it has not yet verified rather than marking it
 done.
 
 ## When this applies
 
 The README's
-["Grafting a project from Stock"](../../README.md#grafting-a-project-from-stock)
+["Grafting a project from Stock"](../../../README.md#grafting-a-project-from-stock)
 procedure — clone at a tag, drop history, point at a new remote — assumes the
 project does not exist yet. This skill is for the opposite case: a project
 with its own commits, its own files, and its own conventions already in
@@ -84,7 +84,7 @@ several sessions without one and the plan existed only in conversation.
    structured as testable code at all — extract into testable modules where
    practical, or declare as an untestable gap with a written reason where it
    is genuinely human-only, per
-   [Stock ADR 0005](../../docs/decisions/stock-0005-declared-gaps-in-traceability.md).
+   [Stock ADR 0005](../../../docs/decisions/stock-0005-declared-gaps-in-traceability.md).
    On the first case: every plain, callable function across two Jupyter
    notebooks got wrapped directly with `testbook` (tests run against a real
    kernel, not a mock) rather than extracted first — extraction can follow
@@ -101,7 +101,7 @@ several sessions without one and the plan existed only in conversation.
    `.claude/settings.json` wiring, as one change — not `mise.toml` alone. A
    Claude Code cloud session cannot resolve the pinned toolchain any other
    way; see
-   [Stock ADR 0012](../../docs/decisions/stock-0012-uv-not-mise-run-on-claude-code-web.md).
+   [Stock ADR 0012](../../../docs/decisions/stock-0012-uv-not-mise-run-on-claude-code-web.md).
 6. Add CI (`.github/workflows/ci.yml`), `.pre-commit-config.yaml`, and the
    rest of Stock's scaffolding once the steps above make it honestly
    reachable.
@@ -141,7 +141,7 @@ is not wrong here, only unfamiliar on first read. Reaching for `# noqa` or
 splitting the `--fix` pass to work around it would mean carrying a
 project-specific exception to a tool default, for a benefit (standalone
 cells) most notebooks do not need. Generalized into
-[Stock ADR 0013](../../docs/decisions/stock-0013-defer-to-tool-defaults-over-suppressions.md):
+[Stock ADR 0013](../../../docs/decisions/stock-0013-defer-to-tool-defaults-over-suppressions.md):
 default to a tool's own defaults, treat a suppression as needing a written
 justification rather than being a routine option alongside the default —
 Graftwork's target user is a product owner who cannot evaluate whether a
