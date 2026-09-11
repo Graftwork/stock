@@ -9,14 +9,29 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
-## [Unreleased]
+## [0.4.0] — 2026-09-11
 
-Nothing here is part of `v0.3.0`, which is already tagged and released. Each
-of these landed on `main` after the release candidate it was built against —
-the tag doesn't follow `main`, so this is all next-version material.
+**Not yet released.** This entry is written ahead of the PR and the merge, per
+[`docs/RELEASING.md` step 5](docs/RELEASING.md#5-decide-the-version-and-write-the-changelog-entry) —
+version and CHANGELOG entry are decided before opening the PR, not after. If a
+release candidate's UAT surfaces a defect, this entry is amended in place
+rather than gaining a new `[Unreleased]` section, per
+[step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate).
+
+**Minor** — every entry below is additive; a project already grafted from
+`v0.3.0` stays green without adopting any of it.
 
 ### Added
 
+- **`LICENSE` and `NOTICE`** — Apache License 2.0, copyright held by James
+  Rennison individually rather than by "Graftwork" (a repo name, not a legal
+  entity). See [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md).
+  Found missing during the pre-publication review ahead of making the
+  repository public: with no `LICENSE`, default exclusive copyright applied,
+  which is incompatible with a repository whose whole purpose is being
+  grafted from. The graft steps in `README.md` now call out `LICENSE`/`NOTICE`
+  explicitly — a fresh graft carries them across like any other file, so doing
+  nothing means Apache-2.0 under Stock's copyright holder by default.
 - **[Branch names match the route](WORKFLOW.md#branch-names-match-the-route).**
   A branch prefix for each route and change type — `feature/`, `bugfix/` on
   the OpenSpec route; `chore/`, `docs/`, `ci/`, `refactor/`, `test/` on the
@@ -486,6 +501,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.4.0]: https://github.com/Graftwork/stock/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Graftwork/stock/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Graftwork/stock/releases/tag/v0.2.0
 [0.1.2]: https://github.com/Graftwork/stock/releases/tag/v0.1.2
