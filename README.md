@@ -30,6 +30,7 @@ plumbing.
 | [`.devcontainer/`](.devcontainer/) | Reproducibility layer, for when a project graduates |
 | [`docs/decisions/`](docs/decisions/) | ADRs — which choices were deliberate. Stock's carry a `stock-` prefix; yours start at 0001 |
 | [`CLAUDE.md`](CLAUDE.md) | Commands, conventions, house rules for Claude Code |
+| [`LICENSE`](LICENSE) / [`NOTICE`](NOTICE) | Apache License 2.0. See [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md) |
 
 ## Getting started
 
@@ -163,7 +164,12 @@ Then:
 4. Rewrite `README.md`, `CHANGELOG.md`, and the "what this repo is" section of
    `CLAUDE.md` for the new project. Replace Stock's cases in `docs/UAT.md` with
    the project's own — keep the file and the case format.
-5. Set `name` and `description` in `pyproject.toml`, and record the graft:
+5. **Decide what to do with `LICENSE` and `NOTICE`.** The clone carries them
+   across like any other file, so doing nothing means the new project is
+   Apache-2.0 under Stock's copyright holder by default — keep them if that's
+   right for the new project too, or replace both if not. See
+   [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md).
+6. Set `name` and `description` in `pyproject.toml`, and record the graft:
 
    ```toml
    [tool.graftwork]
@@ -171,7 +177,7 @@ Then:
    grafted = "YYYY-MM-DD"
    ```
 
-6. Run `mise trust && mise install && uv sync && mise run check` — it should be
+7. Run `mise trust && mise install && uv sync && mise run check` — it should be
    green before you write a line of your own code.
 
 To re-sync later, read this CHANGELOG forward from the recorded `stock-version`,

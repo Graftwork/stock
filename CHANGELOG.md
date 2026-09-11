@@ -17,6 +17,15 @@ the tag doesn't follow `main`, so this is all next-version material.
 
 ### Added
 
+- **`LICENSE` and `NOTICE`** — Apache License 2.0, copyright held by James
+  Rennison individually rather than by "Graftwork" (a repo name, not a legal
+  entity). See [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md).
+  Found missing during the pre-publication review ahead of making the
+  repository public: with no `LICENSE`, default exclusive copyright applied,
+  which is incompatible with a repository whose whole purpose is being
+  grafted from. The graft steps in `README.md` now call out `LICENSE`/`NOTICE`
+  explicitly — a fresh graft carries them across like any other file, so doing
+  nothing means Apache-2.0 under Stock's copyright holder by default.
 - **[Branch names match the route](WORKFLOW.md#branch-names-match-the-route).**
   A branch prefix for each route and change type — `feature/`, `bugfix/` on
   the OpenSpec route; `chore/`, `docs/`, `ci/`, `refactor/`, `test/` on the
