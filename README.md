@@ -166,9 +166,13 @@ Then:
    the project's own — keep the file and the case format.
 5. **Decide what to do with `LICENSE` and `NOTICE`.** The clone carries them
    across like any other file, so doing nothing means the new project is
-   Apache-2.0 under Stock's copyright holder by default — keep them if that's
-   right for the new project too, or replace both if not. See
-   [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md).
+   Apache-2.0 under Stock's copyright holder by default — keep the license and
+   copyright holder if that's right for the new project too, or replace both if
+   not. See [Stock ADR 0014](docs/decisions/stock-0014-license-and-copyright.md).
+   Either way, update `NOTICE`'s first line from `Graftwork Stock` to the new
+   project's name — it's an identity line, not just part of the copyright
+   statement, so it needs the same rewrite step 4 already gives `README.md` and
+   `CHANGELOG.md`, even when the license decision itself is "keep."
 6. Set `name` and `description` in `pyproject.toml`, and record the graft:
 
    ```toml

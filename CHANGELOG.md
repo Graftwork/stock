@@ -11,15 +11,39 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [0.4.0] — 2026-09-11
 
-**Not yet released.** This entry is written ahead of the PR and the merge, per
-[`docs/RELEASING.md` step 5](docs/RELEASING.md#5-decide-the-version-and-write-the-changelog-entry) —
-version and CHANGELOG entry are decided before opening the PR, not after. If a
-release candidate's UAT surfaces a defect, this entry is amended in place
-rather than gaining a new `[Unreleased]` section, per
-[step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate).
+**Amended, not yet released.** `v0.4.0-rc.1`'s tag-dependent UAT (case 5)
+included a real hand-walkthrough of the graft steps against the published
+candidate, not just the mechanical rehearsal — and that walkthrough found the
+gap below. Per
+[`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
+the fix is folded into this same entry rather than filed separately, and the
+next tag is `v0.4.0-rc.2`, not a release.
 
 **Minor** — every entry below is additive; a project already grafted from
 `v0.3.0` stays green without adopting any of it.
+
+### Fixed
+
+- **Step 5's "keep or replace" framing missed that `NOTICE`'s first line is
+  an identity line, not just a copyright statement.** Walking the graft steps
+  by hand against `v0.4.0-rc.1` (rather than only running the mechanical
+  rehearsal) showed that a grafter who genuinely wants to keep Apache-2.0 and
+  Stock's copyright holder would still end up with `NOTICE` reading
+  `Graftwork Stock` — misnaming their own project — since step 5 treated
+  `LICENSE`/`NOTICE` as one binary keep-or-replace decision. Step 5 now says
+  explicitly: update `NOTICE`'s first line to the new project's name either
+  way, the same identity-rewrite step 4 already gives `README.md` and
+  `CHANGELOG.md`.
+- **Step 8 didn't say how to keep an `-rc.N` fix clean when unrelated work
+  had already landed on `main`.** It classified "independent work" as
+  belonging to the next version, but building this very fix's `rc.2` exposed
+  that nothing said *how* to keep that true mechanically — branching from
+  current `main` as usual would have silently carried the unrelated work
+  (PR #17) into the fix, and from there into the tag, unaccounted for in this
+  CHANGELOG entry. Step 8 now says explicitly: branch the fix from the
+  candidate's own commit, not from `main`; merging into `main` afterward is
+  still normal, but the tag is cut from a cherry-pick onto the candidate, not
+  from `main`'s tip.
 
 ### Added
 
