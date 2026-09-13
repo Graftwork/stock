@@ -148,6 +148,23 @@ counts as this step too; a bug it finds is exactly what the step exists to catch
   Confusing the two means the version that eventually ships may never have
   actually been tested — the failure this whole step exists to prevent.
 
+  **If independent work has already landed on `main` since the candidate was
+  cut, don't branch the fix from current `main`.** It'll carry that unrelated
+  work along for the ride, and the resulting `-rc.N` tag would silently
+  include it too — unaccounted for in the CHANGELOG entry, and exactly the
+  kind of drift this step exists to prevent. Branch the fix from the
+  candidate's own commit instead:
+
+  ```bash
+  git checkout -b <fix-branch> v<X.Y.Z>-rc.<N>
+  ```
+
+  Merging the fix into `main` afterward is still normal and expected — `main`
+  never has to equal any particular tag, and independent work sitting on it
+  is fine. The tag is the thing that has to stay clean: cut `-rc.<N+1>` from
+  a cherry-pick of just the fix onto the candidate's own commit, not from
+  whatever `main` has become.
+
 ```mermaid
 flowchart LR
     subgraph S["Graftwork/stock — one continuous git history"]
