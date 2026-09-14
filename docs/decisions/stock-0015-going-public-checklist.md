@@ -20,12 +20,28 @@ anticipated in advance:
 - `NOTICE` cited sections of two other files that didn't actually say what it
   claimed — found only when `sorting-office`'s own real re-sync wrote its own
   `NOTICE` and declined to copy the dangling reference forward.
+- Six references across `CHANGELOG.md`, ADRs, and a skill file pointed at
+  `Graftwork/sorting-office`, `Graftwork/sorting-office-retired`, and
+  `stiffneckjim/comic-book-guy` — all still private at the time this
+  repository went public, meaning every one of those links would 404 for a
+  visitor who clicked through.
 - No way for an agent session to check or set GitHub branch protection, so
   a repository whose entire release model depends on `main`'s history being
-  stable had nothing technical enforcing that beyond personal habit.
+  stable had nothing technical enforcing that beyond personal habit — and,
+  found only once actually attempted: GitHub refused to let this
+  repository configure branch protection while it was still private, so the
+  checklist item has to come after the visibility flip, not before it.
 
-None of this was hypothetical. Every item is something that actually went
-wrong or was actually missing on this repository, this week.
+Five of these six are exactly that concrete — something that actually went
+wrong or was actually missing, found by doing the work. The sixth checklist
+item, a full-history secret scan (beyond the working-tree scan the existing
+`detect-secrets` pre-commit hook already covers), is not incident-grounded
+the same way: no secret was ever actually found in this repository's
+history. It earns its place by extending an already-adopted, already-proven
+practice to history the hook itself cannot reach, not by having caught
+something. Worth stating plainly rather than blurring — a checklist that
+claims more rigor than it has earned is exactly the kind of overstatement
+this repository's own conventions exist to catch.
 
 Stock's own conventions are explicit that the template grows by promotion
 from things that proved themselves in real projects, never by anticipation

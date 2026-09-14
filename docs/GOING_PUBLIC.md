@@ -6,15 +6,16 @@ a repository is public, its entire history — including whatever was in it
 before anyone thought to check — can be cloned, forked, and indexed by the
 time a problem is noticed. Fix what needs fixing first.
 
-This checklist exists because Stock itself went through it. Every item below
-traces to something that was actually missing or actually wrong here — a
-missing `LICENSE`, a doc that stated its own reasoning incorrectly, a stale
-claim that quietly became false, a dead cross-reference a real re-sync caught
-— not something anticipated in advance. That is deliberate: see
-[Stock ADR 0015](decisions/stock-0015-going-public-checklist.md).
+This checklist exists because Stock itself went through it. Most items below
+trace directly to something that was actually missing or actually wrong here,
+not anticipated in advance. One is a considered extension of an
+already-proven practice rather than something that broke here — see
+[Stock ADR 0015](decisions/stock-0015-going-public-checklist.md) for exactly
+which is which, and why that distinction is worth stating plainly rather than
+blurring.
 
 **This runs once**, immediately before a repository's visibility actually
-changes — not on every release the way [`docs/UAT.md`](UAT.md)'s cases do, and
+changes — not on every change the way [`docs/UAT.md`](UAT.md)'s cases do, and
 not part of [`docs/RELEASING.md`](RELEASING.md)'s per-version sequence. If a
 project stays private for years and only later decides to go public, work this
 list fresh at that point rather than trusting whatever was true when the
@@ -41,10 +42,15 @@ project was grafted.
 ## 2. Full-history secret scan
 
 A pre-commit secret scanner only guards commits made after it was installed.
-Going public exposes everything before that too.
+Going public exposes everything before that too — worth checking even though
+no leak has ever actually been found here; a scanner's clean track record
+going forward says nothing about history it was never watching.
 
 - Scan the **entire** history, not just the working tree:
-  `git log --all -p`, checked against common credential patterns (cloud
+  `git log --all -p --diff-merges=cc` (plain `-p` skips merge-commit diffs
+  by default, so a secret introduced only during a merge's manual conflict
+  resolution — and later removed — would produce no output at all; verified
+  directly, not assumed), checked against common credential patterns (cloud
   provider keys, private key blocks, common API token shapes) — not just the
   scanner's own baseline.
 - Also run the project's own scanner across the current tree
@@ -65,6 +71,9 @@ For every match, confirm the linked repository is **already public**, or will
 go public in the same window. A link into a repository that stays private
 becomes a dead link the moment this one goes public — a 404 or a login
 prompt for anyone who clicks through, with no way for them to know why.
+Stock's own review found exactly this: six references across `CHANGELOG.md`,
+ADRs, and a skill file, all pointing at repositories that were still private
+when this one went public.
 
 ## 4. Stale conditional wording sweep
 
@@ -123,10 +132,13 @@ account shows).
   written convention into something GitHub actually enforces.
 - **Require the project's CI status check to pass** before merging.
 - **Disallow force pushes** to the default branch. This is the one that
-  matters most: `docs/RELEASING.md`'s whole tag model depends on the
-  default branch's history being stable and append-only — a force-push
-  (even an accidental one) can silently invalidate every "tag on the exact
-  commit" guarantee the release process makes.
+  matters most — though precisely: a tag is an independent ref, and
+  force-pushing the default branch cannot move, delete, or otherwise affect
+  an existing tag, which keeps pointing at the exact same commit regardless.
+  The real risk is different: a force-push (even an accidental one) can
+  rewrite the default branch's history so a previously-tagged commit is no
+  longer an *ancestor* of it, breaking `docs/RELEASING.md`'s "one continuous
+  history" model even though the tag itself still resolves correctly.
 - **Disallow deletion** of the default branch.
 - Check whether CI secrets (coverage tokens, review-bot tokens, and similar)
   are scoped sensibly now that Actions run logs become publicly visible.
