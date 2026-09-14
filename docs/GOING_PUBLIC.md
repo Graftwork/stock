@@ -130,7 +130,15 @@ account shows).
 - **Require a pull request before merging** on the default branch. Turns
   "changes reach `main` by branch and PR, never a direct commit" from a
   written convention into something GitHub actually enforces.
-- **Require the project's CI status check to pass** before merging.
+- **Require the project's CI status check to pass** before merging. The name
+  GitHub matches against is the **job name**, not the workflow name — Stock's
+  workflow is called `CI`, but the job inside it is named `check`; searching
+  for `CI` in the "Add checks" box won't match anything. Confirmed directly
+  by inspecting a real PR's Checks tab, not assumed — verify the job name the
+  same way on each repo rather than copying `check` across, since it isn't
+  guaranteed to match. A check also only becomes selectable once it has run
+  at least once on the repo, so a project with no PR history yet may need one
+  CI run before the option appears.
 - **Disallow force pushes** to the default branch. This is the one that
   matters most — though precisely: a tag is an independent ref, and
   force-pushing the default branch cannot move, delete, or otherwise affect
