@@ -11,13 +11,14 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [0.4.0] — 2026-09-11
 
-**Amended, not yet released.** `v0.4.0-rc.1`'s tag-dependent UAT (case 5)
-included a real hand-walkthrough of the graft steps against the published
-candidate, not just the mechanical rehearsal — and that walkthrough found the
-gap below. Per
+**Released as `v0.4.0`.** `v0.4.0-rc.1`'s tag-dependent UAT (case 5) included
+a real hand-walkthrough of the graft steps against the published candidate,
+not just the mechanical rehearsal — and that walkthrough found the gaps
+below. Per
 [`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
-the fix is folded into this same entry rather than filed separately, and the
-next tag is `v0.4.0-rc.2`, not a release.
+the fixes are folded into this same entry rather than filed separately.
+`v0.4.0-rc.2` carried the fixes; `v0.4.0` and `rc.2` point at the exact same
+commit, per step 9.
 
 **Minor** — every entry below is additive; a project already grafted from
 `v0.3.0` stays green without adopting any of it.
