@@ -115,17 +115,19 @@ because it's the irreversible one.
 
 ## 7. GitHub-side repository settings — now that the repo is public
 
-**Branch protection specifically cannot happen before step 6.** Confirmed
-directly by the repo owner's own attempt in the GitHub UI, not assumed in
-advance: GitHub refused to let Stock's own private repository configure
-branch protection at all — account-plan-dependent, most likely, though that
-specific mechanism wasn't independently verified, only the refusal itself.
-So this step necessarily comes *after* the flip, not before it, however
-much tidier "settle everything, then flip" would have been. None of it is
-checkable or settable by an agent session either way, as of this writing —
-no tool access to GitHub's branch-protection API. It's a manual pass, in
-Settings → Branches (or the newer Rulesets UI, depending on what your
-account shows).
+**Branch protection specifically cannot happen before step 6, on most
+plans.** Confirmed both directly (Stock's own private repository refused to
+configure it) and against [GitHub's own documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets):
+rulesets and branch protection rules are enforced on public repositories on
+every plan, but on private repositories only from GitHub Team upward — Free
+and Pro accounts can configure nothing on a private repo, full stop. If
+you're on Team or Enterprise, this step doesn't have to wait for step 6; on
+Free or Pro, it does, same as it did here. So this step necessarily comes
+*after* the flip on most accounts, not before it, however much tidier
+"settle everything, then flip" would have been. None of it is checkable or
+settable by an agent session either way, as of this writing — no tool access
+to GitHub's branch-protection API. It's a manual pass, in Settings →
+Branches (or the newer Rulesets UI, depending on what your account shows).
 
 - **Require a pull request before merging** on the default branch. Turns
   "changes reach `main` by branch and PR, never a direct commit" from a
