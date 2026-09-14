@@ -143,11 +143,19 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
-- **Last agent run:** n/a — run and confirmed directly by a person this time,
-  not by an agent; the 403 that blocked an agent from pushing the tag never
-  blocked a person from doing it via the GitHub UI.
-- **Last passed:** 2026-08-18 — against `v0.3.0-rc.2`, confirmed by the person
-  who ran it.
+- **Last agent run:** 2026-09-11 — the mechanical rehearsal and a hand
+  walkthrough of the graft steps ran against `v0.4.0-rc.1`/`rc.2` from this
+  session, finding the `NOTICE` identity-line gap folded into `v0.4.0`.
+  Separately, a different Claude Code session performed a real re-sync of
+  [sorting-office](https://github.com/Graftwork/sorting-office) onto
+  `v0.4.0` on 2026-09-13 and found a second gap (the dead cross-reference
+  fixed in #21) — reported here secondhand, not run or observed directly by
+  this session.
+- **Last passed:** 2026-09-14 — confirmed by the person who ran the
+  `sorting-office` re-sync: it worked. That real graft, not the rehearsal
+  alone, is what this case is actually meant to test. (The `v0.3.0-rc.2`
+  record this replaces is preserved in git history, not duplicated here —
+  see the "Case format" section above.)
 
 ---
 
