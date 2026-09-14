@@ -9,6 +9,21 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+## [Unreleased]
+
+### Fixed
+
+- **`NOTICE` pointed to `WORKFLOW.md`'s "Growing this file" section and
+  `CLAUDE.md`'s Notes section for where the vendored `openspec-*/` skills'
+  MIT license is explained — neither actually says it.** Found by
+  [sorting-office](https://github.com/Graftwork/sorting-office) writing its
+  own `NOTICE` for its independent Apache-2.0 decision while re-syncing to
+  `v0.4.0` — it declined to carry the broken reference forward. The
+  underlying claim still holds (each `openspec-*` skill's own frontmatter
+  declares `license: MIT`); the fix drops the dangling pointer rather than
+  inventing content elsewhere to make it resolve, since nothing else in the
+  repo documents this fact either.
+
 ## [0.4.0] — 2026-09-11
 
 **Released as `v0.4.0`.** `v0.4.0-rc.1`'s tag-dependent UAT (case 5) included
