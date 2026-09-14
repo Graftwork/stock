@@ -93,12 +93,30 @@ This is human-judgment work, the same shape as `docs/UAT.md`'s own cases: an
 agent can read the repository and report what it saw, but it cannot be the
 one to decide the repository is ready. Only a person can.
 
-## 6. GitHub-side repository settings
+## 6. Flip visibility — once everything checkable beforehand is settled
 
-None of this is checkable or settable by an agent session as of this
-writing — no tool access to GitHub's branch-protection API. It's a manual
-pass, in Settings → Branches (or the newer Rulesets UI, depending on what
-your account shows).
+Only once items 1–5 are done. The same principle as *Context Is Not Content*
+applies here, just at the scale of a whole repository instead of one file:
+the window closes at the moment of the flip, not at the moment someone
+notices a problem, and there is no undo that reaches whatever was already
+cloned, forked, or indexed in between.
+
+This is not, in fact, the last step — see below. It only feels that way
+because it's the irreversible one.
+
+## 7. GitHub-side repository settings — now that the repo is public
+
+**Branch protection specifically cannot happen before step 6.** Confirmed
+directly by the repo owner's own attempt in the GitHub UI, not assumed in
+advance: GitHub refused to let Stock's own private repository configure
+branch protection at all — account-plan-dependent, most likely, though that
+specific mechanism wasn't independently verified, only the refusal itself.
+So this step necessarily comes *after* the flip, not before it, however
+much tidier "settle everything, then flip" would have been. None of it is
+checkable or settable by an agent session either way, as of this writing —
+no tool access to GitHub's branch-protection API. It's a manual pass, in
+Settings → Branches (or the newer Rulesets UI, depending on what your
+account shows).
 
 - **Require a pull request before merging** on the default branch. Turns
   "changes reach `main` by branch and PR, never a direct commit" from a
@@ -113,11 +131,3 @@ your account shows).
 - Check whether CI secrets (coverage tokens, review-bot tokens, and similar)
   are scoped sensibly now that Actions run logs become publicly visible.
 - Repo description and topics, if discoverability matters to you.
-
-## 7. Flip visibility — last, deliberately
-
-Only once everything above is settled. The same principle as *Context Is Not
-Content* applies here, just at the scale of a whole repository instead of one
-file: the window closes at the moment of the flip, not at the moment someone
-notices a problem, and there is no undo that reaches whatever was already
-cloned, forked, or indexed in between.
