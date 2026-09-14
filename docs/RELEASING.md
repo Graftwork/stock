@@ -216,10 +216,16 @@ Every entry in the CHANGELOG is work waiting to happen in every grafted project.
 Read each project's recorded `stock-version` in its `pyproject.toml`, read this
 CHANGELOG forward from there, and open one small PR per entry.
 
-**There are currently no live grafts.** The first one was retired before v0.2.0
-shipped, so this step has nothing to do yet — which is also why
+**Live grafts, as they appear:**
+
+| Project | Stock version reached |
+| --- | --- |
+| [sorting-office](https://github.com/Graftwork/sorting-office) | `v0.4.0`, confirmed via a real re-sync — see [docs/UAT.md](UAT.md) case 5 |
+
+The very first graft doesn't appear here — it was retired before `v0.2.0`
+shipped, which is also why
 [Stock ADR 0008](decisions/stock-0008-adr-numbering.md) could renumber Stock's
-own ADRs at no cost to anyone.
+own ADRs at no cost to anyone; there was nothing live yet to break.
 
 Keep the list of grafts here as they appear, and record which Stock version each
 one has reached. Nothing tracks whether a migration has landed; if that becomes a
