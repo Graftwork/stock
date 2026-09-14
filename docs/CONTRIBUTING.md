@@ -1,9 +1,11 @@
 # Contributing to Stock
 
-`Graftwork/stock` is private, and most work against it happens from inside a
-grafted project's own Claude Code session — which usually cannot reach
-`Graftwork/stock` directly. This file is about that specific path: routing a
-change back to Stock from a same-owner fork, and why each step is there.
+Most work against `Graftwork/stock` happens from inside a grafted project's
+own Claude Code session — which usually cannot reach `Graftwork/stock`
+directly, since a session's GitHub access is scoped to one repository owner
+at a time (see "Why this shape" below). This file is about that specific
+path: routing a change back to Stock from a same-owner fork, and why each
+step is there.
 
 ## Branch names
 
