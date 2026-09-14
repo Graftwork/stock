@@ -24,6 +24,21 @@ re-sync, and a **minor** bump means the migration is additive.
   inventing content elsewhere to make it resolve, since nothing else in the
   repo documents this fact either.
 
+### Added
+
+- **[`docs/GOING_PUBLIC.md`](docs/GOING_PUBLIC.md)** and
+  [Stock ADR 0015](docs/decisions/stock-0015-going-public-checklist.md) — a
+  once-only checklist for when a repository's visibility actually changes:
+  license and copyright, a full-history secret scan, a cross-repo dead-link
+  check, a sweep for stale conditional wording, a final whole-repository
+  stranger read, and the GitHub-side settings (branch protection in
+  particular) no agent session can currently check on its own.
+
+  Assembled from Stock's own real pre-publication review, not written ahead
+  of need — every item traces to something that actually went wrong or was
+  actually missing here this week, matching every other promoted-from-a-real-
+  case addition to this repo.
+
 ## [0.4.0] — 2026-09-11
 
 **Released as `v0.4.0`.** `v0.4.0-rc.1`'s tag-dependent UAT (case 5) included

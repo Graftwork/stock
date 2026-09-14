@@ -25,6 +25,7 @@ plumbing.
 | [`WORKFLOW.md`](WORKFLOW.md) | How changes are run — the loop, the conventions, the tool's rough edges |
 | [`docs/UAT.md`](docs/UAT.md) | The checks that need human senses, and when they run |
 | [`docs/RELEASING.md`](docs/RELEASING.md) | Branch to tag to re-sync — how a change gets out |
+| [`docs/GOING_PUBLIC.md`](docs/GOING_PUBLIC.md) | The once-only checklist for when a repository's visibility actually changes |
 | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Lint + test + coverage upload |
 | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | The same checks, before the commit lands |
 | [`.devcontainer/`](.devcontainer/) | Reproducibility layer, for when a project graduates |
