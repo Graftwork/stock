@@ -115,22 +115,32 @@ because it's the irreversible one.
 
 ## 7. GitHub-side repository settings — now that the repo is public
 
-**Branch protection specifically cannot happen before step 6.** Confirmed
-directly by the repo owner's own attempt in the GitHub UI, not assumed in
-advance: GitHub refused to let Stock's own private repository configure
-branch protection at all — account-plan-dependent, most likely, though that
-specific mechanism wasn't independently verified, only the refusal itself.
-So this step necessarily comes *after* the flip, not before it, however
-much tidier "settle everything, then flip" would have been. None of it is
-checkable or settable by an agent session either way, as of this writing —
-no tool access to GitHub's branch-protection API. It's a manual pass, in
-Settings → Branches (or the newer Rulesets UI, depending on what your
-account shows).
+**Branch protection specifically cannot happen before step 6, on most
+plans.** Confirmed both directly (Stock's own private repository refused to
+configure it) and against [GitHub's own documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets):
+rulesets and branch protection rules are enforced on public repositories on
+every plan, but on private repositories only from GitHub Team upward — Free
+and Pro accounts can configure nothing on a private repo, full stop. If
+you're on Team or Enterprise, this step doesn't have to wait for step 6; on
+Free or Pro, it does, same as it did here. So this step necessarily comes
+*after* the flip on most accounts, not before it, however much tidier
+"settle everything, then flip" would have been. None of it is checkable or
+settable by an agent session either way, as of this writing — no tool access
+to GitHub's branch-protection API. It's a manual pass, in Settings →
+Branches (or the newer Rulesets UI, depending on what your account shows).
 
 - **Require a pull request before merging** on the default branch. Turns
   "changes reach `main` by branch and PR, never a direct commit" from a
   written convention into something GitHub actually enforces.
-- **Require the project's CI status check to pass** before merging.
+- **Require the project's CI status check to pass** before merging. The name
+  GitHub matches against is the **job name**, not the workflow name — Stock's
+  workflow is called `CI`, but the job inside it is named `check`; searching
+  for `CI` in the "Add checks" box won't match anything. Confirmed directly
+  by inspecting a real PR's Checks tab, not assumed — verify the job name the
+  same way on each repo rather than copying `check` across, since it isn't
+  guaranteed to match. A check also only becomes selectable once it has run
+  at least once on the repo, so a project with no PR history yet may need one
+  CI run before the option appears.
 - **Disallow force pushes** to the default branch. This is the one that
   matters most — though precisely: a tag is an independent ref, and
   force-pushing the default branch cannot move, delete, or otherwise affect
