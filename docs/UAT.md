@@ -70,7 +70,9 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** lint clean, suite passes, no edits needed to get there. If the
   first command a new project runs is red, the foundation has broken its one
   promise.
-- **Last agent run:** 2026-08-16 — 18 passed, ruff clean, from tracked files only.
+- **Last agent run:** 2026-09-28 — 18 passed, ruff clean, from tracked files
+  only; `pyproject.toml` in the rehearsal copy reads `version = "0.5.0"`,
+  agreeing with the working tree.
 - **Last passed:** never — awaiting a human read.
 
 ### 2. The guard's failure output tells a human what to do
@@ -80,7 +82,7 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the scenario is named, located by file and line, and followed by a
   `fix:` line you could paste. Judgement call: could someone who has never seen
   this repo act on the output without reading the guard's source?
-- **Last agent run:** 2026-08-16 — named the scenario, gave `spec.md:115`, and
+- **Last agent run:** 2026-09-28 — named the scenario, gave `spec.md:115`, and
   printed a pasteable `fix:` line.
 - **Last passed:** never — the judgement call is a person's.
 
@@ -91,8 +93,9 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-08-16 — `9/12 scenarios claimed by tests, 3 allowed
-  without one`; the three reasons printed in full for reading.
+- **Last agent run:** 2026-09-28 — `9/12 scenarios claimed by tests, 3 allowed
+  without one`; the three reasons printed in full for reading, none quietly
+  gone stale.
 - **Last passed:** never — whether each reason still holds is a person's call.
 
 ### 4. The artifacts read clean to a stranger
@@ -117,8 +120,8 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-08-16 — read the full staged diff for this change;
-  reported no personal or identifying detail. See the completion report.
+- **Last agent run:** 2026-09-28 — read the full staged diff for this change
+  (the `v0.5.0` version-bump PR); reported no personal or identifying detail.
 - **Last passed:** never — this is the case an agent is least able to close,
   since it cannot know which details are sensitive to you.
 

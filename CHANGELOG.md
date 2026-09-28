@@ -11,6 +11,19 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
+Nothing here yet — the next real change starts a fresh section.
+
+## [0.5.0] — 2026-09-28
+
+**Not yet released.** Version decided and this entry written per
+[`RELEASING.md` step 5](docs/RELEASING.md#5-decide-the-version-and-write-the-changelog-entry);
+no release candidate exists yet. Remove this line once `v0.5.0` actually
+ships — see step 8's note on amending in place if the candidate's own UAT
+finds something first.
+
+**Minor** — both entries below are additive; a project already grafted from
+`v0.4.0` stays green without adopting either of them.
+
 ### Fixed
 
 - **`NOTICE` pointed to `WORKFLOW.md`'s "Growing this file" section and
