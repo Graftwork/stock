@@ -15,11 +15,10 @@ Nothing here yet — the next real change starts a fresh section.
 
 ## [0.5.0] — 2026-09-28
 
-**Not yet released.** Version decided and this entry written per
-[`RELEASING.md` step 5](docs/RELEASING.md#5-decide-the-version-and-write-the-changelog-entry);
-no release candidate exists yet. Remove this line once `v0.5.0` actually
-ships — see step 8's note on amending in place if the candidate's own UAT
-finds something first.
+**Not yet released.** `v0.5.0-rc.1` is out; this entry is amended in place
+per [`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
+as the candidate's own UAT finds things, rather than filed separately.
+Remove this line once `v0.5.0` actually ships.
 
 **Minor** — both entries below are additive; a project already grafted from
 `v0.4.0` stays green without adopting either of them.
@@ -51,6 +50,17 @@ finds something first.
   of need — every item traces to something that actually went wrong or was
   actually missing here this week, matching every other promoted-from-a-real-
   case addition to this repo.
+
+- **`.claude/skills/stock-graft-existing-project/` is present in this tag,
+  and is not ready to use.** Its own frontmatter says so —
+  `status: "draft — in progress... not yet proposed upstream"`, several
+  sections marked `(pending)` — and that stays true here; nothing about it
+  changed for this release. Disclosed only so its presence doesn't go
+  undiscovered: it was added across several `v0.4.0`-era PRs with no
+  CHANGELOG entry of its own, missed at review each time, and only surfaced
+  now because a real `v0.5.0-rc.1` graft (`talks`) read through everything
+  the tag added rather than trusting this file to say so. Not a capability
+  to adopt yet — treat it as absent until a real entry replaces this one.
 
 ## [0.4.0] — 2026-09-11
 
