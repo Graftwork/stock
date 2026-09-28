@@ -56,11 +56,12 @@ Remove this line once `v0.5.0` actually ships.
   `status: "draft — in progress... not yet proposed upstream"`, several
   sections marked `(pending)` — and that stays true here; nothing about it
   changed for this release. Disclosed only so its presence doesn't go
-  undiscovered: it was added across several `v0.4.0`-era PRs with no
-  CHANGELOG entry of its own, missed at review each time, and only surfaced
-  now because a real `v0.5.0-rc.1` graft (`talks`) read through everything
-  the tag added rather than trusting this file to say so. Not a capability
-  to adopt yet — treat it as absent until a real entry replaces this one.
+  undiscovered: it was added in one PR (#17), whole, with no CHANGELOG
+  entry of its own — missed once, at that PR's own review, and only
+  surfaced now because a real `v0.5.0-rc.1` graft (`talks`) read through
+  everything the tag added rather than trusting this file to say so. Not a
+  capability to adopt yet — treat it as absent until a real entry replaces
+  this one.
 
 ## [0.4.0] — 2026-09-11
 
