@@ -67,7 +67,7 @@ wheels = [
 
 [[package]]
 name = "graftwork-stock"
-version = "0.5.0"
+version = "0.5.1"
 source = { virtual = "." }
 
 [package.dev-dependencies]

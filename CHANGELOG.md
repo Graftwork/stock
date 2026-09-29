@@ -11,6 +11,10 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
+Nothing here yet — the next real change starts a fresh section.
+
+## [0.5.1] — 2026-09-29
+
 **Patch** — fixes existing tooling, adds no new promise or interface.
 
 ### Fixed
@@ -41,11 +45,6 @@ re-sync, and a **minor** bump means the migration is additive.
   be that.
 
 ## [0.5.0] — 2026-09-28
-
-**Not yet released.** `v0.5.0-rc.1` is out; this entry is amended in place
-per [`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
-as the candidate's own UAT finds things, rather than filed separately.
-Remove this line once `v0.5.0` actually ships.
 
 **Minor** — both entries below are additive; a project already grafted from
 `v0.4.0` stays green without adopting either of them.
@@ -607,6 +606,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.5.1]: https://github.com/Graftwork/stock/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Graftwork/stock/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Graftwork/stock/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Graftwork/stock/releases/tag/v0.3.0
