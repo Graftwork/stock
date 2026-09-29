@@ -16,20 +16,29 @@ re-sync, and a **minor** bump means the migration is additive.
 ### Fixed
 
 - **The automated review workflow (`.github/workflows/claude-review.yml`)
-  never posted anything.** Invoking `/code-review:code-review` goes through
-  the `Skill` tool, which was missing from `--allowedTools` — the very first
-  step was denied, and the run fell back to an ad-hoc, turn-exhausting
-  workaround that never posted a result. Confirmed twice over: this
-  repository's own PR #29 hit `permission_denials_count: 1` and posted
-  nothing, and [`Graftwork/talks`](https://github.com/Graftwork/talks) PR #3
-  showed the same failure with a temporary `show_full_output: true`
-  diagnostic, naming `Skill` as the first denied tool. Added
-  `Skill(code-review:code-review)` — scoped to that one skill by its
-  qualified name, not a bare `Skill` grant, since the plugin marketplace it
-  comes from is itself un-pinned — alongside the two grants already there.
-  **Migration:** re-sync this entry into any project's own
-  `claude-review.yml`; its automated review has likely never posted anything
-  either.
+  never posted anything, for two separate reasons.** Every run reported
+  `success` regardless. Both fixes are needed; the first alone is not enough.
+  1. `Skill(code-review:code-review)` was missing from `--allowedTools`.
+     The prompt runs `/code-review:code-review`, which goes through the
+     `Skill` tool, so the first step was denied
+     (`permission_denials_count: 1`). Seen in this repository and in
+     [`Graftwork/talks`](https://github.com/Graftwork/talks). Scoped to that
+     one skill, not a bare `Skill` grant, since the plugin marketplace is
+     un-pinned.
+  2. The plugin starts subagents in the background, and the action's single
+     non-interactive turn can end while they are still running, still
+     reported as `success`. The workflow now sets
+     `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` through the action's `settings`
+     input (a workflow `env:` does not reach Claude Code). Measured in
+     [`sorting-office`](https://github.com/Graftwork/sorting-office), same
+     code change on two PRs: switch off, nothing posted; switch on, two
+     inline comments posted. One run per arm.
+
+  **Migration:** apply both changes to your own `claude-review.yml`. Until
+  you do, its automated review has likely never posted anything. Test with a
+  code change described neutrally: the plugin can decline a PR that calls
+  itself a throwaway, and a run that ends quickly with nothing posted may
+  be that.
 
 ## [0.5.0] — 2026-09-28
 

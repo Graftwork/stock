@@ -124,12 +124,8 @@ jobs:
           # its own PR #3 and, with a temporary `show_full_output: true`
           # diagnostic, showed the denial was exactly this — `{"tool_name":
           # "Skill", "tool_input": {"skill": "code-review:code-review",
-          # ...}}` — as the first entry in permission_denials. Denied at that
-          # first step, the agent falls back to spawning background
-          # subagents to redo the review by hand and burns its turns on
-          # ad-hoc Bash calls (also denied, not matching `gh pr comment`),
-          # ending with "I'll wait for their completion notifications" and
-          # no result ever posted.
+          # ...}}` — as the first entry in permission_denials. This grant is
+          # necessary but not sufficient: see `settings` below.
           # mcp__github_inline_comment__create_inline_comment: without naming
           # it here, the action never starts the MCP server that posts inline
           # PR comments at all — the code-review skill's own allowed-tools
@@ -144,6 +140,23 @@ jobs:
           # necessary, but not sufficient on their own, which the Graftwork/talks
           # PR #3 and this repository's own PR #29 both went on to show.
           claude_args: '--add-dir pr-head --allowedTools "Skill(code-review:code-review),mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*)"'
+          # With the grants above the review still posted nothing: the plugin
+          # starts subagents in the background, and this action's single
+          # non-interactive turn can end while they are still running, which
+          # is reported as `success` with nothing reviewed. Measured in
+          # Graftwork/sorting-office (this pinned action version), same code
+          # change on two PRs: switch off — 4 of 7 subagents in the
+          # background, run ended "still running", nothing posted; switch on —
+          # 9 of 9 in the foreground, two inline comments posted. One run per
+          # arm, so the effect is observed, not proven repeatable.
+          # It goes through `settings`, not a workflow `env:`: the action's
+          # Claude step passes only an explicit allowlist of environment
+          # variables, and this one is not on it (read from action.yml at the
+          # pinned SHA); `settings` is written to ~/.claude/settings.json.
+          # A run that ends in a few turns with nothing posted may be the
+          # plugin's own first step declining a PR that calls itself a
+          # throwaway or "do not merge" — describe test PRs neutrally.
+          settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
           # Dependabot PRs only ever touch dependency-pin lines (pyproject.toml, devcontainer
           # feature versions), so they carry no attacker-controlled content; allow the action to
           # run for them rather than failing every dependency-bump PR's review check.
