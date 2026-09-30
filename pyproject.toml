@@ -21,6 +21,7 @@ unclaimed = [
     { scenario = "foundation/a-pull-request-carrying-ai-generated-code-names-the-agent-and-model", reason = "review policy; the suite cannot observe a pull request" },
     { scenario = "foundation/personal-detail-supplied-as-context-stays-out-of-the-artifacts", reason = "review policy; no test can read a requirement and tell whether a named correspondent is a category or a real person" },
     { scenario = "foundation/a-load-bearing-specific-is-confirmed-before-it-is-written-down", reason = "review policy; the confirmation happens in conversation, which the suite cannot observe" },
+    { scenario = "foundation/a-pull-request-or-issue-contains-no-session-link", reason = "review policy; the suite cannot observe what an agent writes for a pull request or issue, and a link the platform's tooling appends afterward is outside any repository rule" },
 ]
 
 [tool.pytest.ini_options]

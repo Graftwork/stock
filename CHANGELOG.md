@@ -11,7 +11,7 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-**Minor** — additive; a project that adopts neither change stays green.
+**Minor** — additive; a project that adopts none of the changes below stays green.
 
 ### Added
 
@@ -29,6 +29,33 @@ re-sync, and a **minor** bump means the migration is additive.
   The links are opaque IDs, not readable by other accounts (checked signed
   out and from a second account), but they are permanent once committed.
   **Migration:** add the key to your own `.claude/settings.json`.
+
+- **`foundation` gains Coding Session Links Are Not Disclosed**, alongside
+  the existing *AI Authorship Is Disclosed*: name the coding agent and model,
+  never write a link to the private session or conversation that produced a
+  change. **Scope, stated plainly:** it governs what the agent writes and what
+  a commit message contains. It does not reach a link that the GitHub tool
+  appends to a pull request body after the agent has written it (measured, see
+  the `attribution` entry above); the rule tells you to edit that out
+  afterwards. Reported from
+  [`Graftwork/talks`](https://github.com/Graftwork/talks): the link kept
+  reappearing in PR bodies across several PRs despite being stripped each
+  time, which is consistent with a tool-appended footer (not checked in that
+  repository from here).
+  - The commit-message half is caught mechanically: a new `no-session-link`
+    pre-commit hook, at the `commit-msg` stage. Run `pre-commit install` (no
+    extra flag — `default_install_hook_types` now covers both stages) to pick
+    it up on an existing clone. With `sessionUrl: false` above, the agent no
+    longer starts from an instruction to add the link, so the hook is a
+    backstop rather than the only defence.
+  - What the agent writes for a pull request or issue is a declared
+    review-policy gap, the same limitation *AI Authorship Is Disclosed* lives
+    with: the suite cannot observe it.
+  - **Migration for an already-grafted project:** add the equivalent house
+    rule to your own `CLAUDE.md`, even before re-syncing this entry — the
+    platform default applies per repository, not per Stock version. To get the
+    hook, add the `no-session-link` entry and `default_install_hook_types` from
+    `.pre-commit-config.yaml`, plus `scripts/check_no_session_link.py`.
 
 ### Changed
 
