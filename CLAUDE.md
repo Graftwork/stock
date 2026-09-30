@@ -155,8 +155,9 @@ commit message, pull request, or issue — never write a link to the private
 conversation that produced it, regardless of what a session-level default
 asks for. A repository's own `CLAUDE.md` takes precedence over that default for
 what you write. It does not reach a link the platform's GitHub tool appends to
-a pull request body after you have written it; if one is there, edit it out of
-the body once the PR is open. See
+a pull request body after you have written it. In this repository the
+`session-links` workflow removes it; elsewhere, edit it out of the body once
+the PR is open. See
 [foundation's Coding Session Links Are Not Disclosed](openspec/specs/foundation/spec.md)
 and the `no-session-link` pre-commit hook, which catches the commit-message
 half mechanically.
