@@ -157,20 +157,21 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
-- **Last agent run:** 2026-09-28 — the mechanical rehearsal ran clean
-  against `v0.5.0-rc.1` from this session (`mise` unavailable here; ran the
-  `uv`/`ruff` equivalents instead — see `CLAUDE.md`), `pyproject.toml`
-  agreeing on `0.5.0`, README naming the stable tag. Separately, a real
-  graft of `v0.5.0-rc.1` onto `talks` found a genuine gap: the draft
-  `stock-graft-existing-project` skill is present in the tag with no
-  CHANGELOG entry disclosing it — reported here secondhand, not run or
-  observed directly by this session. Folded into the `[0.5.0]` entry;
-  `-rc.2` incoming.
-- **Last passed:** 2026-09-14, against `v0.4.0` — confirmed by the person who ran the
-  `sorting-office` re-sync: it worked. That real graft, not the rehearsal
-  alone, is what this case is actually meant to test. (The `v0.3.0-rc.2`
-  record this replaces is preserved in git history, not duplicated here —
-  see the "Case format" section above.)
+- **Last agent run:** 2026-10-02 — against `v0.5.1-rc.1` (commit `b42c526`;
+  the stable `v0.5.1` tag was then cut on that same commit, identical tree). A
+  clean copy of the candidate: `pytest` 18 passed, `ruff check` and
+  `ruff format --check` clean, the traceability guard `9/12` claimed with 3
+  declared gaps, `pyproject.toml` reading `version = "0.5.1"`, and the README
+  graft snippet naming `v0.5.1`. The real re-sync of `sorting-office` from the
+  candidate (its PR #22) was re-run independently on its branch: 45 passed,
+  ruff clean, guard `34/37` with 3 declared gaps, and its `claude-review.yml`
+  byte-identical to the tag's. `mise` is unavailable in the agent environment,
+  so the `uv`/`ruff` equivalents ran instead (see `CLAUDE.md`).
+- **Last passed:** 2026-10-02, against `v0.5.1` — confirmed by the person who
+  re-synced `sorting-office` from `v0.5.1-rc.1` (its PR #22): it worked. That
+  real graft, not the rehearsal alone, is what this case is actually meant to
+  test. (The `v0.4.0` record this replaces is preserved in git history, not
+  duplicated here — see the "Case format" section above.)
 
 ---
 
