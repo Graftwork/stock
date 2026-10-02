@@ -92,6 +92,47 @@ re-sync, and a **minor** bump means the migration is additive.
   there now run them. **Migration:** add the same line to your own
   session-start hook.
 
+### Fixed
+
+The items under Fixed are patch-level on their own; the additions above set
+this section at **minor**. See
+[Graftwork/stock#39](https://github.com/Graftwork/stock/issues/39) for the
+evidence behind each one. Which version carries them is not decided here:
+the `[0.5.1]` entry below describes what `v0.5.1-rc.1` carried.
+
+- **The automated review workflow (`.github/workflows/claude-review.yml`)
+  reported a green check whether or not a review happened.** Every earlier
+  failure (the missing `Skill` grant, the background subagents) ended the
+  same way: job `success`, nothing posted. The workflow now ends with a step
+  that fails the job when any of these is true:
+  - the action reports one or more permission denials;
+  - the action reports `is_error: true` (seen in `Graftwork/talks`: job
+    green with `is_error: true` and 8 denials);
+  - no comment or review by `claude[bot]` was posted on the pull request
+    since the run started;
+  - the pull request edits `claude-review.yml` itself. The action skips
+    itself for those (it requires the workflow file to match the default
+    branch's) and exits `success` in seconds; measured in `Graftwork/talks`.
+    The check now fails for them so a skip is never green. **Merging such a
+    pull request needs a repository admin to bypass the check**, after a
+    human has read the change. This is deliberate; to make it a warning
+    instead, change the `fail` call in that one branch of the step.
+- **The workflow now also runs on `synchronize` (a push to an open pull
+  request), not only `opened` and `ready_for_review`.** Needed so the check
+  can be made *required*: a required check is matched to the head commit, so
+  without it any pull request with a follow-up push would wait for a check
+  that never runs. Cost: one review per push, not one per pull request.
+- **`show_full_output: true` is on in this change for testing only** and is
+  removed again before the release that contains this entry. It prints the
+  full review transcript into the run log.
+
+  **Migration:** copy the new final step, the `Record when this review
+  started` step, the `id: review` on the action step, and the `synchronize`
+  trigger into your own `claude-review.yml`. Expect the check to go red where
+  it was green: that is the point, and each failure message names the cause.
+  Making the check required is a repository setting (Settings, Rules), not
+  something the workflow file can do; use the job name `review`.
+
 ## [0.5.1] — 2026-09-29
 
 **Patch** — fixes existing tooling, adds no new promise or interface.

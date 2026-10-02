@@ -1,12 +1,21 @@
 name: Claude Code Review
 
-# Automatically review pull requests with Claude when they are opened or marked
-# ready for review. Authentication uses a Claude subscription OAuth token stored
-# in the CLAUDE_CODE_OAUTH_TOKEN repository secret, so reviews draw on the
-# existing Claude plan rather than a separate Anthropic API key.
+# Automatically review pull requests with Claude when they are opened, marked
+# ready for review, or pushed to. Authentication uses a Claude subscription
+# OAuth token stored in the CLAUDE_CODE_OAUTH_TOKEN repository secret, so
+# reviews draw on the existing Claude plan rather than a separate Anthropic API
+# key.
+#
+# `synchronize` (a push to an open PR) is here because the final step of the
+# job is meant to be a *required* check. A required check is matched against
+# the PR's head commit, so without this a PR with a follow-up push would wait
+# for a check that never runs on the new commit. The cost is one review per
+# push rather than per PR; the concurrency group below keeps them from
+# overlapping. Derived from how required checks behave, not yet observed here:
+# confirm on the first PR that gets a second push.
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [opened, ready_for_review, synchronize]
 
 # Cancel an in-progress review when the same pull request triggers another run,
 # so a single PR never consumes subscription quota on overlapping reviews.
@@ -61,7 +70,14 @@ jobs:
           path: pr-head
           fetch-depth: 1
 
+      # The gate at the bottom only counts comments posted after this moment, so
+      # a comment left by an earlier run on the same PR cannot satisfy it.
+      - name: Record when this review started
+        id: started
+        run: echo "at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
       - name: Run Claude code review
+        id: review
         # Pinned to a commit SHA, not the floating @v1 tag — this is a
         # different risk from the checkout split above, and one with a real,
         # disclosed precedent specific to this action: PR content (a title, a
@@ -157,7 +173,85 @@ jobs:
           # plugin's own first step declining a PR that calls itself a
           # throwaway or "do not merge" — describe test PRs neutrally.
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
+          # TEMPORARY: REMOVE THIS LINE BEFORE ANY RELEASE. Prints the whole
+          # transcript into the run log so the probe PRs for Graftwork/stock#39
+          # can be read; the action warns those logs "may contain secrets" and,
+          # on a public repository, are visible to everyone. Private while
+          # testing, off again in the very next change.
+          show_full_output: true
           # Dependabot PRs only ever touch dependency-pin lines (pyproject.toml, devcontainer
           # feature versions), so they carry no attacker-controlled content; allow the action to
           # run for them rather than failing every dependency-bump PR's review check.
           allowed_bots: "dependabot"
+
+      # A green tick has to mean a review happened. The action above reports
+      # `success` when Claude is denied a tool, errors out, ends its turn early,
+      # or skips itself entirely; every failure this workflow has had ended that
+      # way, with nothing posted (Graftwork/stock#39). So check the outcome
+      # rather than the exit code. It reads only the action's own output file,
+      # the GitHub API, and a byte comparison of the two workflow files; it
+      # never executes anything from the pull request.
+      - name: Fail unless a review was actually posted
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          STARTED_AT: ${{ steps.started.outputs.at }}
+          EXECUTION_FILE: ${{ steps.review.outputs.execution_file }}
+          # The identity the action comments as. Confirm against a live run
+          # before trusting this: a wrong name fails every review, loudly.
+          REVIEW_BOT: claude[bot]
+        run: |
+          set -euo pipefail
+
+          fail() {
+            echo "::error title=No review happened::$1"
+            echo "### No review happened" >> "$GITHUB_STEP_SUMMARY"
+            echo "$1" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
+
+          # The action refuses to run when this file differs from the default
+          # branch's (measured: "Skipping action due to workflow validation",
+          # job green in 7 s). Such a pull request is not reviewed by Claude, so
+          # this job must not be green for it.
+          if ! cmp -s .github/workflows/claude-review.yml pr-head/.github/workflows/claude-review.yml; then
+            fail "This pull request edits claude-review.yml, so the action skipped itself and nothing was reviewed. Review it by hand; merging it needs a repository admin to bypass this check."
+          fi
+
+          if [ -z "${EXECUTION_FILE:-}" ] || [ ! -s "$EXECUTION_FILE" ]; then
+            fail "The action produced no execution file, so there is nothing to check."
+          fi
+
+          result=$(jq -s 'flatten | map(select(type == "object" and .type == "result")) | last // {}' "$EXECUTION_FILE")
+          denials=$(jq -r '.permission_denials_count // ((.permission_denials // []) | length)' <<<"$result")
+          is_error=$(jq -r '.is_error // false' <<<"$result")
+          turns=$(jq -r '.num_turns // "unknown"' <<<"$result")
+          {
+            echo "### Review run"
+            echo "- permission denials: $denials"
+            echo "- is_error: $is_error"
+            echo "- turns: $turns"
+            echo "- subagents: $(jq -c '.subagent_stats // {}' <<<"$result")"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$denials" != "0" ]; then
+            names=$(jq -r '[.permission_denials[]?.tool_name] | unique | join(", ")' <<<"$result")
+            fail "Claude was denied $denials tool call(s) (${names:-names not reported}). Add the exact tool to --allowedTools only after reading why; never a bare grant."
+          fi
+          if [ "$is_error" = "true" ]; then
+            fail "Claude Code reported is_error: true."
+          fi
+
+          posted=$(
+            {
+              gh api --paginate "repos/$REPO/issues/$PR_NUMBER/comments"
+              gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/comments"
+              gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/reviews"
+            } | jq -s --arg bot "$REVIEW_BOT" --arg since "$STARTED_AT" \
+              '[.[][] | select(.user.login == $bot) | select((.created_at // .submitted_at // "") >= $since)] | length'
+          )
+          echo "- comments posted by $REVIEW_BOT since $STARTED_AT: $posted" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$posted" = "0" ]; then
+            fail "The run finished without an error but $REVIEW_BOT posted no comment or review on this pull request."
+          fi
