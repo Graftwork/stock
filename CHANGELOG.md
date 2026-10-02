@@ -105,31 +105,54 @@ the `[0.5.1]` entry below describes what `v0.5.1-rc.1` carried.
   failure (the missing `Skill` grant, the background subagents) ended the
   same way: job `success`, nothing posted. The workflow now ends with a step
   that fails the job when any of these is true:
-  - the action reports one or more permission denials;
+  - the review bot (`claude[bot]`) posted no comment or review on the pull
+    request since the run started;
   - the action reports `is_error: true` (seen in `Graftwork/talks`: job
     green with `is_error: true` and 8 denials);
-  - no comment or review by `claude[bot]` was posted on the pull request
-    since the run started;
   - the pull request edits `claude-review.yml` itself. The action skips
     itself for those (it requires the workflow file to match the default
     branch's) and exits `success` in seconds; measured in `Graftwork/talks`.
     The check now fails for them so a skip is never green. **Merging such a
     pull request needs a repository admin to bypass the check**, after a
-    human has read the change. This is deliberate; to make it a warning
-    instead, change the `fail` call in that one branch of the step.
+    human has read the change;
+  - a tool the review is meant to use was denied: `Skill`, the inline-comment
+    tool, or `gh pr comment`.
+
+  **Other permission denials only warn.** The first version failed on any
+  denial. Measured on a pull request with planted bugs: the review named both
+  and posted, and four exploratory `Bash` calls (`gh pr diff`, `git ls-tree`,
+  a `python3` trace) were denied, which turned a good review red. They differ
+  from run to run and one of them executes code, so granting them one at a
+  time would not converge and would widen the allowlist for nothing. The
+  denied commands are listed in the run summary and in one comment on the
+  pull request, which is updated in place on each push. That comment comes
+  from a separate job (`denied-calls-comment`) with `pull-requests: write`,
+  so the job that runs the model keeps a read-only token; it is skipped for
+  fork pull requests and never fails the check.
+
+  **"Nothing to review" is an explicit outcome, not silence.** The review
+  declines pull requests it judges to have nothing to review and, left alone,
+  posts nothing (measured on an empty commit). The prompt now asks it to post
+  a comment beginning `No reviewable changes`, and the gate accepts that. It
+  accepts it only when the pull request has no changed files other than
+  Markdown, checked from the GitHub API and not from anything the model said;
+  otherwise text in a pull request could talk the review out of reviewing
+  code. Only `claude[bot]`'s comments count, so the denied-calls comment and
+  the `session-links` job (both `github-actions[bot]`) can never make a broken
+  run look reviewed. Whether the review follows the new instruction is checked
+  on a live run, not assumed; if it does not, the gate still fails loudly.
 - **The workflow now also runs on `synchronize` (a push to an open pull
   request), not only `opened` and `ready_for_review`.** Needed so the check
   can be made *required*: a required check is matched to the head commit, so
   without it any pull request with a follow-up push would wait for a check
   that never runs. Cost: one review per push, not one per pull request.
-- **`show_full_output: true` is on in this change for testing only** and is
-  removed again before the release that contains this entry. It prints the
-  full review transcript into the run log.
 
   **Migration:** copy the new final step, the `Record when this review
   started` step, the `id: review` on the action step, and the `synchronize`
   trigger into your own `claude-review.yml`. Expect the check to go red where
   it was green: that is the point, and each failure message names the cause.
+  Copy the `denied-calls-comment` job too if you want the comment, and the
+  second paragraph of the `prompt` for the "nothing to review" outcome.
   Making the check required is a repository setting (Settings, Rules), not
   something the workflow file can do; use the job name `review`.
 
