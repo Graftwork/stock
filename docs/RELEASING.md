@@ -100,6 +100,13 @@ git tag -a v<X.Y.Z>-rc.1 -m "v<X.Y.Z>-rc.1"
 git push origin v<X.Y.Z>-rc.1
 ```
 
+**Without `git` installed:** on the repository's **Releases** page choose
+**Draft a new release**. Type `v<X.Y.Z>-rc.1` in *Choose a tag* and pick
+*Create new tag on publish*. Under *Target*, open the **Recent Commits** tab
+and choose the commit the release PR merged as, by its short hash; not a branch
+name, which would move. Tick **Set as a pre-release**, then publish. The release
+page shows the tag with its commit; check it is the one you chose.
+
 **Not the final tag yet.** Some UAT cases need a real published tag to run
 against — you cannot rehearse "clone Stock at a tag and graft a project from it"
 without a tag to clone. Cutting the stable tag first would mean the release is
@@ -116,6 +123,11 @@ below `v0.3.0` and never gets mistaken for it.
 
 The `README.md` graft snippet keeps naming the **stable** tag throughout. An rc is
 for the person running UAT, not for anyone starting a project.
+
+That means `main`'s README names a tag that does not exist yet from the moment
+the release PR merges until the stable tag is cut, and a project started from it
+in that window fails to clone. It cannot be avoided: UAT case 5 checks that the
+candidate's own README already names the stable tag. Keep the gap short.
 
 ### 8. Run the tag-dependent UAT cases against the candidate
 
@@ -200,6 +212,23 @@ person who looked.**
 git tag -a v<X.Y.Z> -m "v<X.Y.Z>" <the same commit the passing rc points at>
 git push origin v<X.Y.Z>
 ```
+
+**Without `git` installed:** on the **Releases** page choose **Draft a new
+release**, type `v<X.Y.Z>` in *Choose a tag* and pick *Create new tag on
+publish*. Under *Target*, open **Recent Commits** and choose the commit the
+passing candidate points at, by its short hash. Set *Previous tag* to the last
+**stable** release, not a candidate (what Auto picks has not been checked; if
+it picked the candidate, the list would come out empty), then **Generate release
+notes**. That list is a
+check on the target: it should name only the pull requests between the last
+stable release and the candidate's commit, and none merged since. Leave
+*pre-release* unticked and publish. Afterwards, open **Tags**: the new tag and
+the candidate's tag should link to the same commit.
+
+A release made this way creates a *lightweight* tag. So is every Stock tag since
+`v0.2.0` (measured with `git cat-file -t` on each; `v0.1.0` to `v0.1.2` are
+annotated), so the `git tag -a` shown above is not what made them. Either kind
+is fine. What matters is the commit.
 
 Tag on `main`, never on a branch, and on **the exact commit the passing candidate
 pointed at** — otherwise you have released something no one ran UAT against, and

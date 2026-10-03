@@ -70,10 +70,10 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** lint clean, suite passes, no edits needed to get there. If the
   first command a new project runs is red, the foundation has broken its one
   promise.
-- **Last agent run:** 2026-09-30 — on the `session-links-not-disclosed` branch
-  after merging `main` (v0.5.1) and narrowing the requirement: 26 passed, ruff
-  clean, from tracked files only, after `git add -A`; `pyproject.toml` in the
-  rehearsal copy reads `version = "0.5.1"`, agreeing with the working tree.
+- **Last agent run:** 2026-10-02 — on the `0.6.0` prep branch, from tracked
+  files only: 26 passed, `ruff check` and `ruff format --check` clean, and
+  `pyproject.toml` in the rehearsal copy reads `version = "0.6.0"`, agreeing
+  with the working tree.
 - **Last passed:** never — awaiting a human read.
 
 ### 2. The guard's failure output tells a human what to do
@@ -83,8 +83,9 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the scenario is named, located by file and line, and followed by a
   `fix:` line you could paste. Judgement call: could someone who has never seen
   this repo act on the output without reading the guard's source?
-- **Last agent run:** 2026-09-29 — in a scratch copy, named the scenario, gave
-  `spec.md:118`, and printed a pasteable `fix:` line; exit 1.
+- **Last agent run:** 2026-10-02 — in a scratch copy, an added scenario with no
+  claiming test was named (`foundation/probe-scenario-nobody-claims`), located
+  at `spec.md:143`, and given a pasteable `fix:` line; exit 1.
 - **Last passed:** never — the judgement call is a person's.
 
 ### 3. A declared gap reads as a decision, not an oversight
@@ -94,12 +95,13 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-09-30 — `10/14 scenarios claimed by tests, 4 allowed
-  without one`; all four reasons printed for reading. The fourth
-  (`a-pull-request-or-issue-contains-no-session-link`) was rewritten in this
-  change: it now says the suite cannot observe what an agent writes, and that
-  a link the platform's tooling appends afterwards is outside any repository
-  rule. The other three are unchanged and still hold.
+- **Last agent run:** 2026-10-02 — `10/14 scenarios claimed by tests, 4 allowed
+  without one`; all four reasons printed for reading. Three hold unchanged. The
+  fourth (`a-pull-request-or-issue-contains-no-session-link`) said a
+  tool-appended link "is outside any repository rule", which stopped being
+  true when the `session-links` workflow landed; it now says what that workflow
+  does and does not cover (same-repository pull request descriptions only: not
+  issues, comments or reviews). Re-read after the change: all four hold.
 - **Last passed:** never — whether each reason still holds is a person's call.
 
 ### 4. The artifacts read clean to a stranger
@@ -124,15 +126,12 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-09-30 — read the staged diff for the narrowing
-  change (`session-link-scope-agent-written-text`, its archive, the spec,
-  the tests, `CLAUDE.md`, `CHANGELOG.md`, `pyproject.toml`); that covers this
-  round only, not the first round's files, which were already committed.
-  Scanned it for real session ids (only the synthetic `session_01ABC`; none
-  of the ids from the two throwaway pull requests), email addresses (only the
-  `noreply@anthropic.com` trailer in test fixtures) and usernames (none). The
-  concrete identifiers are repository names, `Graftwork/stock` and
-  `Graftwork/talks`; whether `Graftwork/talks` is public was not checked.
+- **Last agent run:** 2026-10-02 — scanned the added lines of the whole prep
+  diff against `main` (every commit, six files), taken after the last content
+  edit and before this record was rewritten: 70 added lines, no session links,
+  no usernames, no token-like strings, no zero-width characters. The only
+  email-shaped text is the `git@github.com` clone address in the README snippet,
+  and the only identifier is the repository name `Graftwork/stock`.
 - **Last passed:** never — this is the case an agent is least able to close,
   since it cannot know which details are sensitive to you.
 

@@ -11,6 +11,10 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
+Nothing here yet — the next real change starts a fresh section.
+
+## [0.6.0] — 2026-10-02
+
 **Minor** — additive; a project that adopts none of the changes below stays green.
 
 ### Added
@@ -56,7 +60,10 @@ re-sync, and a **minor** bump means the migration is additive.
     rule to your own `CLAUDE.md`, even before re-syncing this entry — the
     platform default applies per repository, not per Stock version. To get the
     hook, add the `no-session-link` entry and `default_install_hook_types` from
-    `.pre-commit-config.yaml`, plus `scripts/check_no_session_link.py`.
+    `.pre-commit-config.yaml`, plus `scripts/check_no_session_link.py`. If you
+    declare the `a-pull-request-or-issue-contains-no-session-link` gap in your
+    own `pyproject.toml`, copy its `reason` as it stands in Stock's: it says what
+    the `session-links` workflow does and does not cover.
 
 - **`.github/workflows/session-links.yml` keeps coding-session links out of
   pull request descriptions and commits, in CI.** Enforced in CI because the
@@ -92,13 +99,22 @@ re-sync, and a **minor** bump means the migration is additive.
   there now run them. **Migration:** add the same line to your own
   session-start hook.
 
+- **`docs/RELEASING.md` steps 7 and 9 now also describe the GitHub Releases
+  page**, for a maintainer without `git` installed: where to set the tag and the
+  target commit (steps 7 and 9), the previous tag (step 9 only), and how to
+  check the result. Releases made there create *lightweight* tags, as every
+  Stock tag since `v0.2.0` is (`v0.1.0` to `v0.1.2` are annotated). The doc
+  showed only `git tag -a`, which makes annotated ones, so it was not what made
+  them.
+  **Migration:** if your project keeps its own `docs/RELEASING.md`, copy the
+  paragraphs you want; nothing depends on them.
+
 ### Fixed
 
-The items under Fixed are patch-level on their own; the additions above set
-this section at **minor**. See
-[Graftwork/stock#39](https://github.com/Graftwork/stock/issues/39) for the
-evidence behind each one. Which version carries them is not decided here:
-the `[0.5.1]` entry below describes what `v0.5.1-rc.1` carried.
+These ship with the additions above, in `0.6.0`. They are not part of `0.5.1`,
+which carries only the `Skill` grant and the background-tasks switch (the entry
+below). See [Graftwork/stock#39](https://github.com/Graftwork/stock/issues/39)
+for the evidence behind each one.
 
 - **The automated review workflow (`.github/workflows/claude-review.yml`)
   reported a green check whether or not a review happened.** Every earlier
@@ -749,6 +765,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.6.0]: https://github.com/Graftwork/stock/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Graftwork/stock/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Graftwork/stock/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Graftwork/stock/releases/tag/v0.4.0
