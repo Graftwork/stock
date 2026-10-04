@@ -11,7 +11,11 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-Nothing here yet — the next real change starts a fresh section.
+### Added
+
+- **[Stock ADR 0016](docs/decisions/stock-0016-no-ci-check-on-pushes-to-main.md):
+  no CI check for session links on pushes to `main`.** Records a limit of the
+  `session-links` workflow, which scans pull requests only. No migration.
 
 ## [0.6.0] — 2026-10-02
 
