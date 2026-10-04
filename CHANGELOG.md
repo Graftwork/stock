@@ -11,11 +11,7 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-### Added
-
-- **[Stock ADR 0016](docs/decisions/stock-0016-no-ci-check-on-pushes-to-main.md):
-  no CI check for session links on pushes to `main`.** Records a limit of the
-  `session-links` workflow, which scans pull requests only. No migration.
+Nothing here yet — the next real change starts a fresh section.
 
 ## [0.6.0] — 2026-10-02
 
@@ -86,8 +82,20 @@ re-sync, and a **minor** bump means the migration is additive.
     blamed for commits that were already on it.
   - **Limits, measured or stated as not checked:** the original text stays in
     the pull request's edit history, so this tidies what is displayed and
-    does not erase it. Comments and reviews are not covered. Commits already
-    on `main` are not touched: 26 of them carry a `Claude-Session:` trailer
+    does not erase it. Comments and reviews are not covered. Also not
+    covered, found after this was written: the pull request **title** is not
+    scanned, and a squash merge can carry it into the commit message on
+    `main`; a link written **without `https://`** (`claude.ai/code/session_…`)
+    survives the description cleaning (measured), though the commits job and
+    the hook still catch it in a commit message; on a **fork** pull request
+    the description job is skipped, and a skipped job may count as passing for
+    a required check (recalled, not checked), while the commits job still
+    runs; **pushes to `main`** are not scanned
+    ([Stock ADR 0016](docs/decisions/stock-0016-no-ci-check-on-pushes-to-main.md)).
+    The pattern is written in three places (the hook, the commits job, the
+    description script) and nothing checks that they agree; the missing-scheme
+    case is that drift. A later release is planned to close these.
+    Commits already on `main` are not touched: 26 of them carry a `Claude-Session:` trailer
     in this repository (`git log --grep`), all from before the setting and
     the hook. The cleaning logic lives in the workflow and is not covered by
     the suite; it was exercised by extracting it and running it against
