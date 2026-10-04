@@ -165,7 +165,13 @@ for the evidence behind each one.
   request), not only `opened` and `ready_for_review`.** Needed so the check
   can be made *required*: a required check is matched to the head commit, so
   without it any pull request with a follow-up push would wait for a check
-  that never runs. Cost: one review per push, not one per pull request.
+  that never runs. The review plugin reviews a pull request once (it stops if
+  Claude has already commented; measured on `Graftwork/stock#47`, finding 11
+  on #39), so a push after the first review posted nothing and the gate went
+  red. The `prompt` now tells the review to ignore that condition and review
+  the current head. **Unverified until a live two-push test passes**; if the
+  review ignores the instruction the gate still fails, loudly, so a green tick
+  still means a review happened.
 
   **Migration:** copy the new final step, the `Record when this review
   started` step, the `id: review` on the action step, and the `synchronize`

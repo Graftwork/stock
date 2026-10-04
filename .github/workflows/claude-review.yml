@@ -9,10 +9,13 @@ name: Claude Code Review
 # `synchronize` (a push to an open PR) is here because the final step of the
 # job is meant to be a *required* check. A required check is matched against
 # the PR's head commit, so without this a PR with a follow-up push would wait
-# for a check that never runs on the new commit. The cost is one review per
-# push rather than per PR; the concurrency group below keeps them from
-# overlapping. Derived from how required checks behave, not yet observed here:
-# confirm on the first PR that gets a second push.
+# for a check that never runs on the new commit. Left alone, a push gets no
+# second review: the review plugin stops if Claude has already commented on
+# the pull request (measured on Graftwork/stock#47; #39 finding 11), the run
+# posts nothing, and the gate below goes red. The prompt below therefore tells
+# the review to ignore that condition. Whether it does is checked on a live
+# run, not assumed; if it does not, the gate still fails, loudly. The
+# concurrency group below keeps pushes from overlapping reviews.
 on:
   pull_request:
     types: [opened, ready_for_review, synchronize]
@@ -114,7 +117,11 @@ jobs:
           # itself tracks anthropics/claude-code's default branch un-pinned.
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          # The second paragraph exists because the review declines pull requests it
+          # The second paragraph exists so that a push after the first review is
+          # reviewed too: the plugin's step 1 stops when Claude has already
+          # commented, which would leave the new commits unread behind a red
+          # gate. The head SHA is a hex string from the event, safe to inline.
+          # The third paragraph exists because the review declines pull requests it
           # judges to have nothing to review and, left alone, posts nothing
           # (measured on an empty commit), which is indistinguishable from a silent
           # failure. The gate below accepts the sentinel only for pull requests with
@@ -123,6 +130,8 @@ jobs:
           # instruction is checked on a live run, not assumed.
           prompt: |
             /code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+
+            Earlier comments by Claude on this pull request are not a reason to stop: new commits may have been pushed since any earlier review, and this run reviews the current head, ${{ github.event.pull_request.head.sha }}. When you run the step 1 check, leave out the condition about Claude having already commented.
 
             If the review stops because the pull request has nothing worth reviewing (no file changes, or only documentation changes), post exactly one comment with `gh pr comment` that begins "No reviewable changes" and gives the reason in one sentence, and post nothing else.
           # --add-dir pr-head: the PR's own content, checked out above, isn't
