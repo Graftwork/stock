@@ -169,16 +169,31 @@ for the evidence behind each one.
   Claude has already commented; measured on `Graftwork/stock#47`, finding 11
   on #39), so a push after the first review posted nothing and the gate went
   red. The `prompt` now tells the review to ignore that condition and review
-  the current head. **Unverified until a live two-push test passes**; if the
-  review ignores the instruction the gate still fails, loudly, so a green tick
-  still means a review happened.
+  the current head. Measured on a throwaway pull request (`Graftwork/stock#51`) with a planted
+  bug in each of two commits: the first push was reviewed and named bug one;
+  the second push's run posted new reviews naming bug two (and bug one again),
+  and `review` was green. One pass, not a guarantee: the wording depends on a
+  plugin Stock does not pin, and each push costs a full review (about 6
+  minutes here). If the review ignores the instruction the gate still fails,
+  loudly, so a green tick still means a review happened.
+
+  **Known limit: a small code pull request can get no review, and the check
+  goes red.** On a first attempt (`Graftwork/stock#50`, a 3-line file) the review posted
+  nothing, not even the "No reviewable changes" note, and the gate failed it;
+  an 18-line one (`#51`) was reviewed. Cause not established. Candidates: the
+  plugin skips changes it judges trivial (size), or the description's
+  "throwaway, not to be merged" wording (#51 used the same wording and was
+  reviewed, so wording alone does not explain it). The "No reviewable changes"
+  note only covers Markdown-only pull requests, so expect an occasional admin
+  bypass on a tiny code change. The failure is loud, not silent.
 
   **Migration:** copy the new final step, the `Record when this review
   started` step, the `id: review` on the action step, and the `synchronize`
   trigger into your own `claude-review.yml`. Expect the check to go red where
   it was green: that is the point, and each failure message names the cause.
   Copy the `denied-calls-comment` job too if you want the comment, and the
-  second paragraph of the `prompt` for the "nothing to review" outcome.
+  second and third paragraphs of the `prompt` (review again after a push;
+  the "nothing to review" outcome).
   Making the check required is a repository setting (Settings, Rules), not
   something the workflow file can do; use the job name `review`.
 
