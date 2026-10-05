@@ -70,11 +70,12 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** lint clean, suite passes, no edits needed to get there. If the
   first command a new project runs is red, the foundation has broken its one
   promise.
-- **Last agent run:** 2026-10-02 — on the `0.6.0` prep branch, from tracked
-  files only: 26 passed, `ruff check` and `ruff format --check` clean, and
-  `pyproject.toml` in the rehearsal copy reads `version = "0.6.0"`, agreeing
-  with the working tree.
-- **Last passed:** never — awaiting a human read.
+- **Last agent run:** 2026-10-04 — at `v0.6.0-rc.1` (commit `3ed5e22`), from
+  tracked files only: 26 passed, `ruff check` and `ruff format --check` clean,
+  the traceability guard `10/14` claimed with 4 declared gaps, and
+  `pyproject.toml` in the rehearsal copy reads `version = "0.6.0"`.
+- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+  after reading the output above.
 
 ### 2. The guard's failure output tells a human what to do
 
@@ -83,10 +84,12 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the scenario is named, located by file and line, and followed by a
   `fix:` line you could paste. Judgement call: could someone who has never seen
   this repo act on the output without reading the guard's source?
-- **Last agent run:** 2026-10-02 — in a scratch copy, an added scenario with no
-  claiming test was named (`foundation/probe-scenario-nobody-claims`), located
-  at `spec.md:143`, and given a pasteable `fix:` line; exit 1.
-- **Last passed:** never — the judgement call is a person's.
+- **Last agent run:** 2026-10-04 — in a scratch copy of `v0.6.0-rc.1`, an added
+  scenario with no claiming test was named
+  (`foundation/probe-scenario-nobody-claims`), located at `spec.md:143`, and
+  given a pasteable `fix:` line; exit 1. The tracked tree was not touched.
+- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+  after reading the output above.
 
 ### 3. A declared gap reads as a decision, not an oversight
 
@@ -95,14 +98,16 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-10-02 — `10/14 scenarios claimed by tests, 4 allowed
-  without one`; all four reasons printed for reading. Three hold unchanged. The
-  fourth (`a-pull-request-or-issue-contains-no-session-link`) said a
-  tool-appended link "is outside any repository rule", which stopped being
-  true when the `session-links` workflow landed; it now says what that workflow
-  does and does not cover (same-repository pull request descriptions only: not
-  issues, comments or reviews). Re-read after the change: all four hold.
-- **Last passed:** never — whether each reason still holds is a person's call.
+- **Last agent run:** 2026-10-04 — at `v0.6.0-rc.1`: `10/14 scenarios claimed
+  by tests, 4 allowed without one`; all four reasons printed for reading. All
+  four still read as true to me. The fourth
+  (`a-pull-request-or-issue-contains-no-session-link`) says what the
+  `session-links` workflow covers (same-repository pull request
+  descriptions); it is accurate but not exhaustive, since the `[0.6.0]`
+  CHANGELOG now also lists the title, scheme-less links, fork pull requests
+  and pushes to `main` as uncovered.
+- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — the maintainer accepted
+  that each declared reason still holds.
 
 ### 4. The artifacts read clean to a stranger
 
@@ -126,14 +131,17 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-02 — scanned the added lines of the whole prep
-  diff against `main` (every commit, six files), taken after the last content
-  edit and before this record was rewritten: 70 added lines, no session links,
-  no usernames, no token-like strings, no zero-width characters. The only
-  email-shaped text is the `git@github.com` clone address in the README snippet,
-  and the only identifier is the repository name `Graftwork/stock`.
-- **Last passed:** never — this is the case an agent is least able to close,
-  since it cannot know which details are sensitive to you.
+- **Last agent run:** 2026-10-04 — scanned the added lines of
+  `git diff v0.5.1 v0.6.0-rc.1` (26 files, 1307 added lines): no token-like
+  strings, no zero-width characters, no usernames or personal names. 17 lines
+  mention the pattern `claude.ai/code/session` as text (the workflow, the
+  hook, tests, CHANGELOG, a design document); none contains a real session
+  identifier (`session_` followed by an id), only placeholders such as
+  `session_01ABC`. The only email-shaped text is the `git@github.com` clone
+  address and the `noreply@anthropic.com` co-author address. This covers the
+  whole release, not a single change's artifacts.
+- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+  after reading the output above and the scan's findings.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
@@ -156,20 +164,21 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
-- **Last agent run:** 2026-10-02 — against `v0.5.1-rc.1` (commit `b42c526`;
-  the stable `v0.5.1` tag was then cut on that same commit, identical tree). A
-  clean copy of the candidate: `pytest` 18 passed, `ruff check` and
-  `ruff format --check` clean, the traceability guard `9/12` claimed with 3
-  declared gaps, `pyproject.toml` reading `version = "0.5.1"`, and the README
-  graft snippet naming `v0.5.1`. The real re-sync of `sorting-office` from the
-  candidate (its PR #22) was re-run independently on its branch: 45 passed,
-  ruff clean, guard `34/37` with 3 declared gaps, and its `claude-review.yml`
-  byte-identical to the tag's. `mise` is unavailable in the agent environment,
-  so the `uv`/`ruff` equivalents ran instead (see `CLAUDE.md`).
-- **Last passed:** 2026-10-02, against `v0.5.1` — confirmed by the person who
-  re-synced `sorting-office` from `v0.5.1-rc.1` (its PR #22): it worked. That
-  real graft, not the rehearsal alone, is what this case is actually meant to
-  test. (The `v0.4.0` record this replaces is preserved in git history, not
+- **Last agent run:** 2026-10-04 — against `v0.6.0-rc.1` (commit `3ed5e22`,
+  published as a pre-release): a shallow clone of the tag with `.git` removed
+  gave `pytest` 26 passed, `ruff check` and `ruff format --check` clean, the
+  traceability guard `10/14` with 4 declared gaps, `pyproject.toml` reading
+  `version = "0.6.0"`, and the README graft snippet naming the stable
+  `v0.6.0`. The real re-sync of a graft from the candidate has not been run.
+  `mise` is unavailable in the agent environment, so the `uv`/`ruff`
+  equivalents ran instead (see `CLAUDE.md`).
+- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — confirmed by the person
+  who re-synced `sorting-office` from the candidate (its PRs #23 to #26): it
+  worked. After the re-sync its review workflow, session-links workflow and
+  hook script were byte-identical to the tag's (blob hashes compared), its
+  `stock-version` read `0.6.0-rc.1` and CI was green on `main`. That real
+  graft, not the rehearsal alone, is what this case is actually meant to test.
+  (The `v0.5.1` record this replaces is preserved in git history, not
   duplicated here — see the "Case format" section above.)
 
 ---
