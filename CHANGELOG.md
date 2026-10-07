@@ -76,11 +76,13 @@ Nothing here yet — the next real change starts a fresh section.
 ### Fixed
 
 - **CI pins the `mise` binary.** `.github/workflows/ci.yml` let `jdx/mise-action`
-  resolve the newest `mise` release older than seven days, which is a call to
-  the GitHub API. It failed twice, both before any step of ours ran: on
-  `Graftwork/stock#14` a brand-new release returned a 404 for its download, and
-  on `#57` `mise self-update` to 2026.9.17 was rate limited (HTTP 403,
-  unauthenticated) because the cache held 2026.9.12. The workflow now sets
+  resolve the `mise` release by calling the GitHub API, and resolution failed
+  twice, both before any step of ours ran. On `Graftwork/stock#14` it resolved
+  plain "latest" to a brand-new release whose download returned a 404;
+  `#15` answered with `minimum_release_age: 7d`. On `#57`, under that
+  seven-day floor, `mise self-update` to 2026.9.17 (eight days old) was rate
+  limited (HTTP 403, unauthenticated) because the cache held 2026.9.12. The
+  floor fixed the first failure and not the second. The workflow now sets
   `version: 2026.9.12` (the version the repository's cache already held, installed
   by earlier runs) and drops `minimum_release_age`, which the action applies only
   when `version` is not set (read from its `action.yml`). Not run offline: the

@@ -17,14 +17,17 @@ jobs:
 
       # mise reads mise.toml, so CI and a laptop run the same pinned versions.
       # The mise binary itself is pinned too (`version`), for two measured
-      # reasons. Left to resolve "latest", the action calls the GitHub API, and
-      # a brand-new release has failed twice: CI failed on PR #14 with
+      # reasons. Left to resolve the release, the action calls the GitHub API,
+      # and resolution failed twice before any step of ours ran. On PR #14 it
+      # resolved plain "latest" to a brand-new release and got
       # `curl: (22) ... 404` fetching mise-v2026.9.2-linux-x64.tar.zst right
-      # after that release went out; and on PR #57 `mise self-update` to
-      # 2026.9.17 was rate limited (HTTP 403, unauthenticated) when the cache
-      # held 2026.9.12, before any step of ours ran. A pinned version skips that
-      # resolution, and `minimum_release_age` (which the action applies only
-      # when `version` is not set, per its action.yml) is no longer needed.
+      # after it went out; PR #15 answered that with `minimum_release_age: 7d`.
+      # On PR #57, under that seven-day floor, `mise self-update` to 2026.9.17
+      # (eight days old) was rate limited (HTTP 403, unauthenticated) when the
+      # cache held 2026.9.12. So the floor fixed the first failure and not the
+      # second. A pinned version skips resolution, and `minimum_release_age`
+      # (which the action applies only when `version` is not set, per its
+      # action.yml) is no longer needed.
       # 2026.9.12 is the version this repository's cache already held, installed
       # by earlier runs. To upgrade, change `version` here, once the release is a
       # few days old, and check the first CI run on a cold cache.
