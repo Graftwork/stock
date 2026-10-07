@@ -7,7 +7,7 @@ The rootstock for new projects — a versioned foundation you graft new work ont
 so every project starts from a proven, consistent base and can be re-synced as
 the foundation improves.
 
-**Version 0.6.0.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
+**Version 0.7.0.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
 versions, which doubles as the migration list for already-grafted projects.
 
 ## What you get
@@ -135,7 +135,7 @@ non-blocking so a fresh stamp is never red. See
 Clone Stock at a tag, drop its history, and point the remote at the new repo:
 
 ```bash
-git clone --branch v0.6.0 --depth 1 git@github.com:Graftwork/stock.git <project>
+git clone --branch v0.7.0 --depth 1 git@github.com:Graftwork/stock.git <project>
 rm -rf <project>/.git
 git -C <project> init -b main
 git -C <project> remote add origin <new-repo-url>
@@ -178,7 +178,7 @@ Then:
 
    ```toml
    [tool.graftwork]
-   stock-version = "0.6.0"
+   stock-version = "0.7.0"
    grafted = "YYYY-MM-DD"
    ```
 

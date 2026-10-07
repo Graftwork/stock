@@ -11,6 +11,12 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
+Nothing here yet — the next real change starts a fresh section.
+
+## [0.7.0] — 2026-10-07
+
+**Minor** — additive; a project that adopts none of the changes below stays green.
+
 ### Added
 
 - **`foundation` gains *A Passing Review Check Means A Review Happened*, and

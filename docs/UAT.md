@@ -70,10 +70,11 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** lint clean, suite passes, no edits needed to get there. If the
   first command a new project runs is red, the foundation has broken its one
   promise.
-- **Last agent run:** 2026-10-04 — at `v0.6.0-rc.1` (commit `3ed5e22`), from
-  tracked files only: 26 passed, `ruff check` and `ruff format --check` clean,
-  the traceability guard `10/14` claimed with 4 declared gaps, and
-  `pyproject.toml` in the rehearsal copy reads `version = "0.6.0"`.
+- **Last agent run:** 2026-10-07 — on the `0.7.0` prep branch, from tracked
+  files only: 50 passed, `ruff check` and `ruff format --check` clean, the
+  traceability guard `17/21` claimed with 4 declared gaps, and
+  `pyproject.toml` in the rehearsal copy reads `version = "0.7.0"`, agreeing
+  with the working tree.
 - **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
   after reading the output above.
 
@@ -84,9 +85,9 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the scenario is named, located by file and line, and followed by a
   `fix:` line you could paste. Judgement call: could someone who has never seen
   this repo act on the output without reading the guard's source?
-- **Last agent run:** 2026-10-04 — in a scratch copy of `v0.6.0-rc.1`, an added
-  scenario with no claiming test was named
-  (`foundation/probe-scenario-nobody-claims`), located at `spec.md:143`, and
+- **Last agent run:** 2026-10-07 — in a scratch copy of the prep branch, an
+  added scenario with no claiming test was named
+  (`foundation/probe-scenario-nobody-claims`), located at `spec.md:213`, and
   given a pasteable `fix:` line; exit 1. The tracked tree was not touched.
 - **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
   after reading the output above.
@@ -98,14 +99,11 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-10-04 — at `v0.6.0-rc.1`: `10/14 scenarios claimed
-  by tests, 4 allowed without one`; all four reasons printed for reading. All
-  four still read as true to me. The fourth
-  (`a-pull-request-or-issue-contains-no-session-link`) says what the
-  `session-links` workflow covers (same-repository pull request
-  descriptions); it is accurate but not exhaustive, since the `[0.6.0]`
-  CHANGELOG now also lists the title, scheme-less links, fork pull requests
-  and pushes to `main` as uncovered.
+- **Last agent run:** 2026-10-07 — `17/21 scenarios claimed by tests, 4 allowed
+  without one`; all four reasons printed for reading, none changed since
+  `v0.6.0`. All four still read as true to me; the fourth
+  (`a-pull-request-or-issue-contains-no-session-link`) is accurate but not
+  exhaustive, as recorded on 2026-10-04.
 - **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — the maintainer accepted
   that each declared reason still holds.
 
@@ -131,15 +129,13 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-04 — scanned the added lines of
-  `git diff v0.5.1 v0.6.0-rc.1` (26 files, 1307 added lines): no token-like
-  strings, no zero-width characters, no usernames or personal names. 17 lines
-  mention the pattern `claude.ai/code/session` as text (the workflow, the
-  hook, tests, CHANGELOG, a design document); none contains a real session
-  identifier (`session_` followed by an id), only placeholders such as
-  `session_01ABC`. The only email-shaped text is the `git@github.com` clone
-  address and the `noreply@anthropic.com` co-author address. This covers the
-  whole release, not a single change's artifacts.
+- **Last agent run:** 2026-10-07 — scanned the added lines of
+  `git diff v0.6.0` against the prep working tree (14 files, 954 added lines):
+  no token-like strings, no zero-width characters, no usernames or personal
+  names. One line mentions the pattern `claude.ai/code/session` as text; none
+  contains a real session identifier. The only email-shaped text is the
+  `git@github.com` clone address and the `noreply@anthropic.com` co-author
+  address. This covers the whole release.
 - **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
   after reading the output above and the scan's findings.
 
