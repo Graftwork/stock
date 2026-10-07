@@ -61,6 +61,16 @@ Nothing here yet — the next real change starts a fresh section.
   remove it from the ruleset's required checks. Keep your CI job required. A
   pull request that edits the review workflow still shows `review` red, and
   now no bypass is needed.
+  **Known limit, measured on `#57` and `#59`:** the review's prompt says to
+  post "No reviewable changes" when there are "only documentation changes",
+  and the gate accepts that note only when every changed file is Markdown. A
+  pull request of comment edits or a version bump therefore gets a correct
+  decline and a red `review`, with "the review said there was nothing to
+  review, but this pull request changes files other than Markdown". Both
+  reviews were right, and nothing is blocked. Treat a red `review` that comes
+  with that note as informational. Changing the prompt to say "only Markdown
+  files changed" is the likely fix; it is untested, and the gate is unchanged
+  for now.
 - **The gate no longer fails when a tool the review posts with is denied.**
   v0.6.0's gate matched the text `gh pr comment` anywhere in a denied Bash
   command, so a pull request whose own test file quoted that phrase failed it
