@@ -73,6 +73,22 @@ Nothing here yet — the next real change starts a fresh section.
   `if [ "$intended_count" != "0" ]` block from the gate step in your
   `claude-review.yml`, or copy the step from this release.
 
+### Fixed
+
+- **CI pins the `mise` binary.** `.github/workflows/ci.yml` let `jdx/mise-action`
+  resolve the newest `mise` release older than seven days, which is a call to
+  the GitHub API. It failed twice, both before any step of ours ran: on
+  `Graftwork/stock#14` a brand-new release returned a 404 for its download, and
+  on `#57` `mise self-update` to 2026.9.17 was rate limited (HTTP 403,
+  unauthenticated) because the cache held 2026.9.12. The workflow now sets
+  `version: 2026.9.12` (the version the repository's cache already held, installed
+  by earlier runs) and drops `minimum_release_age`, which the action applies only
+  when `version` is not set (read from its `action.yml`). Not run offline: the
+  first CI run on a cold cache is the check. **Migration:** in your own
+  `ci.yml`, replace `minimum_release_age: 7d` with `version: 2026.9.12` on the
+  `jdx/mise-action` step. To upgrade `mise` later, change that number once the
+  release is a few days old.
+
 ## [0.6.0] — 2026-10-02
 
 **Minor** — additive; a project that adopts none of the changes below stays green.
