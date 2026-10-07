@@ -75,7 +75,7 @@ Case 5 is the same check against the real published tag once it does.
   traceability guard `17/21` claimed with 4 declared gaps, and
   `pyproject.toml` in the rehearsal copy reads `version = "0.7.0"`, agreeing
   with the working tree.
-- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
   after reading the output above.
 
 ### 2. The guard's failure output tells a human what to do
@@ -89,7 +89,7 @@ Case 5 is the same check against the real published tag once it does.
   added scenario with no claiming test was named
   (`foundation/probe-scenario-nobody-claims`), located at `spec.md:213`, and
   given a pasteable `fix:` line; exit 1. The tracked tree was not touched.
-- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
   after reading the output above.
 
 ### 3. A declared gap reads as a decision, not an oversight
@@ -104,7 +104,7 @@ Case 5 is the same check against the real published tag once it does.
   `v0.6.0`. All four still read as true to me; the fourth
   (`a-pull-request-or-issue-contains-no-session-link`) is accurate but not
   exhaustive, as recorded on 2026-10-04.
-- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — the maintainer accepted
+- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — the maintainer accepted
   that each declared reason still holds.
 
 ### 4. The artifacts read clean to a stranger
@@ -136,7 +136,7 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   contains a real session identifier. The only email-shaped text is the
   `git@github.com` clone address and the `noreply@anthropic.com` co-author
   address. This covers the whole release.
-- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — accepted by the maintainer
+- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
   after reading the output above and the scan's findings.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
@@ -160,22 +160,32 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
-- **Last agent run:** 2026-10-04 — against `v0.6.0-rc.1` (commit `3ed5e22`,
+- **Last agent run:** 2026-10-07 — against `v0.7.0-rc.1` (commit `7fccde9`,
   published as a pre-release): a shallow clone of the tag with `.git` removed
-  gave `pytest` 26 passed, `ruff check` and `ruff format --check` clean, the
-  traceability guard `10/14` with 4 declared gaps, `pyproject.toml` reading
-  `version = "0.6.0"`, and the README graft snippet naming the stable
-  `v0.6.0`. The real re-sync of a graft from the candidate has not been run.
-  `mise` is unavailable in the agent environment, so the `uv`/`ruff`
-  equivalents ran instead (see `CLAUDE.md`).
-- **Last passed:** 2026-10-04, against `v0.6.0-rc.1` — confirmed by the person
-  who re-synced `sorting-office` from the candidate (its PRs #23 to #26): it
-  worked. After the re-sync its review workflow, session-links workflow and
-  hook script were byte-identical to the tag's (blob hashes compared), its
-  `stock-version` read `0.6.0-rc.1` and CI was green on `main`. That real
-  graft, not the rehearsal alone, is what this case is actually meant to test.
-  (The `v0.5.1` record this replaces is preserved in git history, not
-  duplicated here — see the "Case format" section above.)
+  gave `pytest` 50 passed, `ruff check` and `ruff format --check` clean, the
+  traceability guard `17/21` with 4 declared gaps, `pyproject.toml` reading
+  `version = "0.7.0"`, and the README graft snippet naming the stable
+  `v0.7.0`. `ci.yml` carries the pinned `mise` version, and CI on `main` at
+  that commit ran green with the pin (the `jdx/mise-action` step succeeded).
+  `sorting-office` was then re-synced from the candidate (its PRs #27 to #30,
+  one per CHANGELOG entry), and I checked the result from this side: its
+  `main` (`d9193b7`) has `claude-review.yml`, `session-links.yml`,
+  `check_no_session_link.py`, `test_review_gate.py` and
+  `test_check_no_session_link.py` byte-identical to the tag (blob hashes),
+  `stock-version = "0.7.0-rc.1"`, the pinned `mise` version in its `ci.yml`,
+  and CI green. The session that did the re-sync reports 77 tests passing, the
+  guard at `42/46` claimed with 4 declared gaps, and that the `mise` pin
+  passed on a cold cache (the first run downloaded the release directly, with
+  no API resolution). `mise` is unavailable in the agent environment, so the
+  `uv`/`ruff` equivalents ran instead (see `CLAUDE.md`).
+- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — confirmed by the person
+  who re-synced `sorting-office` from the candidate (its PRs #27 to #30): it
+  worked. After the re-sync its review workflow, session-links workflow, hook
+  script and both test files for them were byte-identical to the tag's (blob
+  hashes compared), its `stock-version` read `0.7.0-rc.1`, and CI was green on
+  `main`. That real graft, not the rehearsal alone, is what this case is
+  actually meant to test. (The `v0.6.0` record this replaces is preserved in
+  git history, not duplicated here — see the "Case format" section above.)
 
 ---
 

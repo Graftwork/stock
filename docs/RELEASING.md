@@ -249,7 +249,7 @@ CHANGELOG forward from there, and open one small PR per entry.
 
 | Project | Stock version reached |
 | --- | --- |
-| [sorting-office](https://github.com/Graftwork/sorting-office) | `v0.6.0`, confirmed via a real re-sync from `v0.6.0-rc.1`, whose tree is identical to the stable tag's. Its recorded `stock-version` reads `0.6.0-rc.1` until it is next touched — see [docs/UAT.md](UAT.md) case 5 |
+| [sorting-office](https://github.com/Graftwork/sorting-office) | `v0.7.0`, confirmed via a real re-sync from `v0.7.0-rc.1`, whose tree is identical to the stable tag's. Its recorded `stock-version` reads `0.7.0-rc.1` until it is next touched — see [docs/UAT.md](UAT.md) case 5 |
 
 The very first graft doesn't appear here — it was retired before `v0.2.0`
 shipped, which is also why

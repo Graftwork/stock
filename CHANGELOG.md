@@ -11,7 +11,18 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-Nothing here yet — the next real change starts a fresh section.
+### Fixed
+
+- **The v0.7.0 migration has an order.** The `Added` entry (the review-check
+  requirement and `tests/test_review_gate.py`) was listed before the `Changed`
+  entry that updates the gate, and the tests need the new gate: measured, the
+  tag's `test_review_gate.py` gives 24 passed against the v0.7.0 gate and 6
+  failed against the v0.6.0 gate (the "posted nothing" and "denied tool call
+  only warns" cases). **When re-syncing across v0.7.0, apply the gate change
+  first** (copy `claude-review.yml`, or edit it as that entry says), **then**
+  copy the tests and the requirement. Found by the `sorting-office` re-sync,
+  which did it in that order. The v0.7.0 entries themselves are unchanged,
+  because the tag is cut.
 
 ## [0.7.0] — 2026-10-07
 
