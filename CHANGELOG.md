@@ -11,7 +11,61 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ## [Unreleased]
 
-Nothing here yet — the next real change starts a fresh section.
+### Added
+
+- **`foundation` gains *A Passing Review Check Means A Review Happened*, and
+  tests that run the review workflow's final step.** v0.6.0 added that step so
+  a green review check means a review was posted; this writes the promise down
+  as a requirement with seven scenarios (a posted review passes; nothing
+  posted, a run error and an edit to the review workflow each fail; a denied
+  tool call only warns; a decline note passes only for a Markdown-only pull
+  request; comments by anyone but the review bot do not count).
+  `tests/test_review_gate.py` reads the step out of
+  `.github/workflows/claude-review.yml`, runs it with `bash` against a fake
+  `gh`, and claims all seven, so removing or weakening a rule turns the suite
+  red. Each claim was shown able to fail: the matching rule was removed in a
+  scratch copy and the matching test went red (7 of 7, plus 5 more for the
+  extra tests). The guard reads `17/21 scenarios claimed by tests, 4 allowed
+  without one` (was `10/14`).
+  **Not covered:** whether the live review follows its prompt (the decline
+  note, reviewing again after a push) is model and plugin behaviour, checked on
+  real runs, not by the suite. **Needs `bash` and `jq`** on the machine that
+  runs the suite; the tests fail, not skip, without them. The tests read the
+  gate out of the workflow, so moving the step or renaming its `id: gate` means
+  updating them.
+  **Migration:** copy the requirement and scenarios into your
+  `openspec/specs/foundation/spec.md` (or re-sync the spec) and copy
+  `tests/test_review_gate.py`. **If your project does not run Stock's
+  `claude-review.yml`,** the tests fail because there is no gate to extract:
+  delete the requirement and the test file in your copy and say why in an ADR,
+  as you would for a declared gap. A project that took the review workflow in
+  v0.6.0 needs nothing else beyond the change below.
+
+### Changed
+
+- **The review check is advisory, not a required check.** The goal changed
+  from "green means reviewed, enforced" to "a missing review must never look
+  like a review": a visible red check meets it, and blocking merges was the
+  expensive part. Measured from the review workflow's run list (runs 28 to 52,
+  25 runs): 15 green, 9 red, 1 cancelled. Four of the reds were pull requests
+  that edit the workflow, which are red by design; five were the gate or the
+  review itself misfiring. Every red that was correct ended with the
+  maintainer bypassing or closing the pull request, never with a review.
+  **Migration:** if you made `review` a required check (v0.6.0 told you how),
+  remove it from the ruleset's required checks. Keep your CI job required. A
+  pull request that edits the review workflow still shows `review` red, and
+  now no bypass is needed.
+- **The gate no longer fails when a tool the review posts with is denied.**
+  v0.6.0's gate matched the text `gh pr comment` anywhere in a denied Bash
+  command, so a pull request whose own test file quoted that phrase failed it
+  (measured on `Graftwork/stock#56`: a 20-minute review failed on two denied
+  `python3` commands). The rule added nothing: if `Skill`, the inline-comment
+  tool or `gh pr comment` is denied, nothing is posted and the "posted
+  nothing" rule already fails the run and lists the denied calls. A denied
+  tool call is now only listed. **Migration:** delete the `intended`
+  definitions, the `intended_list` and `intended_count` lines and the
+  `if [ "$intended_count" != "0" ]` block from the gate step in your
+  `claude-review.yml`, or copy the step from this release.
 
 ## [0.6.0] — 2026-10-02
 
