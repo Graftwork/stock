@@ -9,7 +9,22 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html),
 where a **major** bump means a grafted project needs manual intervention to
 re-sync, and a **minor** bump means the migration is additive.
 
+> **2026-10-07: this repository was rebuilt from rewritten history.** Only
+> commit messages changed, to remove coding-session links; every file at every
+> tag is identical. Pull request and issue numbers, and commit hashes, cited
+> anywhere here before this date refer to the private archive, not to this
+> repository. Tag names are unchanged. The old-to-new commit table is in
+> [Stock ADR 0017](docs/decisions/stock-0017-rebuilt-from-rewritten-history.md).
+
 ## [Unreleased]
+
+### Added
+
+- **Stock ADR 0017: rebuilt from rewritten history.** Records why this
+  repository was rebuilt, what changed (commit messages only) and the old-to-new
+  commit at every tag. Nothing to apply: a project that records its Stock
+  version by tag name is unaffected. A project that cites a Stock commit hash
+  can translate it with the ADR's table.
 
 ### Fixed
 
