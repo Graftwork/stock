@@ -26,6 +26,13 @@ re-sync, and a **minor** bump means the migration is additive.
   version by tag name is unaffected. A project that cites a Stock commit hash
   can translate it with the ADR's table.
 
+### Changed
+
+- **Stock ADR 0015 no longer names a retired private repository.** Its list of
+  links that would have 404'd now says "an earlier attempt at it" in place of
+  the repository's name; the count and the point are unchanged. Grafted
+  projects that carry `stock-0015`: copy it again.
+
 ### Fixed
 
 - **The v0.7.0 migration has an order.** The `Added` entry (the review-check
