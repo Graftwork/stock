@@ -86,6 +86,10 @@ grep -rn "$OLD_VERSION" --include="*.md" --include="*.toml" .
 
 ### 6. Open the PR
 
+The owner opens it, from the branch the agent pushed, with the title and body
+the agent supplies
+([Stock ADR 0018](decisions/stock-0018-owner-opens-agent-pushes.md)).
+
 Disclose the coding agent and the model. This is not etiquette — it is a
 published requirement of the `foundation` spec (*AI Authorship Is Disclosed*),
 and it is declared as a review-policy gap in `[tool.graftwork.traceability]`

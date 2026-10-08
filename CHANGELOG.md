@@ -20,6 +20,28 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ### Added
 
+- **The owner opens, accepts and watches; the agent makes and pushes.** The
+  agent pushes a branch and hands over the pull request's title and body; the
+  owner opens it, merges it and says when something is done. The agent never
+  opens, merges, approves or watches a pull request. Opening pull requests
+  through the cloud session's GitHub tool left a session link in each
+  description's edit history, public once the repository was. See
+  [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md),
+  which also records what was measured about the deny list.
+  **Migration:**
+  1. Copy the `CLAUDE.md` house rule *The owner opens, accepts and watches; you
+     make and push*, and replace the end of *Never link the coding session*
+     (from "It does not reach a link…") with this release's wording.
+  2. Merge the eight `mcp__…` entries into `permissions.deny` in
+     `.claude/settings.json`. Add them to the existing rules; don't replace
+     them.
+  3. Copy the two `WORKFLOW.md` lines under "Who does what" (*Opens, accepts
+     and watches* and *Makes and pushes, then hands over*), the one-paragraph
+     addition to `docs/RELEASING.md` step 6, and
+     `docs/decisions/stock-0018-owner-opens-agent-pushes.md`.
+  4. In the first agent session afterwards, check that
+     `mcp__github__create_pull_request` is unavailable.
+
 - **Stock ADR 0017: rebuilt from rewritten history.** Records why this
   repository was rebuilt, what changed (commit messages only) and the old-to-new
   commit at every tag. Nothing to apply: a project that records its Stock

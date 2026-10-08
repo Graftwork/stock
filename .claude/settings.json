@@ -37,7 +37,15 @@
     "deny": [
       "Bash(git push --force:*)",
       "Read(./.env)",
-      "Read(./.env.*)"
+      "Read(./.env.*)",
+      "mcp__github__create_pull_request",
+      "mcp__github__merge_pull_request",
+      "mcp__github__enable_pr_auto_merge",
+      "mcp__github__pull_request_review_write",
+      "mcp__claude-code-remote__subscribe_pr_activity",
+      "mcp__claude-code-remote__send_later",
+      "mcp__claude-code-remote__create_trigger",
+      "mcp__claude-code-remote__watch_url"
     ]
   },
   "attribution": {
