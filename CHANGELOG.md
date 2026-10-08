@@ -928,6 +928,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[Unreleased]: https://github.com/Graftwork/stock/compare/v0.7.0...HEAD
 [0.7.0]: https://github.com/Graftwork/stock/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Graftwork/stock/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Graftwork/stock/releases/tag/v0.5.1
