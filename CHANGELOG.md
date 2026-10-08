@@ -28,12 +28,21 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ### Changed
 
+- **README reads better on a first visit.** One sentence near the top says who
+  Stock is for, and the Claude Code cloud-session caveat in "Getting started"
+  moves under its own sub-heading. Nothing to apply: a grafted project rewrites
+  its README.
+
 - **Stock ADR 0015 no longer names a retired private repository.** Its list of
   links that would have 404'd now says "an earlier attempt at it" in place of
   the repository's name; the count and the point are unchanged. Grafted
   projects that carry `stock-0015`: copy it again.
 
 ### Fixed
+
+- **`WORKFLOW.md`'s link to `CLAUDE.md#conventions` was broken.** It pointed at
+  `../CLAUDE.md`, outside the repository. Grafted projects that carry
+  `WORKFLOW.md`: drop the `../` from that link.
 
 - **The v0.7.0 migration has an order.** The `Added` entry (the review-check
   requirement and `tests/test_review_gate.py`) was listed before the `Changed`

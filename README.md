@@ -7,6 +7,10 @@ The rootstock for new projects — a versioned foundation you graft new work ont
 so every project starts from a proven, consistent base and can be re-synced as
 the foundation improves.
 
+It is built for someone directing an AI coding agent rather than writing every
+line themselves: what the project promises is written in plain English, and
+checks the agent cannot argue with keep its work tied to those promises.
+
 **Version 0.7.0.** See [CHANGELOG.md](CHANGELOG.md) for what changes between
 versions, which doubles as the migration list for already-grafted projects.
 
@@ -41,9 +45,10 @@ mise install && uv sync
 mise run check
 ```
 
-**On Claude Code cloud sessions, `mise` isn't there and can't install itself.**
-It needs a one-time, per-account manual step — see
-[`.claude/setup.sh`](.claude/setup.sh) and
+### On Claude Code cloud sessions
+
+`mise` isn't there and can't install itself. It needs a one-time, per-account
+manual step — see [`.claude/setup.sh`](.claude/setup.sh) and
 [Stock ADR 0010](docs/decisions/stock-0010-cloud-environment-setup-script.md).
 Even after that step, `mise install` and `mise run <task>` still don't work
 there — a committed `SessionStart` hook installs Python and syncs
