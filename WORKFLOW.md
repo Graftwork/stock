@@ -191,7 +191,7 @@ date is what stops UAT from going quietly stale.
 ### Branch names match the route
 
 Every branch reaches `main` by PR, never a direct commit — see
-[Changes to Stock take one of two routes](../CLAUDE.md#conventions). The
+[Changes to Stock take one of two routes](CLAUDE.md#conventions). The
 prefix names the route, and what kind of change it is within it. Slugs are
 kebab-case throughout.
 
