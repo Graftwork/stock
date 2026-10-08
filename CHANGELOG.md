@@ -602,12 +602,12 @@ commit, per step 9.
 
 ## [0.3.0] — 2026-08-16
 
-**Amended, not yet released.** `v0.3.0-rc.1` failed UAT case 5 — the first real
+**Released as `v0.3.0`.** `v0.3.0-rc.1` failed UAT case 5 — the first real
 graft attempted under it found the bug below — so per
 [`RELEASING.md` step 8](docs/RELEASING.md#8-run-the-tag-dependent-uat-cases-against-the-candidate)
-the fix is folded into this same entry rather than filed separately, and the
-next tag is `v0.3.0-rc.2`, not a release. Nothing here is final until a
-candidate passes.
+the fix is folded into this same entry rather than filed separately.
+`v0.3.0-rc.2` carried the fix and passed case 5; `v0.3.0` is that commit plus
+the record of the pass in `docs/UAT.md`.
 
 ### Fixed
 
@@ -928,6 +928,7 @@ The initial foundation.
 - **`.claude/settings.json`** — shared permission allowlist.
 - **ADRs** in `docs/decisions/`, with a template.
 
+[0.7.0]: https://github.com/Graftwork/stock/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Graftwork/stock/releases/tag/v0.6.0
 [0.5.1]: https://github.com/Graftwork/stock/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Graftwork/stock/releases/tag/v0.5.0
