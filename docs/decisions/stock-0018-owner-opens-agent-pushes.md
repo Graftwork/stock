@@ -45,8 +45,12 @@ the rule does not rest on the agent remembering it:
 `mcp__github__enable_pr_auto_merge`, `mcp__github__pull_request_review_write`,
 `mcp__claude-code-remote__subscribe_pr_activity`,
 `mcp__claude-code-remote__send_later`,
-`mcp__claude-code-remote__create_trigger` and
-`mcp__claude-code-remote__watch_url`.
+`mcp__claude-code-remote__create_trigger`,
+`mcp__claude-code-remote__watch_url` and `mcp__github__update_pull_request`;
+deleting a branch with `git push --delete` or `-d`; `gh pr create`, `merge`
+and `review`; and the local scheduling tools `CronCreate` and
+`ScheduleWakeup`. The `main` ruleset already blocks deleting `main`, but not
+other branches, such as one an open pull request depends on.
 
 **What was measured about the deny list.** In a Claude Code cloud session on
 2026-10-08, a deny rule naming `mcp__github__get_me` was added to a local
@@ -54,19 +58,27 @@ settings file, `.claude/settings.local.json`. The call already in flight
 completed, and the tool was then removed from the session ("Denied by a
 permission rule"). The same happened for
 `mcp__claude-code-remote__list_environments`, a tool from the cloud
-platform's own server. Removing the rule restored both. This matches Claude
+platform's own server. Removing the rule restored both. `mcp__github__update_pull_request` was
+removed the same way. Rules for `git push --delete` and `git push -d` refused
+`git push --dry-run origin --delete <branch>` and its `-d` form, while
+`git push --dry-run origin <branch>` still ran. This matches Claude
 Code's permissions documentation: a deny rule that names a whole tool removes
 it from the session, from the next tool call when added mid-session.
 
-**Not measured:** the eight names above, one by one; and a deny rule in the
-committed `.claude/settings.json`, as opposed to the local file, applying from
-the start of a cloud session. The first session after this merges should check
-that `mcp__github__create_pull_request` is not available, and report.
+**Not measured:** the other names one by one, including the `gh pr` rules,
+which rely on the same matching as the `git push` ones; and a deny rule in
+the committed `.claude/settings.json`, as opposed to the local file, applying
+from the start of a cloud session. The first session after this merges should
+check that `mcp__github__create_pull_request` is not available, and report.
+`CronCreate` and `ScheduleWakeup` could still be loaded after their deny rules
+were added. Whether the rule blocks them when called was not tested, because
+testing it means scheduling something if it fails. Treat those two rules as
+unverified.
 
-**Not covered by the deny list:** deleting a branch with `git push --delete`,
-editing a pull request with `mcp__github__update_pull_request`, local
-scheduling tools such as `CronCreate` and `ScheduleWakeup`, and issue or
-comment writes. These rest on the house rule alone.
+**Not covered by the deny list:** deleting a branch by pushing an empty
+refspec (`git push origin :branch`; a rule ending in `:*` would match every
+push), commands run with `git -C <path>`, the GitHub API reached by other
+means, and issue or comment writes. These rest on the house rule alone.
 
 ## Consequences
 

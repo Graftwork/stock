@@ -45,7 +45,17 @@
       "mcp__claude-code-remote__subscribe_pr_activity",
       "mcp__claude-code-remote__send_later",
       "mcp__claude-code-remote__create_trigger",
-      "mcp__claude-code-remote__watch_url"
+      "mcp__claude-code-remote__watch_url",
+      "mcp__github__update_pull_request",
+      "Bash(git push --delete *)",
+      "Bash(git push * --delete *)",
+      "Bash(git push -d *)",
+      "Bash(git push * -d *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh pr review *)",
+      "CronCreate",
+      "ScheduleWakeup"
     ]
   },
   "attribution": {
