@@ -4,12 +4,19 @@
   "features": {
     // mise installs the toolchain from mise.toml, so the container and the
     // local fast path resolve to identical pinned versions.
-    "ghcr.io/jdx/mise/devcontainer-feature/mise:1": {}
+    "ghcr.io/devcontainers-extra/features/mise:1": {}
   },
-  "postCreateCommand": "mise trust && mise install && uv sync",
+  // The mise feature installs the binary but does not activate it. Putting
+  // its shims on PATH makes python, uv and node resolve to the pinned
+  // versions in every shell, including postCreateCommand. ~/.local/bin is
+  // where Claude Code's native installer puts `claude`.
+  "remoteEnv": {
+    "PATH": "/home/vscode/.local/bin:/home/vscode/.local/share/mise/shims:${containerEnv:PATH}"
+  },
+  "postCreateCommand": "mise trust && mise install && uv sync && curl -fsSL https://claude.ai/install.sh | bash",
   "customizations": {
     "vscode": {
-      "extensions": ["charliermarsh.ruff", "ms-python.python"]
+      "extensions": ["anthropic.claude-code", "charliermarsh.ruff", "ms-python.python"]
     }
   }
 }

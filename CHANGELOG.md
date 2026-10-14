@@ -20,6 +20,20 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ### Added
 
+- **Claude Code in the devcontainer.** `postCreateCommand` installs it with the
+  native installer after `mise install` and `uv sync`, and the
+  `anthropic.claude-code` extension is recommended. Anthropic's devcontainer
+  feature was measured and not used: it installs Node 18 alongside mise's
+  Node, and on Node 18 npm installs an old Claude Code (2.1.197 on
+  2026-10-14, against 2.1.299 current) that cannot update itself without
+  sudo. See
+  [Stock ADR 0019](docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md).
+  **Migration:** copy `.devcontainer/devcontainer.json` (it includes the
+  *Fixed* change below) and
+  `docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md`.
+  Rebuild, then run
+  `claude --version` and `mise run check` in the container's terminal.
+
 - **The owner opens, accepts and watches; the agent makes and pushes.** The
   agent pushes a branch and hands over the pull request's title and body; the
   owner opens it, merges it and says when something is done. The agent never
@@ -62,6 +76,20 @@ re-sync, and a **minor** bump means the migration is additive.
   projects that carry `stock-0015`: copy it again.
 
 ### Fixed
+
+- **The devcontainer did not build.** Its mise feature,
+  `ghcr.io/jdx/mise/devcontainer-feature/mise:1`, is refused by GHCR (403
+  `DENIED`), so `devcontainer up` failed before pulling an image. Once
+  that was swapped for `ghcr.io/devcontainers-extra/features/mise:1`,
+  `postCreateCommand` failed with `uv: not found`, because that feature
+  installs mise without activating it. The devcontainer now uses the new
+  reference and puts mise's shims on `PATH` through `remoteEnv`. Measured, with
+  the commands, in
+  [Stock ADR 0019](docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md).
+  **Migration:** in `.devcontainer/devcontainer.json`, replace the feature
+  reference and add the `remoteEnv` block. Its `/home/vscode/.local/bin`
+  entry is only for Claude Code (see *Added*). Rebuild the container and check
+  that `node --version` in its terminal prints your pinned Node.
 
 - **`WORKFLOW.md`'s link to `CLAUDE.md#conventions` was broken.** It pointed at
   `../CLAUDE.md`, outside the repository. Grafted projects that carry
