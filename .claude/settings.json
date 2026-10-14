@@ -55,7 +55,8 @@
       "Bash(gh pr merge *)",
       "Bash(gh pr review *)",
       "CronCreate",
-      "ScheduleWakeup"
+      "ScheduleWakeup",
+      "RemoteTrigger"
     ]
   },
   "attribution": {

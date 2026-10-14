@@ -33,9 +33,9 @@ re-sync, and a **minor** bump means the migration is additive.
      make and push*, and replace the end of *Never link the coding session*
      (from "It does not reach a link…") with this release's wording.
   2. Merge the new entries in `permissions.deny` in `.claude/settings.json`
-     (the `mcp__…` tools, the `git push` delete and `gh pr` rules, `CronCreate`
-     and `ScheduleWakeup`) into your own. Add them to the existing rules;
-     don't replace them.
+     (the `mcp__…` tools, the `git push` delete and `gh pr` rules,
+     `CronCreate`, `ScheduleWakeup` and `RemoteTrigger`) into your own. Add
+     them to the existing rules; don't replace them.
   3. Copy the two `WORKFLOW.md` lines under "Who does what" (*Opens, accepts
      and watches* and *Makes and pushes, then hands over*), the one-paragraph
      addition to `docs/RELEASING.md` step 6, and

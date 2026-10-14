@@ -13,8 +13,9 @@ Two things went wrong while this repository was being rebuilt and published.
   edit the footer out once the pull request was open. But GitHub keeps every
   version of an edited description, and anyone who can see the repository can
   open them. All six pull requests the agent opened here carried the footer in
-  their first version, and the owner deleted those revisions by hand once the
-  repository was public. The owner reports doing the same on four
+  their first version: the agent saw it on five when re-reading them after
+  opening them, and the owner found it on all six when deleting those
+  revisions by hand once the repository was public. The owner reports doing the same on four
   `sorting-office` pull requests. Re-checked on 2026-10-14 by opening a draft
   pull request in a private repository: the footer was still appended after
   the last line of the body as written.
@@ -51,7 +52,8 @@ the rule does not rest on the agent remembering it:
 `mcp__claude-code-remote__watch_url` and `mcp__github__update_pull_request`;
 deleting a branch with `git push --delete` or `-d`; `gh pr create`, `merge`
 and `review`; and the local scheduling tools `CronCreate` and
-`ScheduleWakeup`. The `main` ruleset already blocks deleting `main`, but not
+`ScheduleWakeup`, and `RemoteTrigger`, which creates routines and webhook
+triggers. The `main` ruleset already blocks deleting `main`, but not
 other branches, such as one an open pull request depends on.
 
 **What was measured about the deny list.** In a Claude Code cloud session on
@@ -60,8 +62,8 @@ settings file, `.claude/settings.local.json`. The call already in flight
 completed, and the tool was then removed from the session ("Denied by a
 permission rule"). The same happened for
 `mcp__claude-code-remote__list_environments`, a tool from the cloud
-platform's own server. Removing the rule restored both. `mcp__github__update_pull_request` was
-removed the same way. Rules for `git push --delete` and `git push -d` refused
+platform's own server. Removing the rule restored both.
+`mcp__github__update_pull_request` was removed the same way. Rules for `git push --delete` and `git push -d` refused
 `git push --dry-run origin --delete <branch>` and its `-d` form, while
 `git push --dry-run origin <branch>` still ran. This matches Claude
 Code's permissions documentation: a deny rule that names a whole tool removes
@@ -75,12 +77,17 @@ check that `mcp__github__create_pull_request` is not available, and report.
 `CronCreate` and `ScheduleWakeup` could still be loaded after their deny rules
 were added. Whether the rule blocks them when called was not tested, because
 testing it means scheduling something if it fails. Treat those two rules as
-unverified.
+unverified. `RemoteTrigger` was not offered in that session, so its rule is
+untested too; in a session without the tool, a deny rule naming it may raise
+a one-line unknown-tool warning at startup.
 
 **Not covered by the deny list:** deleting a branch by pushing an empty
 refspec (`git push origin :branch`; a rule ending in `:*` would match every
 push), commands run with `git -C <path>`, the GitHub API reached by other
-means, and issue or comment writes. These rest on the house rule alone.
+means, and issue or comment writes. `Monitor`, which follows a command's
+output for the length of a session, is left available on purpose: it could
+poll for pull request activity, but it is also how an agent follows a long
+local build or test run. These rest on the house rule alone.
 
 ## Consequences
 
