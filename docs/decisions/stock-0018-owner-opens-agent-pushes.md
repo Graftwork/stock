@@ -18,7 +18,10 @@ Two things went wrong while this repository was being rebuilt and published.
   revisions by hand once the repository was public. The owner reports doing the same on four
   `sorting-office` pull requests. Re-checked on 2026-10-14 by opening a draft
   pull request in a private repository: the footer was still appended after
-  the last line of the body as written.
+  the last line of the body as written. Re-checked the same day through the
+  REST API with `gh` (`gh api -X POST repos/<owner>/<repo>/pulls`): the footer
+  was appended there too, so it comes from the session's network layer, not
+  from one tool.
 - **The environment's defaults run the other way.** The cloud environment
   tells the agent to offer to watch its pull requests, subscribe to their
   activity, schedule check-ins and drive its own pull requests to green.
@@ -111,3 +114,7 @@ local build or test run. These rest on the house rule alone.
 - **Rely on the `session-links` workflow to strip the footer.** Rejected for
   the same reason: stripping it is an edit, and the original stays in the
   history.
+- **Open pull requests from the session with `gh` instead of the GitHub
+  tool.** Rejected: measured on 2026-10-14. `gh pr create` is refused, because
+  the session blocks GitHub's GraphQL API, and a pull request created through
+  the REST API got the same footer.
