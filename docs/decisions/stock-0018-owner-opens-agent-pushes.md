@@ -53,8 +53,8 @@ the rule does not rest on the agent remembering it:
 `mcp__claude-code-remote__send_later`,
 `mcp__claude-code-remote__create_trigger`,
 `mcp__claude-code-remote__watch_url` and `mcp__github__update_pull_request`;
-deleting a branch with `git push --delete` or `-d`; `gh pr create`, `merge`
-and `review`; and the local scheduling tools `CronCreate` and
+deleting a branch with `git push --delete` or `-d`; `gh pr create`, `edit`,
+`merge` and `review`; and the local scheduling tools `CronCreate` and
 `ScheduleWakeup`, and `RemoteTrigger`, which creates routines and webhook
 triggers. The `main` ruleset already blocks deleting `main`, but not
 other branches, such as one an open pull request depends on.
@@ -86,8 +86,12 @@ a one-line unknown-tool warning at startup.
 
 **Not covered by the deny list:** deleting a branch by pushing an empty
 refspec (`git push origin :branch`; a rule ending in `:*` would match every
-push), commands run with `git -C <path>`, the GitHub API reached by other
-means, and issue or comment writes. `Monitor`, which follows a command's
+push), commands run with `git -C <path>`, write requests made with `gh api`
+(for example `gh api -X PATCH repos/<owner>/<repo>/pulls/<n>`, which edits or
+closes a pull request), the GitHub API reached by other means, and issue or
+comment writes. `gh api` is left available because it is also how an agent
+reads CI runs and review comments, and its write requests can be spelled too
+many ways for a pattern to catch reliably. `Monitor`, which follows a command's
 output for the length of a session, is left available on purpose: it could
 poll for pull request activity, but it is also how an agent follows a long
 local build or test run. These rest on the house rule alone.
@@ -96,8 +100,9 @@ local build or test run. These rest on the house rule alone.
 
 - The owner opens each pull request: one extra click, from a page the agent
   links to.
-- The agent cannot correct a pull request body after it is open. It hands over
-  the final text instead.
+- The agent does not correct a pull request body after it is open; it hands
+  over the final text instead. The deny list blocks the GitHub tool and
+  `gh pr edit`; an edit through `gh api` is ruled out by the house rule alone.
 - CI results and review comments do not wake the agent. The owner says when
   to look.
 - `foundation`'s *Coding Session Links Are Not Disclosed* still says a

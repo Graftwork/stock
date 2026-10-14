@@ -52,6 +52,7 @@
       "Bash(git push -d *)",
       "Bash(git push * -d *)",
       "Bash(gh pr create *)",
+      "Bash(gh pr edit *)",
       "Bash(gh pr merge *)",
       "Bash(gh pr review *)",
       "CronCreate",
