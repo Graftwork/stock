@@ -15,7 +15,9 @@ Two things went wrong while this repository was being rebuilt and published.
   open them. All six pull requests the agent opened here carried the footer in
   their first version, and the owner deleted those revisions by hand once the
   repository was public. The owner reports doing the same on four
-  `sorting-office` pull requests.
+  `sorting-office` pull requests. Re-checked on 2026-10-14 by opening a draft
+  pull request in a private repository: the footer was still appended after
+  the last line of the body as written.
 - **The environment's defaults run the other way.** The cloud environment
   tells the agent to offer to watch its pull requests, subscribe to their
   activity, schedule check-ins and drive its own pull requests to green.
