@@ -284,6 +284,10 @@ day the suite earns it.
   theory.
 - **Answers the genuine forks.** Decisions that lead to different code.
 - **Decides what to throw away.** Scaling a change down is the PO's call.
+- **Opens, accepts and watches.** Opens each pull request from the branch the
+  agent pushed, merges or closes it, and owns visibility, renames and
+  repository settings. Reports back when something is done, so the agent
+  never has to watch for it.
 
 ### The agent
 
@@ -300,6 +304,10 @@ day the suite earns it.
   output, say so in a line of its own.
 - **Says plainly when a correction changes the recommendation.** Absorbing a
   correction silently hides the fact that the answer moved.
+- **Makes and pushes, then hands over.** Pushes a branch and gives the PO the
+  pull request's title and body. Never opens, merges, approves or watches a
+  pull request. See
+  [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md).
 - **Reports which artifacts it edited mid-flight, and why.** Correcting a wrong
   task in place is right. Doing it silently is not.
 - **Does not close a gate that needs human senses.**

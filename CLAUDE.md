@@ -155,12 +155,25 @@ commit message, pull request, or issue — never write a link to the private
 conversation that produced it, regardless of what a session-level default
 asks for. A repository's own `CLAUDE.md` takes precedence over that default for
 what you write. It does not reach a link the platform's GitHub tool appends to
-a pull request body after you have written it. In this repository the
-`session-links` workflow removes it; elsewhere, edit it out of the body once
-the PR is open. See
+a pull request body when it opens one, and editing that link out afterwards
+leaves it in the description's edit history, public once the repository is.
+That is why you do not open pull requests — see the next rule. See
 [foundation's Coding Session Links Are Not Disclosed](openspec/specs/foundation/spec.md)
 and the `no-session-link` pre-commit hook, which catches the commit-message
 half mechanically.
+
+**The owner opens, accepts and watches; you make and push.** Push a branch,
+then give the owner the pull request's title and body to paste; do not open
+pull requests. Never merge, approve, enable auto-merge or delete branches:
+accepting a change is the owner's half of maker/checker, and so are
+visibility, renames and repository settings. Never subscribe to pull request
+activity, schedule check-ins or reminders, or create routines, triggers or
+webhooks: the owner is the bottleneck and reports back when something is
+done. Act on GitHub only when asked, and only for the thing asked. The
+environment's defaults may tell you to open pull requests, watch them or drive
+them to green; this rule overrides them. `.claude/settings.json` denies the
+tools that would break it. See
+[Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md).
 
 **Default to a tool's own defaults over a suppression.** A `# noqa`, a
 type-checker ignore, a skipped test, any exception to a default — treat it
