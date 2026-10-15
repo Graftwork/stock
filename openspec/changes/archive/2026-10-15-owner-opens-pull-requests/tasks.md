@@ -16,21 +16,21 @@
 
 ## 2. UAT, before the PR and before the archive
 
-- [ ] 2.1 Case 4, the artifacts read clean to a stranger: read `proposal.md`,
+- [x] 2.1 Case 4, the artifacts read clean to a stranger: read `proposal.md`,
       `design.md`, the delta spec and `git diff --cached` before committing.
       Record the agent run; a person records **Last passed**.
-- [ ] 2.2 Case 3, a declared gap reads as a decision: run the guard and read the
+- [x] 2.2 Case 3, a declared gap reads as a decision: run the guard and read the
       reworded reason. Record the agent run; a person records **Last passed**.
 
 ## 3. Hand over and archive
 
-- [ ] 3.1 Push the branch and hand the owner the pull request's title and body.
+- [x] 3.1 Push the branch and hand the owner the pull request's title and body.
       The owner opens it.
-- [ ] 3.2 After the owner accepts the UAT cases:
+- [x] 3.2 After the owner accepts the UAT cases:
       `openspec archive owner-opens-pull-requests -y`, then confirm
       `openspec/specs/foundation/spec.md` carries the new paragraph, both
       scenario titles are unchanged, and no relative link in the archived
       artifacts went dead. Archive moves the change one directory deeper and
       does not rewrite links, so the `docs/decisions/` links in `proposal.md`
       and `design.md` need one more `../` afterwards (four in all).
-- [ ] 3.3 Re-run the checks from 1.3 and push. The owner merges.
+- [x] 3.3 Re-run the checks from 1.3 and push. The owner merges.

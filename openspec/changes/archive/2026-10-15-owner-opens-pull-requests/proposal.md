@@ -6,7 +6,7 @@ is posted". That remedy does not work: GitHub keeps every version of an edited
 description, and anyone who can see the repository can open them. On six
 pull requests in this repository the link was edited out, stayed readable in
 each first version, and had to be deleted from the history by hand once the
-repository was public. [Stock ADR 0018](../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
+repository was public. [Stock ADR 0018](../../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
 replaced the remedy with a working rule, *the agent does not open pull
 requests; a person does*, but the spec still states the old one. A grafted
 project that re-syncs the spec inherits a remedy known not to work.
