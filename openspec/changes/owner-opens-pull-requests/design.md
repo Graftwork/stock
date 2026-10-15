@@ -1,6 +1,6 @@
 ## Context
 
-[Stock ADR 0018](../../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
+[Stock ADR 0018](../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
 went the direct route: a `CLAUDE.md` house rule, a deny list in
 `.claude/settings.json`, and docs. It could not touch `openspec/specs/`, which is
 written only by archiving a change. So `foundation` still describes the remedy

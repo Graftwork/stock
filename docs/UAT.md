@@ -130,11 +130,15 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-14, for `owner-opens-pull-requests` — read the
-  proposal, design and delta spec, and scanned the staged diff (7 files, 145
-  added lines): no names, usernames, places, email addresses, token-like
-  strings or real session identifiers, and no zero-width characters. The only
-  specific named is Stock ADR 0018.
+- **Last agent run:** 2026-10-15, for `owner-opens-pull-requests` — read the
+  proposal, design and delta spec, and scanned the added lines of
+  `git diff --cached 498a01b -- . ':!docs/UAT.md'` (7 files, 180 added lines,
+  counted with `git diff --numstat`; this file's own edits are not in the scan,
+  and I read them instead). Found no names, usernames, places, email
+  addresses, token-like strings or real session identifiers, and no
+  zero-width characters. The only specific named is Stock ADR 0018. An earlier
+  run of this note gave "145 added lines": that count skipped blank lines and
+  was wrong.
 - **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
   after reading the output above and the scan's findings.
 

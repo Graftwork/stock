@@ -30,5 +30,7 @@
       `openspec archive owner-opens-pull-requests -y`, then confirm
       `openspec/specs/foundation/spec.md` carries the new paragraph, both
       scenario titles are unchanged, and no relative link in the archived
-      artifacts went dead.
+      artifacts went dead. Archive moves the change one directory deeper and
+      does not rewrite links, so the `docs/decisions/` links in `proposal.md`
+      and `design.md` need one more `../` afterwards (four in all).
 - [ ] 3.3 Re-run the checks from 1.3 and push. The owner merges.
