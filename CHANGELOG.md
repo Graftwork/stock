@@ -51,6 +51,17 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ### Changed
 
+- **`foundation`'s *Coding Session Links Are Not Disclosed* no longer says a
+  platform-appended link is removed by editing.** Editing it out leaves it in
+  the pull request description's edit history. The requirement now says the
+  agent does not open pull requests, as
+  [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md)
+  decided. Both scenario titles are unchanged, so test markers and the declared
+  gap keep their ids. **Migration:** re-copy the requirement into your
+  `openspec/specs/foundation/spec.md`, and the reason for
+  `foundation/a-pull-request-or-issue-contains-no-session-link` in
+  `[tool.graftwork.traceability]`.
+
 - **README reads better on a first visit.** One sentence near the top says who
   Stock is for, and the Claude Code cloud-session caveat in "Getting started"
   moves under its own sub-heading. Nothing to apply: a grafted project rewrites
