@@ -105,8 +105,9 @@ Case 5 is the same check against the real published tag once it does.
   presents the `session-links` workflow's stripping as the safeguard, and names
   the agent not opening pull requests (Stock ADR 0018) instead. The other three
   are unchanged and still read as true to me.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — the maintainer accepted
-  that each declared reason still holds.
+- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — the maintainer
+  accepted that each declared reason still holds, including the reworded
+  fourth. Entered by the agent at the maintainer's instruction.
 
 ### 4. The artifacts read clean to a stranger
 
@@ -139,8 +140,9 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   zero-width characters. The only specific named is Stock ADR 0018. An earlier
   run of this note gave "145 added lines": that count skipped blank lines and
   was wrong.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
-  after reading the output above and the scan's findings.
+- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — accepted by the
+  maintainer after reading the output above and the scan's findings. Entered by
+  the agent at the maintainer's instruction.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
