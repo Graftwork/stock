@@ -141,9 +141,8 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   repositories `stock-archive` and `sorting-office`, which the ADR 0018
   measurements need. The three `claude.ai/code` matches are the generic footer
   without a session id, quoted on purpose.
-- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — accepted by the
-  maintainer after reading the output above and the scan's findings. Entered by
-  the agent at the maintainer's instruction.
+- **Last passed:** 2026-10-20, for `appended-link-is-pull-requests-only` — accepted
+  by the maintainer after reading the output above and the scan's findings.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
