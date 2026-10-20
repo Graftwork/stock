@@ -18,17 +18,17 @@
 
 ## 2. UAT, before the archive and before the PR
 
-- [ ] 2.1 Case 4, the artifacts read clean to a stranger. Record the agent run;
+- [x] 2.1 Case 4, the artifacts read clean to a stranger. Record the agent run;
       a person records **Last passed**. Case 3 is not affected: the declared gap
       is unchanged.
 
 ## 3. Archive, then hand over
 
-- [ ] 3.1 After the owner accepts case 4, archive the change on this branch,
+- [x] 3.1 After the owner accepts case 4, archive the change on this branch,
       before the pull request is opened, so one push carries everything and the
       review runs once. Confirm the new wording is in
       `openspec/specs/foundation/spec.md`, both scenario titles are unchanged,
       and the `docs/decisions/` links in the archived `proposal.md` and
       `design.md` gain a fourth `../`.
-- [ ] 3.2 Re-run the checks from 1.5, push, and hand the owner the title and
+- [x] 3.2 Re-run the checks from 1.5, push, and hand the owner the title and
       body. The owner opens the pull request and merges it.

@@ -31,7 +31,7 @@ small.
   request body" where it said "a pull request or issue body". The rule and
   both scenarios are unchanged, so scenario ids, test markers and the declared
   gap keep working.
-- [Stock ADR 0018](../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
+- [Stock ADR 0018](../../../../docs/decisions/stock-0018-owner-opens-agent-pushes.md)
   records the issue measurements, and its Consequences stop describing the
   spec as still wrong.
 - Two claims found wrong while preparing to publish are corrected in the same
