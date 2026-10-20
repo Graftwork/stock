@@ -12,16 +12,30 @@ Two things went wrong while this repository was being rebuilt and published.
   pull request body it creates, whatever the body says. Stock's answer was to
   edit the footer out once the pull request was open. But GitHub keeps every
   version of an edited description, and anyone who can see the repository can
-  open them. All six pull requests the agent opened here carried the footer in
-  their first version: the agent saw it on five when re-reading them after
-  opening them, and the owner found it on all six when deleting those
-  revisions by hand once the repository was public. The owner reports doing the same on four
-  `sorting-office` pull requests. Re-checked on 2026-10-14 by opening a draft
-  pull request in a private repository: the footer was still appended after
-  the last line of the body as written. Re-checked the same day through the
-  REST API with `gh` (`gh api -X POST repos/<owner>/<repo>/pulls`): the footer
-  was appended there too, so it comes from the session's network layer, not
-  from one tool.
+  open them. The owner found the footer in the edit history of all six Stock
+  pull requests the agent opened, when deleting those revisions by hand once
+  the repository was public. The agent can vouch for only two of the six: it
+  read the body of #1 and #3 before editing them and saw the footer on both;
+  it edited the other four before reading them. An earlier version of this
+  record said the agent saw it on five; that was wrong. The owner reports
+  doing the same on four `sorting-office` pull requests.
+- **Re-checked on 2026-10-14**, by opening a draft pull request in a private
+  repository: the footer was still appended after the last line of the body as
+  written. Re-checked the same day through the REST API with `gh`
+  (`gh api -X POST repos/<owner>/<repo>/pulls`): the footer was appended there
+  too, so it comes from the session's network layer, not from one tool.
+- **Pull requests, counted again on 2026-10-20: 8 of 8 read carried the
+  footer.** Two on Stock, two on `stock-archive` (one made through the REST
+  API) and four on `sorting-office`, where a separate session read them.
+- **Issues are different, measured on 2026-10-20 and only for creating one.**
+  Two issues created with the GitHub tool, one in `stock-archive` and one in
+  `sorting-office`, came back with the body unchanged (2 of 2). The
+  `sorting-office` one had `created_at` equal to `updated_at`, so nothing
+  edited it after creation. One issue created through the REST API (`gh api`)
+  got a generic `claude.ai/code` footer with no session id (1 of 1). Not
+  tested: issue comments, edits to issues, and other repositories. These
+  samples are small. They support narrowing this rule to pull requests; they
+  do not show that an issue can never carry a session link.
 - **The environment's defaults run the other way.** The cloud environment
   tells the agent to offer to watch its pull requests, subscribe to their
   activity, schedule check-ins and drive its own pull requests to green.
@@ -105,10 +119,12 @@ local build or test run. These rest on the house rule alone.
   `gh pr edit`; an edit through `gh api` is ruled out by the house rule alone.
 - CI results and review comments do not wake the agent. The owner says when
   to look.
-- `foundation`'s *Coding Session Links Are Not Disclosed* still says a
-  tool-appended link "is removed by editing the body once it is posted". That
-  is no longer the remedy. The spec is written only by archiving an OpenSpec
-  change, so correcting it is a separate change.
+- `foundation`'s *Coding Session Links Are Not Disclosed* said a tool-appended
+  link "is removed by editing the body once it is posted". That was corrected
+  in two steps: the pull request that archived `owner-opens-pull-requests`
+  replaced the remedy with the agent not opening pull requests, and the change
+  `appended-link-is-pull-requests-only` narrowed the premise from "pull
+  request or issue" to pull requests, after the issue measurements above.
 
 ## Alternatives considered
 

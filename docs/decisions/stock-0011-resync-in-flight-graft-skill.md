@@ -34,7 +34,7 @@ merges of same-topic-different-text files always fail: a wall of line-level
 conflicts with no more signal in them than reading each file once would give.
 
 `sorting-office` wrote a skill for exactly this situation and merged it —
-[`resync-in-flight-graft`](https://github.com/Graftwork/sorting-office/blob/main/.claude/skills/resync-in-flight-graft/SKILL.md).
+[`stock-resync-in-flight-graft`](https://github.com/Graftwork/sorting-office/blob/main/.claude/skills/stock-resync-in-flight-graft/SKILL.md).
 It splits the update by file rather than attempting one merge: untouched files
 get a straight patch, verified by comparing tree hashes directly rather than
 trusting the patch succeeded; already-rewritten files are read in full and

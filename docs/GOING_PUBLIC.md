@@ -124,10 +124,19 @@ and Pro accounts can configure nothing on a private repo, full stop. If
 you're on Team or Enterprise, this step doesn't have to wait for step 6; on
 Free or Pro, it does, same as it did here. So this step necessarily comes
 *after* the flip on most accounts, not before it, however much tidier
-"settle everything, then flip" would have been. None of it is checkable or
-settable by an agent session either way, as of this writing — no tool access
-to GitHub's branch-protection API. It's a manual pass, in Settings →
-Branches (or the newer Rulesets UI, depending on what your account shows).
+"settle everything, then flip" would have been. An agent session cannot
+change any of it: the settings are the owner's, made by hand in Settings →
+Branches (or the newer Rulesets UI, depending on what your account shows). An
+agent can read the result back once the repository is public. Measured on
+2026-10-20: `GET /repos/<owner>/<repo>/rules/branches/main` and
+`GET /repos/<owner>/<repo>/rulesets` answered without credentials, and Stock's
+`main` listed `deletion`, `non_fast_forward`, `pull_request` and
+`required_status_checks`. While the repository was private, the same
+`rulesets` endpoint answered HTTP 403 ("Upgrade to GitHub Pro or make this
+repository public") on 2026-10-03; see
+[Stock ADR 0016](decisions/stock-0016-no-ci-check-on-pushes-to-main.md).
+A pull request with a red required check reads `mergeable_state: "blocked"`,
+which is how enforcement shows from outside.
 
 - **Require a pull request before merging** on the default branch. Turns
   "changes reach `main` by branch and PR, never a direct commit" from a
