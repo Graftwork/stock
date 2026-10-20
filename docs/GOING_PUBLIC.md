@@ -124,10 +124,12 @@ and Pro accounts can configure nothing on a private repo, full stop. If
 you're on Team or Enterprise, this step doesn't have to wait for step 6; on
 Free or Pro, it does, same as it did here. So this step necessarily comes
 *after* the flip on most accounts, not before it, however much tidier
-"settle everything, then flip" would have been. An agent session cannot
-change any of it: the settings are the owner's, made by hand in Settings →
-Branches (or the newer Rulesets UI, depending on what your account shows). An
-agent can read the result back once the repository is public. Measured on
+"settle everything, then flip" would have been. The settings are the owner's
+([Stock ADR 0018](decisions/stock-0018-owner-opens-agent-pushes.md)), made by
+hand in Settings → Branches (or the newer Rulesets UI, depending on what your
+account shows). Whether an agent session's token could change them was not
+tested; the rule is that it does not. An agent can read the result back once
+the repository is public. Measured on
 2026-10-20: `GET /repos/<owner>/<repo>/rules/branches/main` and
 `GET /repos/<owner>/<repo>/rulesets` answered without credentials, and Stock's
 `main` listed `deletion`, `non_fast_forward`, `pull_request` and

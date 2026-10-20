@@ -19,23 +19,23 @@ Two things went wrong while this repository was being rebuilt and published.
   it edited the other four before reading them. An earlier version of this
   record said the agent saw it on five; that was wrong. The owner reports
   doing the same on four `sorting-office` pull requests.
-- **Re-checked on 2026-10-14**, by opening a draft pull request in a private
-  repository: the footer was still appended after the last line of the body as
-  written. Re-checked the same day through the REST API with `gh`
-  (`gh api -X POST repos/<owner>/<repo>/pulls`): the footer was appended there
-  too, so it comes from the session's network layer, not from one tool.
-- **Pull requests, counted again on 2026-10-20: 8 of 8 read carried the
-  footer.** Two on Stock, two on `stock-archive` (one made through the REST
-  API) and four on `sorting-office`, where a separate session read them.
-- **Issues are different, measured on 2026-10-20 and only for creating one.**
-  Two issues created with the GitHub tool, one in `stock-archive` and one in
-  `sorting-office`, came back with the body unchanged (2 of 2). The
-  `sorting-office` one had `created_at` equal to `updated_at`, so nothing
-  edited it after creation. One issue created through the REST API (`gh api`)
-  got a generic `claude.ai/code` footer with no session id (1 of 1). Not
-  tested: issue comments, edits to issues, and other repositories. These
-  samples are small. They support narrowing this rule to pull requests; they
-  do not show that an issue can never carry a session link.
+  - **Re-checked on 2026-10-14**, by opening a draft pull request in a private
+    repository: the footer was still appended after the last line of the body as
+    written. Re-checked the same day through the REST API with `gh`
+    (`gh api -X POST repos/<owner>/<repo>/pulls`): the footer was appended there
+    too, so it comes from the session's network layer, not from one tool.
+  - **Pull requests, counted again on 2026-10-20: 8 of 8 read carried the
+    footer.** Two on Stock, two on `stock-archive` (one made through the REST
+    API) and four on `sorting-office`, where a separate session read them.
+  - **Issues are different, measured on 2026-10-20 and only for creating one.**
+    Two issues created with the GitHub tool, one in `stock-archive` and one in
+    `sorting-office`, came back with the body unchanged (2 of 2). The
+    `sorting-office` one had `created_at` equal to `updated_at`, so nothing
+    edited it after creation. One issue created through the REST API (`gh api`)
+    got a generic `claude.ai/code` footer with no session id (1 of 1). Not
+    tested: issue comments, edits to issues, and other repositories. These
+    samples are small. They support narrowing this rule to pull requests; they
+    do not show that an issue can never carry a session link.
 - **The environment's defaults run the other way.** The cloud environment
   tells the agent to offer to watch its pull requests, subscribe to their
   activity, schedule check-ins and drive its own pull requests to green.

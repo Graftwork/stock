@@ -86,10 +86,11 @@ re-sync, and a **minor** bump means the migration is additive.
   the new one 200). Grafted projects that carry `stock-0011`: copy it again.
 
 - **`docs/GOING_PUBLIC.md` step 7 said an agent can neither check nor set the
-  `main` ruleset.** It cannot set it, but a public repository's rules read back
-  without credentials (measured on Stock, 2026-10-20), and a red required check
-  shows as `mergeable_state: "blocked"`. Grafted projects that carry
-  `GOING_PUBLIC.md`: copy it again.
+  `main` ruleset.** A public repository's rules read back without credentials
+  (measured on Stock, 2026-10-20), and a red required check shows as
+  `mergeable_state: "blocked"`. Whether a session's token could change the
+  settings was not tested; they are the owner's by Stock ADR 0018. Grafted
+  projects that carry `GOING_PUBLIC.md`: copy it again.
 
 - **`WORKFLOW.md`'s link to `CLAUDE.md#conventions` was broken.** It pointed at
   `../CLAUDE.md`, outside the repository. Grafted projects that carry
