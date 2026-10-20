@@ -56,11 +56,17 @@ re-sync, and a **minor** bump means the migration is additive.
   the pull request description's edit history. The requirement now says the
   agent does not open pull requests, as
   [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md)
-  decided. Both scenario titles are unchanged, so test markers and the declared
-  gap keep their ids. **Migration:** re-copy the requirement into your
+  decided, and it names pull requests only, not issues: the platform's
+  appended link was found on 8 of 8 pull requests read and on 0 of 2 issues
+  created with the GitHub tool (one more, created through the REST API, got a
+  generic footer with no session id; only creating an issue was tested). Both
+  scenario titles are unchanged, so test markers and the declared gap keep
+  their ids. **Migration:** re-copy the requirement into your
   `openspec/specs/foundation/spec.md`, and the reason for
   `foundation/a-pull-request-or-issue-contains-no-session-link` in
-  `[tool.graftwork.traceability]`.
+  `[tool.graftwork.traceability]`; copy
+  `docs/decisions/stock-0018-owner-opens-agent-pushes.md` again for the
+  measurements.
 
 - **README reads better on a first visit.** One sentence near the top says who
   Stock is for, and the Claude Code cloud-session caveat in "Getting started"
@@ -73,6 +79,18 @@ re-sync, and a **minor** bump means the migration is additive.
   projects that carry `stock-0015`: copy it again.
 
 ### Fixed
+
+- **Stock ADR 0011 linked to a skill file that does not exist.** The link
+  pointed at `.claude/skills/resync-in-flight-graft/` in `sorting-office`; the
+  skill is `stock-resync-in-flight-graft` (measured: the old URL returns 404,
+  the new one 200). Grafted projects that carry `stock-0011`: copy it again.
+
+- **`docs/GOING_PUBLIC.md` step 7 said an agent can neither check nor set the
+  `main` ruleset.** A public repository's rules read back without credentials
+  (measured on Stock, 2026-10-20), and a red required check shows as
+  `mergeable_state: "blocked"`. Whether a session's token could change the
+  settings was not tested; they are the owner's by Stock ADR 0018. Grafted
+  projects that carry `GOING_PUBLIC.md`: copy it again.
 
 - **`WORKFLOW.md`'s link to `CLAUDE.md#conventions` was broken.** It pointed at
   `../CLAUDE.md`, outside the repository. Grafted projects that carry

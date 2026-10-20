@@ -123,8 +123,8 @@ link identifies more than either: an account, sometimes a device, always a
 private exchange nobody but its participants agreed to publish.
 
 This governs what the agent writes and what a commit message contains. It does
-not reach a link that the platform's own tooling appends to a pull request or
-issue body when the agent opens one, and editing that link out afterwards does
+not reach a link that the platform's own tooling appends to a pull request
+body when the agent opens one, and editing that link out afterwards does
 not remove it: the original stays in the body's edit history, readable by
 anyone who can see the repository. So the agent SHALL NOT open pull requests
 itself: it pushes a branch and hands the title and body to a person, who opens

@@ -131,18 +131,18 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-15, for `owner-opens-pull-requests` — read the
-  proposal, design and delta spec, and scanned the added lines of
-  `git diff --cached 498a01b -- . ':!docs/UAT.md'` (7 files, 180 added lines,
+- **Last agent run:** 2026-10-20, for `appended-link-is-pull-requests-only` —
+  read the proposal, design and delta spec, and scanned the added lines of
+  `git diff --cached 22b0ef4 -- . ':!docs/UAT.md'` (9 files, 237 added lines,
   counted with `git diff --numstat`; this file's own edits are not in the scan,
   and I read them instead). Found no names, usernames, places, email
   addresses, token-like strings or real session identifiers, and no
-  zero-width characters. The only specific named is Stock ADR 0018. An earlier
-  run of this note gave "145 added lines": that count skipped blank lines and
-  was wrong.
-- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — accepted by the
-  maintainer after reading the output above and the scan's findings. Entered by
-  the agent at the maintainer's instruction.
+  zero-width characters. The only specifics named are Stock ADRs and the
+  repositories `stock-archive` and `sorting-office`, which the ADR 0018
+  measurements need. The three `claude.ai/code` matches are the generic footer
+  without a session id, quoted on purpose.
+- **Last passed:** 2026-10-20, for `appended-link-is-pull-requests-only` — accepted
+  by the maintainer after reading the output above and the scan's findings.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
