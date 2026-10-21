@@ -1,36 +1,42 @@
 name: Claude Code Review
 
-# Automatically review pull requests with Claude when they are opened, marked
-# ready for review, or pushed to. Authentication uses a Claude subscription
-# OAuth token stored in the CLAUDE_CODE_OAUTH_TOKEN repository secret, so
-# reviews draw on the existing Claude plan rather than a separate Anthropic API
-# key.
+# Review a pull request with Claude when the `claude-review` label is added to
+# it. Nothing runs without the label: a review draws on the owner's Claude
+# subscription (the CLAUDE_CODE_OAUTH_TOKEN repository secret, not a separate
+# Anthropic API key), so the owner chooses which pull requests spend it. To
+# review again after a push, remove the label and add it back. Only someone
+# with triage access can add a label, and pull requests from forks get no
+# secrets, so they cannot run this review either way. Stock ADR 0019 has the
+# reasoning and what was measured.
 #
-# `synchronize` (a push to an open PR) is here so the result of the final step
-# describes the PR's current head commit, not an older one. The check is
-# advisory, not a required check (maintainer decision, Graftwork/stock#39): a
-# missing review must never look like a review, but nothing waits on this job.
-# Left alone, a push gets no
-# second review: the review plugin stops if Claude has already commented on
-# the pull request (measured on Graftwork/stock#47; #39 finding 11), the run
-# posts nothing, and the gate below goes red. The prompt below therefore tells
-# the review to ignore that condition. Whether it does is checked on a live
-# run, not assumed; if it does not, the gate still fails, loudly. The
-# concurrency group below keeps pushes from overlapping reviews.
+# The check is advisory, not a required check (maintainer decision, recorded
+# in the archive as Graftwork/stock#39): a missing review must never look like
+# a review, but nothing waits on this job. A push after a labelled run gets no
+# `review` check at all, which cannot be mistaken for one.
+#
+# Left alone, a second labelled run gets no review: the review plugin stops if
+# Claude has already commented on the pull request (measured in the archive on
+# #47), the run posts nothing, and the gate below goes red. The prompt below
+# therefore tells the review to ignore that condition. Whether it does is
+# checked on a live run, not assumed; if it does not, the gate still fails,
+# loudly.
 on:
   pull_request:
-    types: [opened, ready_for_review, synchronize]
+    types: [labeled]
 
-# Cancel an in-progress review when the same pull request triggers another run,
-# so a single PR never consumes subscription quota on overlapping reviews.
+# Cancel an in-progress review when the same label is added again, so one pull
+# request never runs overlapping reviews. The label name is in the key because
+# adding any other label also starts a run (which skips its job below); without
+# it, that run would cancel a review in progress.
 concurrency:
-  group: claude-review-${{ github.event.pull_request.number }}
+  group: claude-review-${{ github.event.pull_request.number }}-${{ github.event.label.name }}
   cancel-in-progress: true
 
 jobs:
   review:
-    # Skip draft pull requests; they are reviewed once marked ready for review.
-    if: github.event.pull_request.draft == false
+    # Only the claude-review label starts a review. A draft is skipped: add the
+    # label once it is ready for review.
+    if: github.event.label.name == 'claude-review' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     outputs:
       # The denied tool calls, on one line, for the comment job below.
