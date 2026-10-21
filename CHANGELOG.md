@@ -56,8 +56,8 @@ re-sync, and a **minor** bump means the migration is additive.
   marked ready for review, or pushed to. It now triggers on `labeled` only, runs
   for that label, and includes the label name in its concurrency key. The
   review spends the owner's Claude allowance, so the owner now chooses which
-  pull requests use it, and a docs-only fix-up push no longer turns the check
-  red. The gate step and `tests/test_review_gate.py` are unchanged. See
+  pull requests use it, and a docs-only fix-up push no longer starts a run that
+  can turn the check red (re-adding the label may still). The gate step and `tests/test_review_gate.py` are unchanged. See
   [Stock ADR 0019](docs/decisions/stock-0019-claude-review-is-opt-in.md), which
   also lists what was not measured. **Migration:** a project that carries the
   workflow copies the new `on:`, `concurrency:` and job-level `if:`; create a

@@ -4,15 +4,21 @@ name: Claude Code Review
 # it. Nothing runs without the label: a review draws on the owner's Claude
 # subscription (the CLAUDE_CODE_OAUTH_TOKEN repository secret, not a separate
 # Anthropic API key), so the owner chooses which pull requests spend it. To
-# review again after a push, remove the label and add it back. Only someone
-# with triage access can add a label, and pull requests from forks get no
+# review again after a push, remove the label and add it back; "Re-run jobs"
+# replays the original event, so it reviews the commit the label was added at.
+# A draft is skipped and keeps the label, so remove it and add it again once
+# the pull request is ready. Only someone with triage access can add a label.
+# By default GitHub gives pull requests from forks of a public repository no
 # secrets, so they cannot run this review either way. Stock ADR 0019 has the
 # reasoning and what was measured.
 #
 # The check is advisory, not a required check (maintainer decision, recorded
 # in the archive as Graftwork/stock#39): a missing review must never look like
-# a review, but nothing waits on this job. A push after a labelled run gets no
-# `review` check at all, which cannot be mistaken for one.
+# a review, but nothing waits on this job. A push after a labelled run starts
+# no run, so the new commit has no `review` check. Adding any other label does
+# start a run whose job is skipped, which leaves a skipped `review` entry on
+# the head commit. That is not a review, but whether it hides an earlier red
+# `review` in the pull request's checks list has not been tested.
 #
 # Left alone, a second labelled run gets no review: the review plugin stops if
 # Claude has already commented on the pull request (measured in the archive on
@@ -203,8 +209,11 @@ jobs:
           # throwaway or "do not merge" — describe test PRs neutrally.
           settings: '{"env": {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}}'
           # Dependabot PRs only ever touch dependency-pin lines (pyproject.toml, devcontainer
-          # feature versions), so they carry no attacker-controlled content; allow the action to
-          # run for them rather than failing every dependency-bump PR's review check.
+          # feature versions), so they carry no attacker-controlled content; the action was
+          # allowed to run for them rather than failing every dependency-bump PR's review
+          # check. Since the review runs on a label, its actor is whoever added the label,
+          # so this probably no longer matters. It is left in because removing it was not
+          # tested.
           allowed_bots: "dependabot"
 
       # A green tick has to mean a review happened. The action above reports
@@ -338,7 +347,7 @@ jobs:
           fi
 
   # Lists the denied tool calls as one comment per pull request, updated in
-  # place on each push. A separate job so the job that runs the model keeps a
+  # place on each labelled run. A separate job so the job that runs the model keeps a
   # read-only token; this one can write to pull requests and runs nothing from
   # the pull request. Best effort: it never fails the check, and it is skipped
   # for fork pull requests, whose token is read-only.
