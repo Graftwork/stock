@@ -56,8 +56,12 @@ request. To review again after a push, remove the label and add it back.
   replays the original event, so it reviews the commit the label was added
   at; removing and re-adding the label does not have that problem.
 
-Who can add the label: anyone with triage access. That is the owner, and
-possibly the agent. The deny list in `.claude/settings.json` blocks
+Who can add the label: anyone with triage access. Who can get a review from it:
+only someone with write or admin access, because the pinned action (`v1.0.207`,
+`src/github/validation/permissions.ts`, read in the source) accepts only those
+levels for the person whose action started the run and otherwise refuses to
+run, so a triage-only user's label would make the gate fail (derived from the
+gate's code, not run). In practice that is the owner, and possibly the agent. The deny list in `.claude/settings.json` blocks
 `gh pr edit`, the usual way to add a label, but not `gh api`, `gh issue edit`
 or possibly `mcp__github__issue_write` (recalled, not tested). The house rule
 in `CLAUDE.md` that the agent acts on GitHub only when asked is what stops it.

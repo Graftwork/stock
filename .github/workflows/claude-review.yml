@@ -7,7 +7,9 @@ name: Claude Code Review
 # review again after a push, remove the label and add it back; "Re-run jobs"
 # replays the original event, so it reviews the commit the label was added at.
 # A draft is skipped and keeps the label, so remove it and add it again once
-# the pull request is ready. Only someone with triage access can add a label.
+# the pull request is ready. Triage access is enough to add a label, but the
+# action then refuses to run for anyone without write or admin access (read from
+# the pinned action's permissions check), so only they can get a review.
 # By default GitHub gives pull requests from forks of a public repository no
 # secrets, so they cannot run this review either way. Stock ADR 0019 has the
 # reasoning and what was measured.
