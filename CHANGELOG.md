@@ -51,6 +51,29 @@ re-sync, and a **minor** bump means the migration is additive.
 
 ### Changed
 
+- **The Claude review runs only when the `claude-review` label is added.**
+  `claude-review.yml` used to review every pull request when it was opened,
+  marked ready for review, or pushed to. It now triggers on `labeled` only, runs
+  for that label, and includes the label name in its concurrency key. The
+  review spends the owner's Claude allowance, so the owner now chooses which
+  pull requests use it, and a docs-only fix-up push no longer starts a run that
+  can turn the check red (re-adding the label may still). The gate step and
+  `tests/test_review_gate.py` are unchanged. See
+  [Stock ADR 0019](docs/decisions/stock-0019-claude-review-is-opt-in.md), which
+  also lists what was not measured. **Migration:** a project that carries the
+  workflow copies the new `on:`, `concurrency:` and job-level `if:`; creates a
+  `claude-review` label in the repository; and adds it to a pull request to get
+  a review. The label does not always produce one:
+  - a draft pull request is skipped and keeps the label, so add it again once
+    the pull request is ready;
+  - the person adding it needs write or admin access, because the action
+    refuses to run for anyone with less (triage access can add the label but
+    not get a review);
+  - a pull request that edits `claude-review.yml` is not reviewed, because the
+    action skips itself and the gate fails: review it by hand.
+
+  A project that does not use the review changes nothing.
+
 - **`foundation`'s *Coding Session Links Are Not Disclosed* no longer says a
   platform-appended link is removed by editing.** Editing it out leaves it in
   the pull request description's edit history. The requirement now says the
