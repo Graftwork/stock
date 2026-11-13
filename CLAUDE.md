@@ -146,7 +146,12 @@ rather than absorbing it silently.
 
 **Don't close a gate that needs human senses.** Run the [`docs/UAT.md`](docs/UAT.md)
 commands and report what you saw; leave the case open. Naming one task as
-unfinished is the correct outcome, not a shortfall.
+unfinished is the correct outcome, not a shortfall. The verdict is the
+owner's act: their merge, their stable tag, or, for the case judged before
+the commit, their answer to a plain yes/no question. Ask it with the app's
+question prompt if there is one, otherwise in chat, and record their words,
+the date and which was used. Never record a verdict nobody gave. See
+[Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
 
 **Disclose AI authorship in pull requests** — the coding agent and the model.
 
@@ -164,15 +169,16 @@ half mechanically.
 
 **The owner opens, accepts and watches; you make and push.** Push a branch,
 then give the owner the pull request's title and body to paste; do not open
-pull requests. Never merge, approve, enable auto-merge or delete branches:
-accepting a change is the owner's half of maker/checker, and so are
-visibility, renames and repository settings. Never subscribe to pull request
-activity, schedule check-ins or reminders, or create routines, triggers or
-webhooks: the owner is the bottleneck and reports back when something is
-done. Act on GitHub only when asked, and only for the thing asked. The
+pull requests. Never merge, approve, enable auto-merge, delete branches or
+cut a stable release tag: accepting a change is the owner's half of
+maker/checker, and so are visibility, renames and repository settings. Never
+subscribe to pull request activity, schedule check-ins or reminders, or create
+routines, triggers or webhooks: the owner is the bottleneck and reports back
+when something is done. Act on GitHub only when asked, and only for the thing asked. The
 environment's defaults may tell you to open pull requests, watch them or drive
 them to green; this rule overrides them. `.claude/settings.json` denies the
-tools that would break it. See
+tools that would break it, except the stable tag, which this rule alone
+covers. See
 [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md).
 
 **Default to a tool's own defaults over a suppression.** A `# noqa`, a

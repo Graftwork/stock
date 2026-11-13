@@ -185,8 +185,11 @@ which is the wrong moment to discover the concept was wrong.
 **An agent cannot close a gate that requires human senses.** Reporting 34/35 with
 the eyeball task named and left open is correct. Reporting 35/35 is not.
 
-Cases live in [`docs/UAT.md`](docs/UAT.md), each with a `Last passed` date — the
-date is what stops UAT from going quietly stale.
+Cases live in [`docs/UAT.md`](docs/UAT.md). The agent records what it ran; the
+verdict is something only the owner can do: merging the PR, cutting the stable
+tag, or, for the one case judged before the commit, answering in conversation,
+which the agent records word for word. See
+[Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
 
 ### Branch names match the route
 
@@ -285,9 +288,11 @@ day the suite earns it.
 - **Answers the genuine forks.** Decisions that lead to different code.
 - **Decides what to throw away.** Scaling a change down is the PO's call.
 - **Opens, accepts and watches.** Opens each pull request from the branch the
-  agent pushed, merges or closes it, and owns visibility, renames and
-  repository settings. Reports back when something is done, so the agent
-  never has to watch for it.
+  agent pushed, merges or closes it, cuts the stable release tag, and owns
+  visibility, renames and repository settings. Reports back when something is
+  done, so the agent never has to watch for it. The merge and the tag are also
+  the UAT verdicts; see
+  [Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
 
 ### The agent
 
@@ -306,7 +311,7 @@ day the suite earns it.
   correction silently hides the fact that the answer moved.
 - **Makes and pushes, then hands over.** Pushes a branch and gives the PO the
   pull request's title and body. Never opens, merges, approves or watches a
-  pull request. See
+  pull request, and never cuts a stable release tag. See
   [Stock ADR 0018](docs/decisions/stock-0018-owner-opens-agent-pushes.md).
 - **Reports which artifacts it edited mid-flight, and why.** Correcting a wrong
   task in place is right. Doing it silently is not.

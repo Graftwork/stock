@@ -1,6 +1,8 @@
 # Stock ADR 0006: UAT is a human gate, ordered before the PR and the archive
 
-- **Status:** accepted
+- **Status:** accepted; the `Last passed` mechanism is superseded by
+  [Stock ADR 0019](stock-0019-uat-verdict-is-the-owners-act.md), which makes
+  the verdict an act only the owner can perform
 - **Date:** 2026-08-16
 
 ## Context
