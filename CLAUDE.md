@@ -151,7 +151,7 @@ owner's act: their merge, their stable tag, or, for the case judged before
 the commit, their answer to a plain yes/no question. Ask it with the app's
 question prompt if there is one, otherwise in chat, and record their words,
 the date and which was used. Never record a verdict nobody gave. See
-[Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+[Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 **Disclose AI authorship in pull requests** — the coding agent and the model.
 

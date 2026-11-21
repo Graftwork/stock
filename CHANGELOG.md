@@ -67,7 +67,7 @@ re-sync, and a **minor** bump means the migration is additive.
   every commit that changed one carries an agent co-author trailer (8 of 8,
   measured with `git log -G'Last passed' -- docs/UAT.md`). Cutting a stable
   release tag joins the agent's never-list in `CLAUDE.md`. See
-  [Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+  [Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
   **Migration:**
   1. In your own `docs/UAT.md`, copy the intro and *Case format* sections from
      this release. In each case, replace the `Last passed` line with a
@@ -81,7 +81,7 @@ re-sync, and a **minor** bump means the migration is additive.
      before the PR* and the two lines under "Who does what" (*Opens, accepts
      and watches* and *Makes and pushes, then hands over*). If you kept
      `docs/RELEASING.md`, copy its changes to steps 4, 8 and 9.
-  4. Copy `docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md`, and the
+  4. Copy `docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md`, and the
      updated status line of `stock-0006-uat-is-a-human-gate.md`.
 
 - **`foundation`'s *Coding Session Links Are Not Disclosed* no longer says a

@@ -1,4 +1,4 @@
-# Stock ADR 0019: A UAT verdict is the owner's act, not a line in a file
+# Stock ADR 0020: A UAT verdict is the owner's act, not a line in a file
 
 - **Status:** accepted
 - **Date:** 2026-10-23

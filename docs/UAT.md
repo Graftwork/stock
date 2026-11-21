@@ -45,7 +45,7 @@ that for as long as the person wrote it by hand. But writing it means editing
 this file, which an owner directing an agent should not have to do, and the
 agent can edit the same line. An act the agent has no way to perform needs
 neither. See
-[Stock ADR 0019](decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+[Stock ADR 0020](decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 **A verdict given in conversation** — the one case that has to be judged before
 anything is committed — is recorded by the agent, never inferred by it. The
@@ -103,7 +103,7 @@ Case 5 is the same check against the real published tag once it does.
   promise.
 - **Verdict:** merging the PR.
 - **Last agent run:** 2026-11-13, for the change that made the verdict the
-  owner's act (Stock ADR 0019) — from tracked files only, with the change
+  owner's act (Stock ADR 0020) — from tracked files only, with the change
   staged: 50 passed, `ruff check` and `ruff format --check` clean, the
   traceability guard `17/21` claimed with 4 declared gaps, and
   `pyproject.toml` in the rehearsal copy reads `version = "0.7.0"`, agreeing
@@ -130,7 +130,7 @@ Case 5 is the same check against the real published tag once it does.
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
 - **Verdict:** merging the PR.
-- **Last agent run:** 2026-11-13, for the Stock ADR 0019 change —
+- **Last agent run:** 2026-11-13, for the Stock ADR 0020 change —
   `17/21 scenarios claimed by tests, 4 allowed without one`. The change does
   not touch `pyproject.toml` (`git diff --cached --quiet -- pyproject.toml`),
   so the four reasons are the ones accepted with `owner-opens-pull-requests`.
@@ -161,7 +161,7 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
 
 - **Verdict:** in conversation, before the commit. A PR is too late for this
   case.
-- **Last agent run:** 2026-11-13, for the Stock ADR 0019 change — a
+- **Last agent run:** 2026-11-13, for the Stock ADR 0020 change — a
   docs-only change with no proposal, design or delta spec. Scanned the added
   lines of `git diff --cached -- . ':!docs/UAT.md'` (8 files, 187 added lines,
   counted with `git diff --numstat`; this file's own edits are not in that
@@ -170,9 +170,9 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   identifiers, and no zero-width characters. People appear only as "the
   owner" and "the maintainer". The only specifics are Stock ADR numbers, three
   dates, one sentence quoted from this file's earlier case 3 entry, and the
-  maintainer's own report, in Stock ADR 0019, that they wrote the `Last passed`
+  maintainer's own report, in Stock ADR 0020, that they wrote the `Last passed`
   lines themselves.
-- **Last verdict:** 2026-11-13, for the Stock ADR 0019 change: "Yes, it reads
+- **Last verdict:** 2026-11-13, for the Stock ADR 0020 change: "Yes, it reads
   clean" (prompt)
 
 ### 5. The published tag is actually graftable — *needs a published tag*

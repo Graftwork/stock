@@ -59,7 +59,7 @@ Cases marked *needs a published tag* cannot run yet; leave them for step 8. Repo
 is the correct outcome — an agent may run the commands and report, but may not
 pass a case. The owner's merge in step 7 is the verdict on the cases run here;
 the stranger-read case is judged in conversation before the commit (see
-[Stock ADR 0019](decisions/stock-0019-uat-verdict-is-the-owners-act.md)).
+[Stock ADR 0020](decisions/stock-0020-uat-verdict-is-the-owners-act.md)).
 
 ### 5. Decide the version and write the CHANGELOG entry
 

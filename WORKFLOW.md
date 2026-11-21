@@ -189,7 +189,7 @@ Cases live in [`docs/UAT.md`](docs/UAT.md). The agent records what it ran; the
 verdict is something only the owner can do: merging the PR, cutting the stable
 tag, or, for the one case judged before the commit, answering in conversation,
 which the agent records word for word. See
-[Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+[Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 ### Branch names match the route
 
@@ -292,7 +292,7 @@ day the suite earns it.
   visibility, renames and repository settings. Reports back when something is
   done, so the agent never has to watch for it. The merge and the tag are also
   the UAT verdicts; see
-  [Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+  [Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 ### The agent
 

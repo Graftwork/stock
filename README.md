@@ -122,7 +122,7 @@ commands and report what it saw; the verdict is an act only the owner can
 perform — merging the PR, cutting the stable tag, or an answer given in
 conversation that the agent records word for word. See
 [Stock ADR 0006](docs/decisions/stock-0006-uat-is-a-human-gate.md) and
-[Stock ADR 0019](docs/decisions/stock-0019-uat-verdict-is-the-owners-act.md).
+[Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 [`docs/RELEASING.md`](docs/RELEASING.md) is how a change gets *out* — branch, the
 route it takes, the version decision, tag, and the re-sync PRs it owes every
