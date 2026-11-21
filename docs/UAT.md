@@ -99,13 +99,15 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-10-07 — `17/21 scenarios claimed by tests, 4 allowed
-  without one`; all four reasons printed for reading, none changed since
-  `v0.6.0`. All four still read as true to me; the fourth
-  (`a-pull-request-or-issue-contains-no-session-link`) is accurate but not
-  exhaustive, as recorded on 2026-10-04.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — the maintainer accepted
-  that each declared reason still holds.
+- **Last agent run:** 2026-10-14, for `owner-opens-pull-requests` —
+  `17/21 scenarios claimed by tests, 4 allowed without one`. The fourth reason
+  (`a-pull-request-or-issue-contains-no-session-link`) is reworded: it no longer
+  presents the `session-links` workflow's stripping as the safeguard, and names
+  the agent not opening pull requests (Stock ADR 0018) instead. The other three
+  are unchanged and still read as true to me.
+- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — the maintainer
+  accepted that each declared reason still holds, including the reworded
+  fourth. Entered by the agent at the maintainer's instruction.
 
 ### 4. The artifacts read clean to a stranger
 
@@ -129,15 +131,18 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-07 — scanned the added lines of
-  `git diff v0.6.0` against the prep working tree (14 files, 954 added lines):
-  no token-like strings, no zero-width characters, no usernames or personal
-  names. One line mentions the pattern `claude.ai/code/session` as text; none
-  contains a real session identifier. The only email-shaped text is the
-  `git@github.com` clone address and the `noreply@anthropic.com` co-author
-  address. This covers the whole release.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
-  after reading the output above and the scan's findings.
+- **Last agent run:** 2026-10-20, for `appended-link-is-pull-requests-only` —
+  read the proposal, design and delta spec, and scanned the added lines of
+  `git diff --cached 22b0ef4 -- . ':!docs/UAT.md'` (9 files, 237 added lines,
+  counted with `git diff --numstat`; this file's own edits are not in the scan,
+  and I read them instead). Found no names, usernames, places, email
+  addresses, token-like strings or real session identifiers, and no
+  zero-width characters. The only specifics named are Stock ADRs and the
+  repositories `stock-archive` and `sorting-office`, which the ADR 0018
+  measurements need. The three `claude.ai/code` matches are the generic footer
+  without a session id, quoted on purpose.
+- **Last passed:** 2026-10-20, for `appended-link-is-pull-requests-only` — accepted
+  by the maintainer after reading the output above and the scan's findings.
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
