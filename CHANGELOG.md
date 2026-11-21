@@ -69,6 +69,8 @@ re-sync, and a **minor** bump means the migration is additive.
   - the person adding it needs write or admin access, because the action
     refuses to run for anyone with less (triage access can add the label but
     not get a review);
+  - a label added by a bot or app skips the review, so only a person can
+    spend it;
   - a pull request that edits `claude-review.yml` is not reviewed, because the
     action skips itself and the gate fails: review it by hand.
 

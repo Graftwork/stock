@@ -43,8 +43,10 @@ concurrency:
 jobs:
   review:
     # Only the claude-review label starts a review. A draft is skipped: add the
-    # label once it is ready for review.
-    if: github.event.label.name == 'claude-review' && github.event.pull_request.draft == false
+    # label once it is ready for review. A label added by a GitHub App (an actor
+    # ending in [bot]) is skipped too, so only a person can spend the review;
+    # Stock ADR 0019 says why the action's own checks are not relied on for it.
+    if: github.event.label.name == 'claude-review' && github.event.pull_request.draft == false && !endsWith(github.actor, '[bot]')
     runs-on: ubuntu-latest
     outputs:
       # The denied tool calls, on one line, for the comment job below.

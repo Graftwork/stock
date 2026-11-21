@@ -67,6 +67,19 @@ or possibly `mcp__github__issue_write` (recalled, not tested). The house rule
 in `CLAUDE.md` that the agent acts on GitHub only when asked is what stops it.
 The label is a gate by rule, not by permission.
 
+A label added by a GitHub App, an actor whose name ends in `[bot]`, skips the
+job. At the pinned version such a run would already stop before Claude starts
+(read in the source, not run). The write check in `permissions.ts` lets any
+`[bot]` actor through, but the human-actor check in
+`src/github/validation/actor.ts`, which both of the action's modes call, then
+refuses any bot not in `allowed_bots`. The one bot listed, Dependabot, gets no
+repository secrets on the runs it starts (recalled, not tested), so it cannot
+authenticate. The condition does not lean on either: it ends such a run as a
+skipped job before anything is checked out, rather than a failed one, and it
+keeps holding if a later version of the action changes its checks. A person
+adding the label to a Dependabot pull request is unaffected, because the actor
+is the person.
+
 ## Not measured
 
 - That the action runs when started by a `labeled` event. The gate step reads
