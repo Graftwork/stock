@@ -1,4 +1,4 @@
-# Stock ADR 0019: the devcontainer builds, and carries Claude Code
+# Stock ADR 0021: the devcontainer builds, and carries Claude Code
 
 - **Status:** accepted
 - **Date:** 2026-10-14

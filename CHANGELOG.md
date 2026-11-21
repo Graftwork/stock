@@ -27,10 +27,10 @@ re-sync, and a **minor** bump means the migration is additive.
   Node, and on Node 18 npm installs an old Claude Code (2.1.197 on
   2026-10-14, against 2.1.299 current) that cannot update itself without
   sudo. See
-  [Stock ADR 0019](docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md).
+  [Stock ADR 0021](docs/decisions/stock-0021-devcontainer-builds-with-claude-code.md).
   **Migration:** copy `.devcontainer/devcontainer.json` (it includes the
   *Fixed* change below) and
-  `docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md`.
+  `docs/decisions/stock-0021-devcontainer-builds-with-claude-code.md`.
   Rebuild, then run
   `claude --version` and `mise run check` in the container's terminal.
 
@@ -102,7 +102,7 @@ re-sync, and a **minor** bump means the migration is additive.
   installs mise without activating it. The devcontainer now uses the new
   reference and puts mise's shims on `PATH` through `remoteEnv`. Measured, with
   the commands, in
-  [Stock ADR 0019](docs/decisions/stock-0019-devcontainer-builds-with-claude-code.md).
+  [Stock ADR 0021](docs/decisions/stock-0021-devcontainer-builds-with-claude-code.md).
   **Migration:** in `.devcontainer/devcontainer.json`, replace the feature
   reference and add the `remoteEnv` block. Its `/home/vscode/.local/bin`
   entry is only for Claude Code (see *Added*). Rebuild the container and check
