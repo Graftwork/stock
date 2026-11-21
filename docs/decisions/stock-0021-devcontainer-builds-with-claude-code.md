@@ -60,9 +60,13 @@ Code runs under.
 - puts `~/.local/bin` and mise's shims directory on `PATH` through
   `remoteEnv`, so `python`, `uv` and `node` resolve to the `mise.toml` pins in
   every shell and in `postCreateCommand`;
-- installs Claude Code in `postCreateCommand` with the native installer
-  (`curl -fsSL https://claude.ai/install.sh | bash`), after `mise install`
-  and `uv sync`;
+- installs Claude Code in `postCreateCommand` with the native installer,
+  after `mise install` and `uv sync`. The installer is downloaded to a file
+  and then run, rather than piped into `bash`: piped, a failed download
+  still exits 0, because a pipeline's status is its last command's (measured
+  with `sh -c`, 2026-11-21: a 403 from `curl -fsSL` piped into `bash` gave
+  exit status 0; downloading first gave 22), so the container build would
+  carry on without Claude Code;
 - recommends the `anthropic.claude-code` VS Code extension.
 
 ## Consequences

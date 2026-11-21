@@ -13,7 +13,7 @@
   "remoteEnv": {
     "PATH": "/home/vscode/.local/bin:/home/vscode/.local/share/mise/shims:${containerEnv:PATH}"
   },
-  "postCreateCommand": "mise trust && mise install && uv sync && curl -fsSL https://claude.ai/install.sh | bash",
+  "postCreateCommand": "mise trust && mise install && uv sync && curl -fsSL https://claude.ai/install.sh -o /tmp/claude-install.sh && bash /tmp/claude-install.sh",
   "customizations": {
     "vscode": {
       "extensions": ["anthropic.claude-code", "charliermarsh.ruff", "ms-python.python"]
