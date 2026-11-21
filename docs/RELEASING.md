@@ -57,7 +57,9 @@ uvx pre-commit run --all-files
 Work [`docs/UAT.md`](UAT.md), run the cases you can, and record what you saw.
 Cases marked *needs a published tag* cannot run yet; leave them for step 8. Reporting a case as open
 is the correct outcome — an agent may run the commands and report, but may not
-mark a case passed.
+pass a case. The owner's merge in step 7 is the verdict on the cases run here;
+the stranger-read case is judged in conversation before the commit (see
+[Stock ADR 0020](decisions/stock-0020-uat-verdict-is-the-owners-act.md)).
 
 ### 5. Decide the version and write the CHANGELOG entry
 
@@ -207,10 +209,13 @@ manual report, and this step is the fork in what happens to it: the highlighted
 path is a defect in the exact candidate under test, folded back into the same
 release; the plain path is everything else, which waits for the next one.
 
-Record `Last agent run` for what was executed; **`Last passed` stays for the
-person who looked.**
+Record `Last agent run` for what was executed. **The verdict is step 9: the
+owner cutting the stable tag.** The agent does not cut it.
 
 ### 9. Tag the release
+
+The owner cuts this tag, not the agent. It is the verdict on the cases run in
+step 8.
 
 ```bash
 git tag -a v<X.Y.Z> -m "v<X.Y.Z>" <the same commit the passing rc points at>

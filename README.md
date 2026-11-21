@@ -116,10 +116,13 @@ items are proposal-only changes, why you copy the reasoning out of an abandoned
 change before deleting it, and where OpenSpec's sharp edges are. It's short, and
 everything in it changed an outcome on a real project.
 
-[`docs/UAT.md`](docs/UAT.md) holds the checks that need a person — each with a
-`Last passed` date, run before the PR and before the archive, because the archive
-is one-way. An agent can run the commands and report what it saw; it can't mark
-the case passed. See [Stock ADR 0006](docs/decisions/stock-0006-uat-is-a-human-gate.md).
+[`docs/UAT.md`](docs/UAT.md) holds the checks that need a person, run before the
+PR and before the archive, because the archive is one-way. An agent can run the
+commands and report what it saw; the verdict is an act only the owner can
+perform — merging the PR, cutting the stable tag, or an answer given in
+conversation that the agent records word for word. See
+[Stock ADR 0006](docs/decisions/stock-0006-uat-is-a-human-gate.md) and
+[Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
 
 [`docs/RELEASING.md`](docs/RELEASING.md) is how a change gets *out* — branch, the
 route it takes, the version decision, tag, and the re-sync PRs it owes every

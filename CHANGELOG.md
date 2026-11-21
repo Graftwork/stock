@@ -76,6 +76,39 @@ re-sync, and a **minor** bump means the migration is additive.
 
   A project that does not use the review changes nothing.
 
+- **A UAT verdict is the owner's act, not a line in a file.** `Last passed` is
+  gone from `docs/UAT.md`. Each case names its `Verdict`, an act only the
+  owner can perform:
+  - merging the PR, for cases run before it;
+  - cutting the stable tag, for the case run against a release candidate;
+  - for the stranger-read case, which must be judged before the commit, an
+    answer given in conversation. The agent records that answer word for
+    word, with the date and whether the app's question prompt or plain chat
+    was used.
+
+  Writing a `Last passed` line means editing a repository file by hand, a
+  technical act a project's owner should not need. The line also sat in a
+  file the agent can edit, and nothing in the repository showed who wrote it:
+  every commit that changed one carries an agent co-author trailer (8 of 8,
+  measured with `git log -G'Last passed' -- docs/UAT.md`). Cutting a stable
+  release tag joins the agent's never-list in `CLAUDE.md`. See
+  [Stock ADR 0020](docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md).
+  **Migration:**
+  1. In your own `docs/UAT.md`, copy the intro and *Case format* sections from
+     this release. In each case, replace the `Last passed` line with a
+     `Verdict` line. Keep your `Last agent run` lines.
+  2. For a case judged before the commit, change its latest `Last passed` to
+     `Last verdict`. If the owner's own words weren't kept, say so rather than
+     reconstructing them.
+  3. Copy the `CLAUDE.md` rules *Don't close a gate that needs human senses*
+     and *The owner opens, accepts and watches* from this release. In
+     `WORKFLOW.md`, copy the last paragraph of *UAT is a gate, and it comes
+     before the PR* and the two lines under "Who does what" (*Opens, accepts
+     and watches* and *Makes and pushes, then hands over*). If you kept
+     `docs/RELEASING.md`, copy its changes to steps 4, 8 and 9.
+  4. Copy `docs/decisions/stock-0020-uat-verdict-is-the-owners-act.md`, and the
+     updated status line of `stock-0006-uat-is-a-human-gate.md`.
+
 - **`foundation`'s *Coding Session Links Are Not Disclosed* no longer says a
   platform-appended link is removed by editing.** Editing it out leaves it in
   the pull request description's edit history. The requirement now says the

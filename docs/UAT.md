@@ -2,8 +2,8 @@
 
 The things a test suite cannot judge: whether the output looks right, reads
 right, or works the way a person expected. Each case is judged by a human, and
-the `Last passed` date is the point — it is what stops UAT from going quietly
-stale while the suite stays green.
+the verdict is an act only the owner can perform — that is what stops UAT from
+going quietly stale while the suite stays green.
 
 **Run these before opening the PR and before archiving the change.** Not after.
 The archive is one-way, and a PR is the wrong place to discover the concept was
@@ -17,23 +17,52 @@ which is what lets them happen before the release rather than after it. A case
 earns this marking only if it genuinely cannot be checked earlier; it is not a
 way to defer an awkward case past the gate.
 
-An agent may run the commands and report what it saw. It may not mark a case
-passed — that is the whole point of the gate.
+An agent may run the commands and report what it saw. It may not pass a case —
+that is the whole point of the gate.
 
-Because that line is easy to blur, each case carries **two** dates:
+So the two halves are kept apart:
 
 - **Last agent run** — the commands were executed and this is what came back. An
-  agent may write this. It is evidence, not a verdict.
-- **Last passed** — a person looked at that output and accepted it. Only a
-  person writes this line.
+  agent writes this. It is evidence, not a verdict.
+- **The verdict** — a person looked at that evidence and accepted it. It is not a
+  line in this file. It is something the owner does, at the gate the case sits
+  at, that the agent has no way to do for them:
 
-The distinction earns its keep: the first version of this file had `Last passed`
-dates that an agent had written after running the commands itself. Everything was
-green and nothing had been reviewed, which is precisely the failure UAT exists to
-prevent. Two fields make that mistake impossible to make quietly.
+  | The case runs | The verdict is |
+  | --- | --- |
+  | before the PR | the owner **merging** the PR that carries the evidence |
+  | before the commit | the owner's **answer in conversation**, recorded word for word (below) |
+  | against a release candidate | the owner **cutting the stable tag** |
 
-Dates are **batched** — they are updated as part of the next real change rather
-than each earning its own pull request.
+  The agent cannot merge or approve (both are denied in `.claude/settings.json`)
+  and does not cut a stable tag (`CLAUDE.md`).
+
+Why the verdict is an act rather than a line: the first version of this file had
+`Last passed` dates that an agent had written after running the commands itself.
+Everything was green and nothing had been reviewed, which is precisely the
+failure UAT exists to prevent. A second field, written only by a person, fixed
+that for as long as the person wrote it by hand. But writing it means editing
+this file, which an owner directing an agent should not have to do, and the
+agent can edit the same line. An act the agent has no way to perform needs
+neither. See
+[Stock ADR 0020](decisions/stock-0020-uat-verdict-is-the-owners-act.md).
+
+**A verdict given in conversation** — the one case that has to be judged before
+anything is committed — is recorded by the agent, never inferred by it. The
+agent asks a plain yes/no question naming exactly what to look at, using the
+app's own question prompt where it has one and plain chat where it does not.
+It then writes the owner's own words, the date, and which of the two was used:
+
+```markdown
+- **Last verdict:** YYYY-MM-DD, for `<change>`: "<the owner's words>" (prompt | chat)
+```
+
+An agent that writes a verdict nobody gave has broken the gate, exactly as
+before; the difference is that the quotation and the conversation can be checked
+against each other.
+
+`Last agent run` dates are **batched**. They are updated as part of the next
+real change rather than each earning its own pull request.
 
 ## Case format
 
@@ -42,9 +71,11 @@ than each earning its own pull request.
 
 - **Command:** the exact thing to run
 - **Expect:** what you should see, specifically enough to be wrong
+- **Verdict:** merging the PR | in conversation, before the commit | cutting the stable tag
 - **Last agent run:** YYYY-MM-DD — what came back
-- **Last passed:** YYYY-MM-DD (or `never`) — a person's judgement only
 ```
+
+When the verdict is given in conversation, a `Last verdict` line follows.
 
 ---
 
@@ -70,13 +101,13 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** lint clean, suite passes, no edits needed to get there. If the
   first command a new project runs is red, the foundation has broken its one
   promise.
-- **Last agent run:** 2026-10-07 — on the `0.7.0` prep branch, from tracked
-  files only: 50 passed, `ruff check` and `ruff format --check` clean, the
+- **Verdict:** merging the PR.
+- **Last agent run:** 2026-11-13, for the change that made the verdict the
+  owner's act (Stock ADR 0020) — from tracked files only, with the change
+  staged: 50 passed, `ruff check` and `ruff format --check` clean, the
   traceability guard `17/21` claimed with 4 declared gaps, and
   `pyproject.toml` in the rehearsal copy reads `version = "0.7.0"`, agreeing
   with the working tree.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
-  after reading the output above.
 
 ### 2. The guard's failure output tells a human what to do
 
@@ -85,12 +116,11 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the scenario is named, located by file and line, and followed by a
   `fix:` line you could paste. Judgement call: could someone who has never seen
   this repo act on the output without reading the guard's source?
+- **Verdict:** merging the PR.
 - **Last agent run:** 2026-10-07 — in a scratch copy of the prep branch, an
   added scenario with no claiming test was named
   (`foundation/probe-scenario-nobody-claims`), located at `spec.md:213`, and
   given a pasteable `fix:` line; exit 1. The tracked tree was not touched.
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — accepted by the maintainer
-  after reading the output above.
 
 ### 3. A declared gap reads as a decision, not an oversight
 
@@ -99,15 +129,13 @@ Case 5 is the same check against the real published tag once it does.
 - **Expect:** the summary line accounts for the gap (`… , 1 allowed without
   one`), and every declared reason still holds today. A reason that has quietly
   stopped being true is exactly what this case exists to catch.
-- **Last agent run:** 2026-10-14, for `owner-opens-pull-requests` —
-  `17/21 scenarios claimed by tests, 4 allowed without one`. The fourth reason
-  (`a-pull-request-or-issue-contains-no-session-link`) is reworded: it no longer
-  presents the `session-links` workflow's stripping as the safeguard, and names
-  the agent not opening pull requests (Stock ADR 0018) instead. The other three
-  are unchanged and still read as true to me.
-- **Last passed:** 2026-10-15, for `owner-opens-pull-requests` — the maintainer
-  accepted that each declared reason still holds, including the reworded
-  fourth. Entered by the agent at the maintainer's instruction.
+- **Verdict:** merging the PR.
+- **Last agent run:** 2026-11-13, for the Stock ADR 0020 change —
+  `17/21 scenarios claimed by tests, 4 allowed without one`. The change does
+  not touch `pyproject.toml` (`git diff --cached --quiet -- pyproject.toml`),
+  so the four reasons are the ones accepted with `owner-opens-pull-requests`.
+  I re-read them against this change: none mentions `Last passed` or
+  `docs/UAT.md`, and all four still read as true to me.
 
 ### 4. The artifacts read clean to a stranger
 
@@ -131,18 +159,21 @@ late. See [Context is not content](../WORKFLOW.md#context-is-not-content).
   to understand why a detail is harmless, a stranger reading the public
   repository does not have it.
 
-- **Last agent run:** 2026-10-20, for `appended-link-is-pull-requests-only` —
-  read the proposal, design and delta spec, and scanned the added lines of
-  `git diff --cached 22b0ef4 -- . ':!docs/UAT.md'` (9 files, 237 added lines,
-  counted with `git diff --numstat`; this file's own edits are not in the scan,
-  and I read them instead). Found no names, usernames, places, email
-  addresses, token-like strings or real session identifiers, and no
-  zero-width characters. The only specifics named are Stock ADRs and the
-  repositories `stock-archive` and `sorting-office`, which the ADR 0018
-  measurements need. The three `claude.ai/code` matches are the generic footer
-  without a session id, quoted on purpose.
-- **Last passed:** 2026-10-20, for `appended-link-is-pull-requests-only` — accepted
-  by the maintainer after reading the output above and the scan's findings.
+- **Verdict:** in conversation, before the commit. A PR is too late for this
+  case.
+- **Last agent run:** 2026-11-13, for the Stock ADR 0020 change — a
+  docs-only change with no proposal, design or delta spec. Scanned the added
+  lines of `git diff --cached -- . ':!docs/UAT.md'` (8 files, 187 added lines,
+  counted with `git diff --numstat`; this file's own edits are not in that
+  count, and I read them instead). Found no names, usernames, places, email
+  addresses, web addresses, repository names, token-like strings or session
+  identifiers, and no zero-width characters. People appear only as "the
+  owner" and "the maintainer". The only specifics are Stock ADR numbers, three
+  dates, one sentence quoted from this file's earlier case 3 entry, and the
+  maintainer's own report, in Stock ADR 0020, that they wrote the `Last passed`
+  lines themselves.
+- **Last verdict:** 2026-11-13, for the Stock ADR 0020 change: "Yes, it reads
+  clean" (prompt)
 
 ### 5. The published tag is actually graftable — *needs a published tag*
 
@@ -165,6 +196,8 @@ or a file that is gitignored in a way nobody noticed.
 
   If this passes, the stable tag goes on the exact commit the candidate points
   at. If it fails, fix it and cut `-rc.<N+1>`; nothing has been released.
+- **Verdict:** cutting the stable tag. The owner does it, on the commit the
+  candidate points at, only once they have accepted what this case found.
 - **Last agent run:** 2026-10-07 — against `v0.7.0-rc.1` (commit `7fccde9`,
   published as a pre-release): a shallow clone of the tag with `.git` removed
   gave `pytest` 50 passed, `ruff check` and `ruff format --check` clean, the
@@ -183,14 +216,6 @@ or a file that is gitignored in a way nobody noticed.
   passed on a cold cache (the first run downloaded the release directly, with
   no API resolution). `mise` is unavailable in the agent environment, so the
   `uv`/`ruff` equivalents ran instead (see `CLAUDE.md`).
-- **Last passed:** 2026-10-07, against `v0.7.0-rc.1` — confirmed by the person
-  who re-synced `sorting-office` from the candidate (its PRs #27 to #30): it
-  worked. After the re-sync its review workflow, session-links workflow, hook
-  script and both test files for them were byte-identical to the tag's (blob
-  hashes compared), its `stock-version` read `0.7.0-rc.1`, and CI was green on
-  `main`. That real graft, not the rehearsal alone, is what this case is
-  actually meant to test. (The `v0.6.0` record this replaces is preserved in
-  git history, not duplicated here — see the "Case format" section above.)
 
 ---
 
